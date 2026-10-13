@@ -255,3 +255,32 @@
     transform: none;
   }
 }
+
+/* --------------------------------------------------------------- scrollbars -- */
+/* Standard properties only: Chromium ignores ::-webkit-scrollbar once
+   scrollbar-color is set, and Firefox never supported it. */
+
+:root {
+  --sh-scrollbar-thumb: rgba(90, 69, 214, 0.35);
+  --sh-scrollbar-thumb-hover: rgba(194, 51, 122, 0.55);
+}
+
+.dark {
+  --sh-scrollbar-thumb: rgba(139, 108, 255, 0.38);
+  --sh-scrollbar-thumb-hover: rgba(255, 111, 181, 0.6);
+}
+
+html,
+.vp-doc div[class*="language-"] pre,
+.vp-doc table,
+.VPSidebar,
+.VPLocalSearchBox .results {
+  scrollbar-width: thin;
+  scrollbar-color: var(--sh-scrollbar-thumb) transparent;
+}
+
+.vp-doc div[class*="language-"] pre:hover,
+.vp-doc table:hover,
+.VPSidebar:hover {
+  scrollbar-color: var(--sh-scrollbar-thumb-hover) transparent;
+}

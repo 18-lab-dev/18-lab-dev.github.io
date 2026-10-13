@@ -44,6 +44,7 @@ export default defineConfig({
           { text: "User guide", link: "/vosu/guide/" },
           { text: "Developer docs", link: "/vosu/dev/" },
           { text: "Build an overlay", link: "/vosu/dev/tutorial/" },
+          { text: "Benchmarks vs tosu", link: "/vosu/benchmarks" },
         ],
       },
       { text: "vosulay", link: "/vosulay/", activeMatch: "^/vosulay/" },

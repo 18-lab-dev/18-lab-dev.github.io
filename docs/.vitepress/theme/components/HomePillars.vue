@@ -1,10 +1,21 @@
 <script setup lang="ts">
-const pillars = [
+import { withBase } from "vitepress";
+
+interface Pillar {
+  n: string;
+  title: string;
+  body: string;
+  color: string;
+  link?: { text: string; href: string };
+}
+
+const pillars: Pillar[] = [
   {
     n: "1",
     title: "native & measured",
-    body: "Native Rust, no Node.js or Electron underneath. Hot paths have Criterion benchmarks, and the results and their limits are published next to the code.",
+    body: "Native Rust, no Node.js or Electron underneath. Hot paths have Criterion benchmarks, and we publish head-to-head results against tosu with their limits stated.",
     color: "var(--sh-pink)",
+    link: { text: "vosu vs tosu 4.26.2", href: "/vosu/benchmarks" },
   },
   {
     n: "2",
@@ -29,6 +40,7 @@ const pillars = [
         <span class="circle" aria-hidden="true">{{ p.n }}</span>
         <h3>{{ p.title }}</h3>
         <p>{{ p.body }}</p>
+        <a v-if="p.link" class="more" :href="withBase(p.link.href)">{{ p.link.text }} →</a>
       </li>
     </ol>
   </section>
@@ -100,5 +112,18 @@ p {
   font-size: 15px;
   line-height: 1.65;
   color: var(--vp-c-text-2);
+}
+
+.more {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--c);
+  text-decoration: none;
+}
+
+.more:hover {
+  text-decoration: underline;
 }
 </style>
