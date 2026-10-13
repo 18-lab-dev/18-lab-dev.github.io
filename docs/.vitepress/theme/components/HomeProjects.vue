@@ -195,6 +195,8 @@ h3 {
 }
 
 .pills li {
+  /* .vp-doc gives every li after the first a top margin; pills sit in a flex row. */
+  margin: 0;
   padding: 3px 12px;
   border-radius: 999px;
   border: 1px solid rgba(139, 108, 255, 0.4);

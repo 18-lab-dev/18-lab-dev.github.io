@@ -79,7 +79,9 @@ const pillars: Pillar[] = [
   }
 }
 
-li {
+.grid > li {
+  /* .vp-doc gives every li after the first a top margin; cards sit in a grid. */
+  margin: 0;
   padding: 26px 24px 24px;
   border-radius: 18px;
   border: 1px solid var(--vp-c-divider);
