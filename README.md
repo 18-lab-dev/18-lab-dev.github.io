@@ -34,3 +34,8 @@ changes there, update the matching page here.
 `.github/workflows/deploy.yml` lints, format-checks, and builds every push and pull request, then
 publishes `main` to GitHub Pages. In the repository settings, set **Pages → Source** to
 **GitHub Actions**.
+
+## License
+
+[MIT](LICENSE), covering the site code, documentation, and `examples/starter-overlay/`. The vosu
+and vosulay icons in `docs/public/` remain under their own projects' terms.

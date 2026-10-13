@@ -74,7 +74,8 @@ export default defineConfig({
     },
 
     footer: {
-      message: "Documentation for vosu and vosulay. Not affiliated with ppy or the tosu project.",
+      message:
+        'Site and documentation released under the <a href="https://github.com/shiruviaa/shiruviaa.github.io/blob/main/LICENSE">MIT License</a>. Not affiliated with ppy or the tosu project.',
       copyright: "© 2026 shiruviaa · nine tails, zero frame drops",
     },
   },

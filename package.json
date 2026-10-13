@@ -2,6 +2,7 @@
   "name": "shiruviaa-site",
   "private": true,
   "description": "shiruviaa.github.io: the shiruviaa organization site and documentation for vosu and vosulay.",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vitepress dev docs",
