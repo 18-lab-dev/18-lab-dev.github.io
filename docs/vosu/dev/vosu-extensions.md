@@ -43,7 +43,7 @@ Each field below is additive; original timing arrays and four-button shapes rema
 | `keys.all` and precise `tourney[].keys.all` <Badge type="tip" text="vosu only" />                                                                            | All source-reported logical inputs in order                                                              | tosu precise KeyOverlay has only k1/k2/m1/m2                                |
 | `keys.all[].name`, `.isPressed`, `.count`, `.pressedAt`, `.releasedAt` (and precise tournament equivalents) <Badge type="tip" text="vosu only" />            | String, boolean, integer, nullable number, nullable number; timestamps are sampled gameplay milliseconds | No all-key element in tosu                                                  |
 
-Release classification can lag the original array; converted or unavailable metadata remains press-only. Edge timestamps only record observed sampled transitions, not every tap implied by count changes. See [schema](/vosu/dev/schema#timing-and-input-semantics).
+Together the press and release arrays hold every value of the original array exactly once, in order. osu!lazer and native osu!stable mania maps (including Mirror) are classified; stable converted maps and maps without metadata stay press-only, and an unmatched error falls back to a press within 250 ms of replay time or one second. Edge timestamps only record observed sampled transitions, not every tap implied by count changes. See [schema](/vosu/dev/schema#timing-and-input-semantics).
 
 ## Package-level differences
 
