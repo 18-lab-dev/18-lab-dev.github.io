@@ -17,7 +17,7 @@ Removing the package does not reverse user shortcut edits. See [Uninstall](/vosu
 
 ## Live attachment or launch-time integration
 
-vosulay discovers same-user native game processes and attempts live attachment. OS injection policy may prevent this. Restart through a refreshed shortcut rather than weakening ptrace policy or launching elevated to bypass restrictions.
+vosulay discovers same-user native game processes and attempts live attachment. OS injection policy may prevent this. Restart through a refreshed shortcut rather than weakening ptrace policy or launching elevated to bypass restrictions. Live attachment does not reach Wine games: a Wine game started with the preload connects by itself, and one started without it gets a single warning asking for a relaunch.
 
 For a manual OpenGL/Wine launch, replace both absolute paths and the game command:
 
@@ -44,7 +44,7 @@ The visible Wine window can differ from its offscreen render window. vosulay tre
 
 The selected game follows authenticated game-focus notifications, not process enumeration order. Focusing an unrelated window retains the selection; another supported game takes over only when focused. If the selected game exits, vosulay waits for a supported game to gain focus rather than choosing a background process.
 
-Shortcuts use the focused game's input path, not a desktop-global key grab. **Ctrl+Shift+Space** toggles editing. Default focus loss ends editing; [Settings](/vosulay/settings) can keep the editor visible without capturing another app's input.
+Shortcuts use the focused game's input path, not a desktop-global key grab. **Ctrl+Shift+Space** toggles editing. For a desktop-wide key, bind `vosulay --toggle-edit` in your compositor or desktop (for example a Hyprland or KDE shortcut); like the tray item, it starts editing once the game is focused. Default focus loss ends editing; [Settings](/vosulay/settings) can keep the editor visible without capturing another app's input.
 
 The tray needs **StatusNotifierItem** support from your desktop. Use **Exit vosulay**, not **Hide vosulay**, to quit.
 

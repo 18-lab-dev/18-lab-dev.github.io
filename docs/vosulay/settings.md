@@ -33,16 +33,16 @@ Read [Remote profiles](/vosulay/remote) before opening access. There is no remot
 
 ## Advanced
 
-| UI setting                           | JSON key under `settings`                | Default                     | Effect                                                                                                  |
-| ------------------------------------ | ---------------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------- |
-| vosu URL                             | `vosu_url`                               | `"http://127.0.0.1:24050/"` | vosu or tosu-compatible backend origin. Restart required; `--vosu-url` (`-t`) overrides it for one run. |
-| Allow editing on this computer       | `allow_local_profile_editing`            | `false` (off)               | Let loopback profile pages edit the placements they show. Applies without restart.                      |
-| Allow unrestricted SharedArrayBuffer | `allow_unrestricted_shared_array_buffer` | `false` (off)               | Compatibility opt-in for all overlays. Restart required.                                                |
+| UI setting                           | JSON key under `settings`                | Default                     | Effect                                                                                                     |
+| ------------------------------------ | ---------------------------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| vosu URL                             | `vosu_url`                               | `"http://127.0.0.1:24050/"` | vosu or tosu-compatible backend origin. Restart required; `--vosu-url` (`-t`) overrides it for one run.    |
+| Allow editing on this computer       | `allow_local_profile_editing`            | `false` (off)               | Serve the full editor at `manage.localhost:<port>/overlay` to this computer only. Applies without restart. |
+| Allow unrestricted SharedArrayBuffer | `allow_unrestricted_shared_array_buffer` | `false` (off)               | Compatibility opt-in for all overlays. Restart required.                                                   |
 
 Backend URLs accept HTTP(S) without embedded credentials, query or fragment. Use scheme, host and port, not a path prefix: API paths are absolute. Invalid stored URLs fall back to the default.
 
 ::: danger Security-sensitive switches
-Local profile editing can also be used by installed counters sharing the profile page's origin. Unrestricted SharedArrayBuffer disables a Chromium Spectre mitigation and exposes shared memory to all local/remote overlays. Enable either only with content you trust; neither is needed for an ordinary first setup.
+Local editing serves vosulay's full editor, including settings and file dialogs, to any program on this computer that can open `manage.localhost`; counters and other websites cannot use it (see [Remote profiles](/vosulay/remote#edit-from-obs-or-a-local-browser)). Unrestricted SharedArrayBuffer disables a Chromium Spectre mitigation and exposes shared memory to all local/remote overlays. Enable either only when you need it; neither is needed for an ordinary first setup.
 :::
 
 ## Shortcuts
@@ -72,6 +72,23 @@ All keys below are under `settings.hotkeys`. Click a shortcut and press a new ch
 | Profile 0                  | `profile_0`                | `Ctrl+0` (profile position 10) |
 
 Profile shortcuts follow list order. Text fields keep their native undo/redo. On Windows, an already-owned native chord warns rather than stopping startup; choose another binding. See [Editor](/vosulay/editor) for focus/capture rules and non-configurable Delete/Escape actions.
+
+## Command line
+
+| Option                      | Effect                                                                                                                  |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `--vosu-url URL`, `-t URL`  | Backend for this run instead of **vosu URL**.                                                                           |
+| `--fps-limit FPS`, `-f FPS` | `auto`/`0` or a positive cap for this run (see [General](#general)).                                                    |
+| `--config PATH`             | Use another configuration file.                                                                                         |
+| `--pid PID`                 | Also treat this process as a supported game; repeatable.                                                                |
+| `--process-name NAME`       | Also treat this executable name as a supported game; repeatable.                                                        |
+| `--cef-dir PATH`            | Use another runtime package directory.                                                                                  |
+| `--server-only`             | Run only the [overlay server](/vosulay/remote#run-as-an-overlay-server-only): no game attachment, tray or in-game view. |
+| `--toggle-edit`             | Toggle editing in the running instance, like the tray's **Edit mode**.                                                  |
+| `--quit`                    | Save and exit the running instance gracefully.                                                                          |
+| `--version`, `--help`       | Print the version or the option list.                                                                                   |
+
+`--toggle-edit` and `--quit` talk to the running vosulay over a per-user local channel (no network), return immediately, and exit with status 1 if vosulay is not running or rejects the command; for example, `--toggle-edit` fails in server-only mode, which has no in-game view. Bind `vosulay --toggle-edit` to a key in your desktop or Wayland compositor to toggle editing without the in-game shortcut. A plain second launch still exits without starting another instance. `--server-only` rejects `--pid`, `--process-name` and `--fps-limit`.
 
 ## tosu layout
 

@@ -41,13 +41,14 @@ description: Source-grounded fixes for missing counters, input, saving, attachme
 
 ## Remote page problems
 
-| Symptom                                      | Check                                                                                                                                                                 |
-| -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Local counters work but remote page does not | A remote-port bind failure does not stop the separate in-game broker. Check logs and choose an available listener port; restart after changing it.                    |
-| LAN device cannot reach a page               | Default listener is loopback-only. Set a LAN interface IP or `0.0.0.0`, list the client's IP, restart, and use the host's actual LAN address in the URL.              |
-| Remote counters cannot reach backend data    | Backend permissions must allow the vosulay host, not each viewing device.                                                                                             |
-| OBS/browser page is not editable             | Enable **Allow editing on this computer**, use `127.0.0.1` or `localhost` on that computer, then press the edit shortcut inside the page. LAN pages remain view-only. |
-| OBS display capture contains vosulay         | Expected: Linux game-capture exclusion does not apply to Display Capture. Windows third-party-overlay capture settings are not a guaranteed exclusion switch.         |
+| Symptom                                      | Check                                                                                                                                                                                                                                                            |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Local counters work but remote page does not | A remote-port bind failure does not stop the separate in-game broker. Check logs and choose an available listener port; restart after changing it.                                                                                                               |
+| LAN device cannot reach a page               | Default listener is loopback-only. Set a LAN interface IP or `0.0.0.0`, list the client's IP, restart, and use the host's actual LAN address in the URL.                                                                                                         |
+| Remote counters cannot reach backend data    | Backend permissions must allow the vosulay host, not each viewing device.                                                                                                                                                                                        |
+| OBS/browser page is not editable             | The plain `/overlay` address is always view-only. Enable **Allow editing on this computer** and open `http://manage.localhost:<port>/overlay` on that computer, then press the edit shortcut inside the page. Load it directly, not inside another page's frame. |
+| `vosulay --toggle-edit` or `--quit` fails    | Status 1 means vosulay is not running for this user, or rejected the command; `--toggle-edit` has no effect in `--server-only` mode. With the game unfocused, `--toggle-edit` waits for focus like the tray item.                                                |
+| OBS display capture contains vosulay         | Expected: Linux game-capture exclusion does not apply to Display Capture. Windows third-party-overlay capture settings are not a guaranteed exclusion switch.                                                                                                    |
 
 See [Remote profiles](/vosulay/remote) before widening listener access.
 

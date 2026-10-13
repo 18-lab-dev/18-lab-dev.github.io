@@ -5,41 +5,40 @@ description: Arrange counters precisely, manage interaction and learn the defaul
 
 # Overlay editor
 
-Focus the game and press **Ctrl+Shift+Space** to toggle editing. The tray's **Edit mode** starts capturing input when the game next receives focus; selecting it again cancels a pending edit request.
+Focus the game and press **Ctrl+Shift+Space** to toggle editing. The tray's **Edit mode** starts capturing input when the game next receives focus; selecting it again cancels a pending edit request. From a script or a compositor keybind, `vosulay --toggle-edit` does the same as the tray item (see [Settings → Command line](/vosulay/settings#command-line)).
 
 ## Arrange a counter
 
-Click a counter to select it; the first press on an unselected counter selects and moves it. Drag a selected counter's corner handles or the edge/corner bands inside its border to resize. Those bands remain usable when external handles fall off-screen.
+Click a counter to select it; the first press on an unselected counter selects and moves it. Drag a counter's body to move it. A selected counter's corner handles and the edge/corner bands just inside its border change it; the modifier held when you press decides how:
 
-The **Counter properties** inspector provides:
+| Drag on an edge or handle | Effect                                                                                   |
+| ------------------------- | ---------------------------------------------------------------------------------------- |
+| Plain drag                | Resize that side or corner.                                                              |
+| **Ctrl**+drag             | Scale; the opposite corner (or the middle of the opposite side) stays fixed.             |
+| **Shift**+drag            | Crop that side; the counter's content stays where it is on screen, like Alt+drag in OBS. |
 
-| Control        | Behavior                                                                |
-| -------------- | ----------------------------------------------------------------------- |
-| Title          | Name the placement.                                                     |
-| URL            | Change a custom overlay's URL.                                          |
-| Enabled        | Hide this placement without discarding its geometry; re-enable it here. |
-| X / Y          | Horizontal/vertical position.                                           |
-| Width / Height | Content dimensions; minimum 10 px.                                      |
-| Scale          | Scale the content; minimum 0.1.                                         |
-| Layer          | Stacking order from 0 to 999.                                           |
-| Opacity %      | 0–100%; stored as 0–1.                                                  |
-| Rotation       | −180° to 180°.                                                          |
-| Reset size     | Restore the catalog dimensions (500×300 fallback) and scale 1.          |
-| Refresh        | Reload the selected counter.                                            |
-| Settings       | Open an installed counter's backend-hosted settings when available.     |
-| Remove counter | Delete the placement rather than disable it.                            |
+The band under the pointer is highlighted in the color of the edit it would make: purple for resize, blue for scale, amber for crop. The mode is fixed when you press, so pressing or releasing a modifier mid-drag does not change the edit. The bands remain usable when external handles fall off-screen.
 
-In a focused numeric field, the wheel changes the value by its step; hold **Shift** for ten steps.
+Right-click a counter to open its **Counter properties** inspector; when counters overlap, repeated right-clicks cycle through them. The inspector provides:
 
-### Wheel gestures on the counter
+| Control        | Behavior                                                                                  |
+| -------------- | ----------------------------------------------------------------------------------------- |
+| Title          | Name the placement.                                                                       |
+| URL            | Change a custom overlay's URL.                                                            |
+| Enabled        | Hide this placement without discarding its geometry; re-enable it here.                   |
+| X / Y          | Position of the visible (cropped) area's top-left corner.                                 |
+| Width / Height | Counter frame dimensions before cropping; minimum 10 px.                                  |
+| Scale          | Scale the content; minimum 0.1.                                                           |
+| Layer          | Stacking order from 0 to 999.                                                             |
+| Opacity %      | 0–100%; stored as 0–1.                                                                    |
+| Rotation       | −180° to 180°.                                                                            |
+| Crop sides     | Counter pixels hidden from the left, right, top and bottom; at least 10 px stays visible. |
+| Reset size     | Restore the catalog dimensions (500×300 fallback), scale 1 and no crop.                   |
+| Refresh        | Reload the selected counter.                                                              |
+| Settings       | Open an installed counter's backend-hosted settings when available.                       |
+| Remove counter | Delete the placement rather than disable it.                                              |
 
-| Pointer location | Wheel behavior                                                |
-| ---------------- | ------------------------------------------------------------- |
-| Middle           | Change layer.                                                 |
-| Edge             | Grow that side by 10 px (up) or shrink it (down).             |
-| Corner           | Change scale by 0.05 while keeping the opposite corner fixed. |
-
-Continued scrolling keeps the same edge/corner target until the wheel pauses. Each gesture is one undo step. The right-click menu also offers **Refresh**.
+The mouse wheel changes the inspector field under the pointer by its step, without clicking into it; hold **Shift** for ten steps. Scrolling one field is one undo step. The wheel over a counter itself does nothing. The right-click menu also offers **Refresh**.
 
 **Settings → General → Keep overlays in view** constrains only the selected overlay during editing. It does not clamp unselected counters or silently save new coordinates when the game window resizes in normal mode.
 

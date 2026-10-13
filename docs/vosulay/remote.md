@@ -1,6 +1,6 @@
 ---
 title: Remote profile pages
-description: Show a profile in OBS or on trusted LAN devices, with optional same-computer editing.
+description: Show a profile in OBS or on trusted LAN devices, edit from this computer, or run vosulay as an overlay server only.
 ---
 
 # Remote profile pages
@@ -37,23 +37,47 @@ Restrict the bind address and allowlist to trusted devices/networks. Host/Origin
 
 ## Edit from OBS or a local browser
 
-Enable **Settings → Advanced → Allow editing on this computer**. It is off by default and takes effect without restarting.
+Enable **Settings → Advanced → Allow editing on this computer**. It is off by default and takes effect without restarting. vosulay's full editor is then served, to this computer only, at:
 
-Open the profile page through `127.0.0.1` or `localhost` on the same machine. In OBS, open the browser source's **Interact** window. Press **Ctrl+Shift+Space** inside the page (or your configured edit shortcut), then use the editor.
+```text
+http://manage.localhost:5050/overlay
+```
 
-Changes save to the profile the page shows. The in-game editor receives them immediately; other open pages update within about two seconds. Profile management, app settings and the local HTML picker remain in the in-game editor. Other devices stay view-only.
+Open it in a browser tab or an OBS browser source; in OBS, use the source's **Interact** window. Press **Ctrl+Shift+Space** inside the page (or your configured edit shortcut), then use the same editor as in game: profiles, settings, local HTML files and imports included. File choices open native dialogs on this computer. Changes apply as they do in game; the in-game editor receives them immediately and other open editor pages update within about two seconds.
 
-::: warning Same-origin counters can also edit
-Unrelated websites cannot use the editing routes, but installed counters run on the page's own origin and can make the same edits. Enable local editing only with trusted counters. Remote saves cannot authorize new local overlay directories.
+The plain `/overlay` address stays view-only for everyone, including this computer. As in game, counters on the editor take no clicks outside edit mode, so the page keeps the keyboard for the edit shortcut; press **Ctrl+I** while editing to interact with them.
+
+::: tip Why a separate address
+Counters on the editor load from the plain listener address, a different origin than `manage.localhost`, so neither they nor other websites can use the editing routes. The editor refuses to load inside another page's frame, so it cannot be overlaid with deceptive content to trick clicks. A page can only add a local HTML file you chose in a file dialog.
 :::
+
+## Use vosulay as the frontend of other overlay software
+
+Overlay renderers that draw a web page over the game themselves, such as idk-overlay or a Linux window built for tosu's in-game page, can use vosulay's editor as their whole UI:
+
+1. Enable **Allow editing on this computer**.
+2. Load `http://manage.localhost:<port>/overlay` as a **top-level** page sized to the game. Outside edit mode it shows only the counters on a transparent background; in edit mode it is the full editor. Framed (iframe) loads are refused.
+3. Switch edit mode the way tosu's in-game overlay does, by running `window.postMessage('editingStarted')` or `window.postMessage('editingEnded')` in the page.
+4. Listen for `message` events: the page posts the same strings when it enters or leaves edit mode itself (shortcut, Escape, **Done**), so the host knows when to capture input or restore click-through. Messages from counter frames are ignored.
+
+To keep vosulay from also drawing inside the game, run it as an overlay server only (next section).
+
+## Run as an overlay server only
+
+```sh
+vosulay --server-only
+```
+
+This serves the remote pages, the backend broker and the editor at `manage.localhost`, but never discovers, injects into or attaches to games, rewrites Linux game launchers, shows a tray or starts the in-game browser. The startup message names the page and editor URLs. Stop it with `vosulay --quit`; `--vosu-url` and `--config` still apply, while game-selection and frame-rate options are rejected. See [Settings → Command line](/vosulay/settings#command-line).
 
 ## Which listeners run?
 
-| Listener               | Default / purpose                                                         |
-| ---------------------- | ------------------------------------------------------------------------- |
-| Remote overlay server  | `127.0.0.1:5050`; starts with the host even without a viewer.             |
-| In-game backend broker | Separate loopback listener on an OS-assigned port; serves local counters. |
+| Listener               | Default / purpose                                                                                                      |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Remote overlay server  | `127.0.0.1:5050`; starts with the host even without a viewer. Also serves `manage.localhost` when local editing is on. |
+| In-game backend broker | Separate loopback listener on an OS-assigned port; serves local counters.                                              |
+| Local control channel  | Not a network listener: a per-user socket (Linux) or pipe (Windows) for `vosulay --toggle-edit` and `vosulay --quit`.  |
 
-If the remote port is occupied, a bind failure is logged but local counters can still use the broker. **Hide vosulay** does not stop either listener. **Exit vosulay** stops the host and its listeners.
+If the remote port is occupied, a bind failure is logged but local counters can still use the broker. **Hide vosulay** does not stop any of them. **Exit vosulay** (or `vosulay --quit`) stops the host and its listeners.
 
 Sources: [remote usage](https://github.com/shiruviaa/vosulay/blob/main/README.md#remote-profile-pages), [network disclosure](https://github.com/shiruviaa/vosulay/blob/main/docs/security.md#network-exposure-and-web-content).

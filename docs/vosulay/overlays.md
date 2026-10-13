@@ -44,7 +44,7 @@ See [Editor](/vosulay/editor) for placement controls.
 ::: warning Trust the content
 Counters and custom pages execute JavaScript inside CEF's sandboxed renderer. Third-party scripts can send data to their own destinations. **Allow unrestricted SharedArrayBuffer** is off by default; enabling it weakens a Chromium Spectre mitigation for every overlay and requires restart. Enable it only if you fully trust all loaded content.
 
-Optional [local profile editing](/vosulay/remote#edit-from-obs-or-a-local-browser) also lets installed counters sharing the page's origin make profile edits. Leave it off unless that content is trusted.
+Counters cannot make edits: [local editing](/vosulay/remote#edit-from-obs-or-a-local-browser) lives on a separate `manage.localhost` address whose routes counters cannot reach, and a page can only add local HTML files you chose in a file dialog.
 :::
 
 Sources: [integrations](https://github.com/shiruviaa/vosulay/blob/main/docs/integrations.md), [security disclosure](https://github.com/shiruviaa/vosulay/blob/main/docs/security.md), [hosted settings action](https://github.com/shiruviaa/vosulay/blob/main/src/runtime/editor.rs).

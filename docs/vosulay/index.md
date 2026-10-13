@@ -13,13 +13,14 @@ The default backend is `http://127.0.0.1:24050/`. Change it in **Settings → Ad
 
 ## What you can do
 
-- Move, resize, scale, rotate, reorder and change overlay opacity.
+- Move, resize, scale, crop, rotate, reorder and change overlay opacity; Ctrl+drag scales and Shift+drag crops.
 - Disable a placement without deleting it.
 - Keep multiple named profiles and switch layouts.
 - Search installed counters by name, author or folder.
 - Add custom remote URLs or local HTML files.
 - Use Chromium GPU compositing, WebGL, WebGPU where supported, and overlay audio.
-- Serve profiles to browsers and streaming clients, with optional local editing.
+- Serve view-only profiles to browsers and streaming clients, and the full editor to OBS, a browser or other overlay software on the same computer.
+- Run as an overlay server only (`--server-only`), and toggle editing or quit from scripts and keybinds (`--toggle-edit`, `--quit`).
 
 ## Platforms and rendering
 
