@@ -26,7 +26,19 @@ const LABELS: Record<string, string> = {
   tosu: "tosu 4.26.2",
   vosu: "vosu",
   vosuAlone: "vosu alone",
+  before: "before",
+  after: "after",
 };
+
+// The chip compares the reference series with vosu's: tosu vs vosu, or vosu before vs after.
+const RATIO_PAIRS: [string, string][] = [
+  ["tosu", "vosu"],
+  ["before", "after"],
+];
+
+const pair = computed(() =>
+  RATIO_PAIRS.find(([a, b]) => props.chart.series.includes(a) && props.chart.series.includes(b)),
+);
 
 const max = computed(() =>
   Math.max(
@@ -41,10 +53,11 @@ function width(value: Value | null | undefined): string {
 }
 
 function ratio(row: Row): { text: string; better: boolean } | null {
-  const tosu = row.values.tosu;
-  const vosu = row.values.vosu;
-  if (!tosu || !vosu || vosu.v === 0) return null;
-  const r = tosu.v / vosu.v;
+  if (!pair.value) return null;
+  const reference = row.values[pair.value[0]];
+  const candidate = row.values[pair.value[1]];
+  if (!reference || !candidate || candidate.v === 0) return null;
+  const r = reference.v / candidate.v;
   return { text: `${r.toFixed(2)}×`, better: r >= 1 };
 }
 </script>
@@ -66,8 +79,8 @@ function ratio(row: Row): { text: string; better: boolean } | null {
           v-if="ratio(row)"
           class="ratio"
           :class="{ worse: !ratio(row)!.better }"
-          :title="'tosu ÷ vosu; above 1× means vosu is lower'"
-          >tosu / vosu {{ ratio(row)!.text }}</span
+          :title="`${pair![0]} ÷ ${pair![1]}; above 1× means ${pair![1]} is lower`"
+          >{{ pair![0] }} / {{ pair![1] }} {{ ratio(row)!.text }}</span
         >
       </div>
       <div v-for="key in chart.series" :key="key" class="line">
@@ -211,6 +224,16 @@ code.title {
 .swatch.vosu,
 .bar.vosu {
   background: linear-gradient(90deg, #e2559c, #ff8cc4);
+}
+
+.swatch.before,
+.bar.before {
+  background: linear-gradient(90deg, #6b6385, #9a91b8);
+}
+
+.swatch.after,
+.bar.after {
+  background: linear-gradient(90deg, #e2559c, #ffd58a);
 }
 
 .swatch.vosuAlone,

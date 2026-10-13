@@ -1,0 +1,299 @@
+{
+  "source": {
+    "repo": "shiruviaa/vosu",
+    "commit": "60875d7",
+    "path": "docs/testing/benchmarks.md",
+    "section": "Performance changes for 1.1.0 (paired)"
+  },
+  "charts": [
+    {
+      "id": "reader",
+      "title": "Linux native reader (regular capture cycle)",
+      "series": ["before", "after"],
+      "rows": [
+        {
+          "label": "lazer gameplay",
+          "values": {
+            "before": {
+              "v": 89.49,
+              "s": "89.49 µs",
+              "range": "89.24–90.00"
+            },
+            "after": {
+              "v": 16.58,
+              "s": "16.58 µs",
+              "range": "16.38–16.62"
+            }
+          }
+        },
+        {
+          "label": "lazer menu",
+          "values": {
+            "before": {
+              "v": 107.29,
+              "s": "107.29 µs",
+              "range": "106.13–108.05"
+            },
+            "after": {
+              "v": 42.44,
+              "s": "42.44 µs",
+              "range": "41.92–43.00"
+            }
+          }
+        },
+        {
+          "label": "stable gameplay",
+          "values": {
+            "before": {
+              "v": 45.43,
+              "s": "45.43 µs",
+              "range": "45.31–46.03"
+            },
+            "after": {
+              "v": 36.53,
+              "s": "36.53 µs",
+              "range": "35.69–38.08"
+            }
+          }
+        },
+        {
+          "label": "stable menu",
+          "values": {
+            "before": {
+              "v": 49.39,
+              "s": "49.39 µs",
+              "range": "49.19–49.53"
+            },
+            "after": {
+              "v": 39.17,
+              "s": "39.17 µs",
+              "range": "38.68–40.51"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "precise",
+      "title": "Linux lazer precise capture (memory_reader_bench)",
+      "series": ["before", "after"],
+      "rows": [
+        {
+          "label": "lazer precise",
+          "values": {
+            "before": {
+              "v": 10.67,
+              "s": "10.67 µs",
+              "range": "10.44–10.88"
+            },
+            "after": {
+              "v": 8.94,
+              "s": "8.94 µs",
+              "range": "8.72–9.05"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "filtered",
+      "title": "Filtered WebSocket fan-out, v2, 100 clients",
+      "series": ["before", "after"],
+      "rows": [
+        {
+          "label": "identical filters",
+          "values": {
+            "before": {
+              "v": 5201.0,
+              "s": "5.201 ms",
+              "range": "5.169–5.208"
+            },
+            "after": {
+              "v": 23.35,
+              "s": "23.35 µs",
+              "range": "23.27–23.45"
+            }
+          }
+        },
+        {
+          "label": "unique filters",
+          "values": {
+            "before": {
+              "v": 5758.0,
+              "s": "5.758 ms",
+              "range": "5.735–5.787"
+            },
+            "after": {
+              "v": 558.8,
+              "s": "558.80 µs",
+              "range": "547.5–572.6"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "subscribe",
+      "title": "Selected-field subscription, 1000 clients",
+      "series": ["before", "after"],
+      "rows": [
+        {
+          "label": "distinct plans",
+          "values": {
+            "before": {
+              "v": 397.6,
+              "s": "397.60 µs",
+              "range": "396.0–403.8"
+            },
+            "after": {
+              "v": 159.3,
+              "s": "159.30 µs",
+              "range": "158.7–160.8"
+            }
+          }
+        },
+        {
+          "label": "shared plan",
+          "values": {
+            "before": {
+              "v": 200.9,
+              "s": "200.90 µs",
+              "range": "200.5–206.2"
+            },
+            "after": {
+              "v": 104.2,
+              "s": "104.20 µs",
+              "range": "101.3–115.5"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "serializers",
+      "title": "Cold serializers",
+      "series": ["before", "after"],
+      "rows": [
+        {
+          "label": "v2 precise",
+          "values": {
+            "before": {
+              "v": 4.185,
+              "s": "4.18 µs",
+              "range": "3.925–5.427"
+            },
+            "after": {
+              "v": 2.948,
+              "s": "2.95 µs",
+              "range": "2.885–3.005"
+            }
+          }
+        },
+        {
+          "label": "v1",
+          "values": {
+            "before": {
+              "v": 4.538,
+              "s": "4.54 µs",
+              "range": "4.516–4.680"
+            },
+            "after": {
+              "v": 4.475,
+              "s": "4.47 µs",
+              "range": "4.191–4.878"
+            }
+          }
+        },
+        {
+          "label": "v2",
+          "values": {
+            "before": {
+              "v": 10.585,
+              "s": "10.59 µs",
+              "range": "10.112–13.387"
+            },
+            "after": {
+              "v": 10.208,
+              "s": "10.21 µs",
+              "range": "9.609–11.427"
+            }
+          }
+        },
+        {
+          "label": "streamCompanion",
+          "values": {
+            "before": {
+              "v": 6.653,
+              "s": "6.65 µs",
+              "range": "6.247–7.926"
+            },
+            "after": {
+              "v": 6.338,
+              "s": "6.34 µs",
+              "range": "6.313–6.371"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "calls": {
+    "id": "calls",
+    "title": "Native read calls per capture cycle",
+    "series": ["before", "after"],
+    "rows": [
+      {
+        "label": "lazer gameplay",
+        "values": {
+          "before": {
+            "v": 268,
+            "s": "268"
+          },
+          "after": {
+            "v": 32,
+            "s": "32"
+          }
+        }
+      },
+      {
+        "label": "lazer menu",
+        "values": {
+          "before": {
+            "v": 314,
+            "s": "314"
+          },
+          "after": {
+            "v": 136,
+            "s": "136"
+          }
+        }
+      },
+      {
+        "label": "stable gameplay",
+        "values": {
+          "before": {
+            "v": 135,
+            "s": "135"
+          },
+          "after": {
+            "v": 135,
+            "s": "135"
+          }
+        }
+      },
+      {
+        "label": "stable menu",
+        "values": {
+          "before": {
+            "v": 148,
+            "s": "148"
+          },
+          "after": {
+            "v": 148,
+            "s": "148"
+          }
+        }
+      }
+    ]
+  }
+}

@@ -5,6 +5,7 @@ description: vosu measured against the tosu 4.26.2 baseline in live osu! clients
 
 <script setup>
 import data from "../.vitepress/data/benchmarks-tosu-4.26.2.json";
+import paired from "../.vitepress/data/benchmarks-1.1.0-paired.json";
 </script>
 
 # Benchmarks against tosu
@@ -19,6 +20,38 @@ These numbers come from the "Released tosu comparison" section of vosu's maintai
 (vosu commit `a89f467`). The Windows rows and the hot paths used vosu `v1.0.0` on 2026-10-11; the
 Linux live-reader rows and the Linux osu!stable daemon rows used vosu `v1.0.2` on 2026-10-13. That
 guide holds the full tables, method, and caveats; this page charts every measured value from it.
+
+## Coming in 1.1.0: before and after
+
+The performance work for the next release is on vosu's `main` branch and not released yet. These
+charts compare the same synthetic Linux benchmarks before and after it (vosu commit `60875d7`,
+[paired section](https://github.com/shiruviaa/vosu/blob/60875d7/docs/testing/benchmarks.md#performance-changes-for-110-paired)
+of the benchmark guide). Both builds ran alternately three times, pinned to one CPU with nothing
+else running; each bar is the median of three Criterion means, and the range spans them. The
+`before / after` chip is the speedup.
+
+<BenchChart v-for="chart in paired.charts" :key="chart.id" :chart="chart" />
+
+::: details What changed, and what these numbers don't show
+- **Linux native reader:** osu!lazer reads are batched, so a gameplay capture makes 32 native read
+  calls instead of 268, and each read checks the process generation once afterwards instead of
+  before and after. This targets the one live row tosu still wins below (Linux osu!lazer regular
+  cycle); a live rerun is still to come.
+- **Filtered WebSocket fan-out:** clients with the same filter share one encoded payload per
+  broadcast (bounded to 64 variants and 1 MiB), and only the fields a filter can read get
+  serialized.
+- **Selected-field subscriptions:** frames are written straight into a shared buffer, and
+  per-client delivery uses lighter locking and a one-frame mailbox.
+- **Cold serializers:** the precise document is written directly as bytes. The v1, v2, and
+  streamCompanion encoders are unchanged; their bars differ only within run-to-run spread.
+- These are synthetic, Linux-only fixtures. They don't measure live clients, Windows, network
+  transport, or whole-daemon CPU and memory. Windows has no batched cross-process read, so the
+  reader batching won't cut native calls there the same way.
+:::
+
+<BenchChart :chart="paired.calls" />
+
+The charts below this point compare released builds with tosu and predate the 1.1.0 work.
 
 ## Setup
 
