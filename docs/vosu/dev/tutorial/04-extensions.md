@@ -37,7 +37,7 @@ is shared with tosu, not a vosu-only extension.
 Selecting `/play/hitErrorArray` or either press/release array selects the **whole array**,
 so every new hit resends its full history. That is fine for a starter HUD that only shows
 the latest value. For long maps or a real hit-error bar, switch to the sliding-window
-selection described in [performance: watch out for growing arrays](/vosu/dev/performance#watch-out-for-growing-arrays).
+selection described in [performance: bound growing histories](/vosu/dev/performance#advanced-bound-growing-histories).
 :::
 
 See [vosu extensions](/vosu/dev/vosu-extensions) and [schema](/vosu/dev/schema).

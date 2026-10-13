@@ -29,6 +29,7 @@ jobs:
       - run: pnpm lint
       - run: pnpm fmt:check
       - run: pnpm build
+      - run: node scripts/check-fragments.mjs
       - uses: actions/upload-pages-artifact@v5
         if: github.event_name != 'pull_request'
         with:

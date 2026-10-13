@@ -11,7 +11,7 @@
     "lint": "oxlint",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
-    "check": "oxlint && oxfmt --check && vitepress build docs"
+    "check": "oxlint && oxfmt --check && vitepress build docs && node scripts/check-fragments.mjs"
   },
   "devDependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.3.0",

@@ -5,15 +5,21 @@ description: "Render pp, accuracy, combo, judgements, timing, and keys without r
 
 # 3. Render a play HUD
 
+## Markup
+
 Replace `index.html` with the HUD markup. Elements have stable IDs so JavaScript can
 cache them once. The body stays transparent for OBS and vosulay.
 
 <<< ../../../../examples/starter-overlay/index.html
 
+## Styles
+
 Create `src/style.css`. The HUD's declared dimensions match its metadata. Key motion
 uses `transform` and `opacity`; color changes occur only on input transitions.
 
 <<< ../../../../examples/starter-overlay/src/style.css
+
+## Script
 
 Create `src/main.ts`. It imports the connection module and stylesheet, caches DOM
 references, creates a fixed pool of 18 key nodes, and wires the telemetry callback.
