@@ -1,9 +1,9 @@
 {
   "source": {
     "repo": "shiruviaa/vosu",
-    "commit": "9c47ccb",
+    "commit": "a89f467",
     "path": "docs/testing/benchmarks.md",
-    "section": "1.0.0 against tosu 4.26.2 in live clients — 2026-10-11"
+    "section": "Released tosu comparison"
   },
   "hotPaths": [
     {
@@ -497,25 +497,29 @@
           "label": "Linux lazer",
           "values": {
             "tosu": {
-              "v": 145.3,
-              "s": "145.3 µs",
-              "range": "138.5–178.0"
+              "v": 165.3,
+              "s": "165.3 µs",
+              "range": "153.6–182.4"
             },
             "vosu": {
-              "v": 193.6,
-              "s": "193.6 µs",
-              "range": "189.1–215.6"
+              "v": 203.6,
+              "s": "203.6 µs",
+              "range": "188.5–210.3"
             }
           }
         },
         {
           "label": "Linux stable (Wine)",
           "values": {
-            "tosu": null,
+            "tosu": {
+              "v": 156.8,
+              "s": "156.8 µs",
+              "range": "142.1–187.2"
+            },
             "vosu": {
-              "v": 90.9,
-              "s": "90.9 µs",
-              "range": "one invocation"
+              "v": 104.8,
+              "s": "104.8 µs",
+              "range": "85.1–130.5"
             }
           }
         }
@@ -560,25 +564,29 @@
           "label": "Linux lazer",
           "values": {
             "tosu": {
-              "v": 32.3,
-              "s": "32.3 µs",
-              "range": "31.9–36.9"
+              "v": 36.3,
+              "s": "36.3 µs",
+              "range": "33.4–48.2"
             },
             "vosu": {
-              "v": 10.7,
-              "s": "10.7 µs",
-              "range": "10.3–11.8"
+              "v": 11.0,
+              "s": "11.0 µs",
+              "range": "10.6–11.9"
             }
           }
         },
         {
           "label": "Linux stable (Wine)",
           "values": {
-            "tosu": null,
+            "tosu": {
+              "v": 11.7,
+              "s": "11.7 µs",
+              "range": "10.6–18.6"
+            },
             "vosu": {
-              "v": 7.7,
-              "s": "7.7 µs",
-              "range": "one invocation"
+              "v": 7.4,
+              "s": "7.4 µs",
+              "range": "6.6–10.6"
             }
           }
         }
@@ -619,19 +627,31 @@
           "label": "Linux lazer",
           "values": {
             "tosu": {
-              "v": 3634000.0,
-              "s": "3634 ms"
+              "v": 3984000.0,
+              "s": "3984 ms"
             },
             "vosu": {
-              "v": 69000.0,
-              "s": "69 ms"
+              "v": 72000.0,
+              "s": "72 ms"
+            }
+          }
+        },
+        {
+          "label": "Linux stable (Wine)",
+          "values": {
+            "tosu": {
+              "v": 235000.0,
+              "s": "235 ms"
+            },
+            "vosu": {
+              "v": 20000.0,
+              "s": "20 ms"
             }
           }
         }
       ]
     }
   ],
-  "liveReaderErrors": 0,
   "daemon": [
     {
       "id": "cpu",
@@ -743,22 +763,34 @@
         {
           "label": "Linux stable (Wine) · background",
           "values": {
-            "tosu": null,
-            "vosu": null,
+            "tosu": {
+              "v": 0.93,
+              "s": "0.93%"
+            },
+            "vosu": {
+              "v": 0.84,
+              "s": "0.84%"
+            },
             "vosuAlone": {
-              "v": 0.8,
-              "s": "0.80%"
+              "v": 0.84,
+              "s": "0.84%"
             }
           }
         },
         {
           "label": "Linux stable (Wine) · consumer",
           "values": {
-            "tosu": null,
-            "vosu": null,
-            "vosuAlone": {
+            "tosu": {
+              "v": 2.04,
+              "s": "2.04%"
+            },
+            "vosu": {
               "v": 0.93,
               "s": "0.93%"
+            },
+            "vosuAlone": {
+              "v": 0.96,
+              "s": "0.96%"
             }
           }
         }
@@ -850,20 +882,26 @@
         {
           "label": "Linux stable (Wine) · background",
           "values": {
-            "tosu": null,
+            "tosu": {
+              "v": 241.8,
+              "s": "241.8 MB"
+            },
             "vosu": {
-              "v": 29.7,
-              "s": "29.7 MB"
+              "v": 36.0,
+              "s": "36.0 MB"
             }
           }
         },
         {
           "label": "Linux stable (Wine) · consumer",
           "values": {
-            "tosu": null,
+            "tosu": {
+              "v": 246.6,
+              "s": "246.6 MB"
+            },
             "vosu": {
-              "v": 30.4,
-              "s": "30.4 MB"
+              "v": 37.6,
+              "s": "37.6 MB"
             }
           }
         }
@@ -955,20 +993,26 @@
         {
           "label": "Linux stable (Wine) · background",
           "values": {
-            "tosu": null,
+            "tosu": {
+              "v": 234.9,
+              "s": "234.9 MB"
+            },
             "vosu": {
-              "v": 25.8,
-              "s": "25.8 MB"
+              "v": 32.0,
+              "s": "32.0 MB"
             }
           }
         },
         {
           "label": "Linux stable (Wine) · consumer",
           "values": {
-            "tosu": null,
+            "tosu": {
+              "v": 239.8,
+              "s": "239.8 MB"
+            },
             "vosu": {
-              "v": 26.5,
-              "s": "26.5 MB"
+              "v": 33.6,
+              "s": "33.6 MB"
             }
           }
         }
@@ -1060,20 +1104,26 @@
         {
           "label": "Linux stable (Wine) · background",
           "values": {
-            "tosu": null,
+            "tosu": {
+              "v": 4.24,
+              "s": "4.24 ms"
+            },
             "vosu": {
-              "v": 0.65,
-              "s": "0.65 ms"
+              "v": 0.95,
+              "s": "0.95 ms"
             }
           }
         },
         {
           "label": "Linux stable (Wine) · consumer",
           "values": {
-            "tosu": null,
+            "tosu": {
+              "v": 2.86,
+              "s": "2.86 ms"
+            },
             "vosu": {
-              "v": 0.25,
-              "s": "0.25 ms"
+              "v": 0.27,
+              "s": "0.27 ms"
             }
           }
         }

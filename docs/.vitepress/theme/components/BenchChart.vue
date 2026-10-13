@@ -24,7 +24,7 @@ const props = defineProps<{ chart: Chart; code?: boolean }>();
 
 const LABELS: Record<string, string> = {
   tosu: "tosu 4.26.2",
-  vosu: "vosu 1.0.0",
+  vosu: "vosu",
   vosuAlone: "vosu alone",
 };
 
