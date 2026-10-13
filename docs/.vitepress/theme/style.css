@@ -188,6 +188,12 @@
   background-image: linear-gradient(180deg, rgba(139, 108, 255, 0.05), transparent 30rem);
 }
 
+/* The curtain behind the nav logo is a solid block by default; let the sidebar's
+   gradient run through it so the logo sits on the same backdrop as the links. */
+.dark .VPSidebar .curtain {
+  background-color: transparent;
+}
+
 .VPBadge {
   white-space: nowrap;
 }

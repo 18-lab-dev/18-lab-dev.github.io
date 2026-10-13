@@ -1,337 +1,284 @@
 ---
 title: Performance for overlay developers
-description: High-yield ways to reduce telemetry parsing, DOM work, allocations, and animation overhead in OBS and vosulay overlays.
+description: General browser performance principles for building responsive counters, HUDs, visualizers, and animated overlays in OBS and vosulay.
 ---
 
 # Performance for overlay developers
 
-Start with less data, fewer DOM writes, and less work per frame—not a new rendering engine. These wins apply to OBS browser sources and vosulay's in-game CEF renderer. [vosulay renders a complete profile in one transparent browser](https://github.com/shiruviaa/vosulay/blob/main/README.md#linux), so one expensive overlay can affect the others.
+Build an overlay that does work when something changes, and only as much work as the visible result needs. That applies to a score label, a multi-widget HUD, a graph, or a full animated key visualizer—not just a particular counter.
 
-This guide credits **breadles5** for customHitErrorBar's pooled tick management and rendering work, and **qt715** for its animation/median improvements and the EZ2ON overlay optimizations. Snippets are shortened adaptations, not complete overlays. **Before** shows the expensive pattern; where it is illustrative rather than a historical diff, that is stated. Keep your existing reset and error handling when adapting them.
+Start with the [overlay tutorial](/vosu/dev/tutorial/) for implementation and the [WebSocket API](/vosu/dev/websocket-api) for stream details. The examples below illustrate general principles; snippets are shortened teaching examples, not complete overlays. **breadles5** and **qt715** are credited where their real-world changes demonstrate a technique.
 
-For a working starting point, use the [overlay tutorial](/vosu/dev/tutorial/). For protocol details, see the [WebSocket API](/vosu/dev/websocket-api).
+## 1. Know where the time goes
 
-## 1. Subscribe to the fields you actually use
+A typical update travels through this pipeline:
+
+```text
+message intake / JSON parse → state update → DOM / style writes
+                           → layout → paint → composite
+```
+
+An inexpensive message handler can still trigger expensive rendering. Layout calculates geometry, paint produces pixels, and compositing combines layers. Changing geometry can require layout and paint; changing a composited transform or opacity can avoid those stages. See [MDN's rendering waterfall](https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/Animation_performance_and_frame_rate).
+
+The frame budget belongs to the **whole page**, not each widget. OBS browser sources use [CEF](https://obsproject.com/kb/browser-source); [vosulay renders the complete profile in one transparent CEF browser](https://github.com/shiruviaa/vosulay/blob/main/README.md#linux). In vosulay, your work shares that page's budget with the other overlays. Separate OBS sources still compete for the machine's resources; they do not become free because they are separate pages.
+
+Optimize the stage a trace shows is expensive. Usually the first wins are less incoming data, fewer writes, bounded history, and no work while idle—not switching every counter to a GPU renderer.
+
+## 2. Make data intake event-driven
+
+### Ask for less, then react only to changes
 
 <Badge type="tip" text="vosu only" />
 
-JSON parsing and reconstruction happen before you can decide not to draw. Receiving a full document for a two-field counter spends bandwidth and main-thread time on unrelated state.
+Use `/websocket/v2/subscribe` to request only the fields your overlay needs. Smaller messages mean less transfer and JSON parsing before your own code even runs.
 
-**Before — full-payload pattern:**
+**The important property:** after the initial snapshot, vosu sends a state frame **only when at least one selected value changed**. Update frames contain **only changed indices plus removals**, not a replacement copy of every selected field. No changes means no state frame. Your overlay can dispatch updates directly to the affected widgets—no polling loop and no client-side diff of the entire document.
 
-```js
-const socket = new WebSocket("ws://127.0.0.1:24050/websocket/v2");
-socket.onmessage = (event) => {
-  const state = JSON.parse(event.data);
-  updateState(state.state.number, state.play.mode.number);
-};
-```
+| Protocol detail | Meaning                                                                                           |
+| --------------- | ------------------------------------------------------------------------------------------------- |
+| Request         | One array of 1–256 non-overlapping RFC 6901 JSON Pointers, sent within five seconds of connecting |
+| Initial frame   | `[0, revision, [[index, value], ...]]`                                                            |
+| Update frame    | `[1, revision, [[changedIndex, value], ...], [removedIndex, ...]]`                                |
+| Index           | Position in your requested pointer list                                                           |
+| Missing value   | Omitted initially or reported as removed; not the same as JSON `null`                             |
+| New field set   | Open a new connection; the established selection is not editable                                  |
 
-**After — adapted from the EZ2ON `Subscription` client:**
+After subscribing, **send nothing**. Browsers handle WebSocket control ping/pong; do not implement a text-message ping on this stream. Sources: [change suppression and delivery](https://github.com/shiruviaa/vosu/blob/main/src/server/v2_subscription.rs), [transport](https://github.com/shiruviaa/vosu/blob/main/src/server/service/websocket_transport.rs), and [WebSocket standard](https://websockets.spec.whatwg.org/#ping-and-pong-frames).
 
-```js
-const socket = new WebSocket("ws://127.0.0.1:24050/websocket/v2/subscribe");
-socket.onopen = () => {
-  socket.send(JSON.stringify(["/state/number", "/play/mode/number"]));
-};
-// Decode compact frames and reconstruct the selected values here,
-// using the WebSocket API guide or the source's Subscription class.
-```
-
-Do not pass these frames to a handler expecting a full v2 document. The array you send is an ordered list of RFC 6901 JSON Pointers; returned indices refer to that order.
-
-| Detail                | Behavior                                                                                                                                                                                       |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Initial request       | One JSON array of 1–256 non-overlapping pointers, within five seconds of connecting                                                                                                            |
-| Initial frame         | `[0, revision, [[index, value], ...]]`                                                                                                                                                         |
-| Update frame          | `[1, revision, [[changedIndex, value], ...], [removedIndex, ...]]`                                                                                                                             |
-| Missing field         | Omitted initially; removal is reported by index. This is not the same as a JSON `null`.                                                                                                        |
-| Field-set change      | Open a new connection with the new selection; do not send another text request on the established socket.                                                                                      |
-| Sampling and delivery | `V2_SUBSCRIPTION_DEBOUNCE` controls selected-field sampling and the minimum interval between state frames per client. Only changed selected values cause frames, carrying the latest snapshot. |
-
-The setting defaults to **1 ms**, accepts fractional milliseconds, and ranges from **1–60000 ms**. Selected-field sampling runs while a selection is established and is never slower than the regular/precise sampling cadence. This is **not** a wait-until-input-goes-quiet debounce: continuous changes can keep producing frames at the interval. Faster sampling reruns memory reads and live pp calculation, so do not turn it down just to make a static label feel faster. HTTP and compatibility streams retain their own `POLL_RATE` / `PRECISE_DATA_POLL_RATE` cadence.
-
-**tosu fallback:** use `/websocket/v2` and extract the same values from its full payload. The selected-field endpoint is vosu-specific; choose the backend deliberately rather than silently retrying an unsupported endpoint forever. Use `/websocket/v2/precise` only when the overlay actually needs its precise fields/cadence—not as the default for every counter. Use streams for live updates; **do not poll HTTP in a loop**. One-off snapshots are different from continuous polling.
-
-Sources: [EZ2ON subscription client](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/blob/main/ez2on-timing-bar/js/vosu.js), [vosu stream/configuration reference](https://github.com/shiruviaa/vosu/blob/main/README.md#websocket-api), [vosu delivery implementation](https://github.com/shiruviaa/vosu/blob/main/src/server/v2_subscription.rs), [subscription transport](https://github.com/shiruviaa/vosu/blob/main/src/server/service/websocket_transport.rs), and [tosu socket routes](https://github.com/tosuapp/tosu/blob/master/packages/server/router/socket.ts).
-
-### Watch out for growing arrays
-
-Selecting `/play/hitErrorArray` is still selecting the **whole array**: every append changes that value. Long maps therefore make every update more expensive, even if you only plot the newest hit.
-
-**Before — qt715's timing bar selected the whole history:**
+For example, the [EZ2ON `Subscription` helper](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/blob/main/ez2on-timing-bar/js/vosu.js) reconstructs values and exposes a `changed` set, including removals and initial missing fields:
 
 ```js
-const pointers = ["/play/hitErrorArray"];
-```
-
-**After — adapted from its sliding-window stream:**
-
-```js
-const ARRAY = "/play/hitErrorArray";
-const WINDOW = 256;
-const start = Math.max(0, length - 1);
-const pointers = Array.from({ length: WINDOW }, (_, i) => `${ARRAY}/${start + i}`);
-```
-
-This is an advanced optimization for history consumers, not a replacement for a simple two-field subscription. qt715's implementation takes an initial whole-array snapshot, closes that subscription, then watches a window of indices. It opens overlapping windows before exhaustion and deduplicates their results. The **last delivered index is an anchor**: its removal/change reveals a retry that shrinks the array. Without that anchor, a selection containing only nonexistent future indices might remain silent until the new attempt outgrows the old one.
-
-Reuse the complete [`HitErrorStream`](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/blob/main/ez2on-timing-bar/js/hitErrors.js) logic rather than copying only the selector construction. Sources: qt715's [long-map fix](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/commit/c6fdbbc71cbc8ba52b4c197bc6f710d50a4136ac) and [retry-anchor correction](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/commit/652e23383b8e46dbd4c552cdf484744db8b5ff9b).
-
-## 2. Pool short-lived visual elements
-
-Repeatedly creating and removing ticks means allocating nodes and changing the DOM tree during gameplay. Allocate a bounded pool once, then reposition and reactivate an existing element.
-
-**Before — illustrative create/remove pattern:**
-
-```js
-function plot(error) {
-  const tick = document.createElement("div");
-  container.appendChild(tick);
-  tick.style.transform = `translateX(${error * 2}px)`;
-  setTimeout(() => tick.remove(), lifetime);
-}
-```
-
-**After — adapted from breadles5's tick pool:**
-
-```js
-// Once at initialization; renderTicksOnLoad attaches elements to these ticks.
-const poolSize = 100;
-const pool = Array.from({ length: poolSize }, () => new TickImpl());
-
-// Only newly appended hits, not the entire history on every update.
-for (let i = processedHits; i < hitErrors.length; i++) {
-  const tick = pool[i % poolSize];
-  if (tick.active) tick.setInactive();
-  tick.setActive(hitErrors[i]);
-}
-processedHits = hitErrors.length;
-```
-
-The source builds the DOM nodes in a `DocumentFragment` once and assigns them to the pool. Pool size is a visual policy: wraparound can replace an active tick, so size it for the number you want visible, not the total map history. Reset `processedHits` and visual state on a new attempt.
-
-Source: breadles5's [tick-manager commit](https://github.com/breadles5/customHitErrorBar/commit/65298b3b6890b9ce3b677e1cfa747ccb182d3944), with current [tick manager](https://github.com/breadles5/customHitErrorBar/blob/master/src/calculation/tickManager.ts) and [one-time element creation](https://github.com/breadles5/customHitErrorBar/blob/master/src/rendering/ticks.ts).
-
-## 3. Batch visual updates with one pending animation frame
-
-One `requestAnimationFrame` callback per incoming message can queue several updates for the same displayed frame. Keep the newest visual value and schedule at most one callback; this also avoids creating a callback for every message while one is pending.
-
-**Before — customHitErrorBar's earlier arrow update:**
-
-```js
-function updateArrow(targetPosition) {
-  requestAnimationFrame(() => {
-    if (targetPosition === oldPosition) return;
-    oldPosition = targetPosition;
-    arrow.style.transform = `translate3d(${targetPosition * 2}px, 0, 0)`;
-  });
-}
-```
-
-**After — adapted from qt715's coalescing change:**
-
-```js
-let pendingPosition = null;
-let frame = null;
-function updateArrow(targetPosition) {
-  pendingPosition = targetPosition;
-  if (frame !== null) return;
-  frame = requestAnimationFrame(() => {
-    if (pendingPosition !== null && pendingPosition !== oldPosition) {
-      oldPosition = pendingPosition;
-      arrow.style.transform = `translate3d(${oldPosition * 2}px, 0, 0)`;
-    }
-    frame = null;
-    pendingPosition = null;
-  });
-}
-```
-
-This throttles **drawing** to browser frames, not necessarily telemetry processing. Do not discard individual hits or key edges when replacing the pending visual value: update your event/history model first, then render it once. A score label can keep only the newest score; a hit-error plot must retain all newly received hits.
-
-Source: qt715's [animation batching and cleanup commit](https://github.com/breadles5/customHitErrorBar/commit/de04edf49a9d84cac06f6590882bcbef5f3c3036). Browser behavior: [MDN `requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame).
-
-## 4. Skip unchanged DOM writes
-
-A draw loop does not mean every attribute changed. Compare the value before writing, particularly attributes used by CSS selectors and frequently updated transforms.
-
-**Before — EZ2ON key visualizer:**
-
-```js
-root.dataset.direction = down ? "down" : "up";
-```
-
-**After — qt715's change:**
-
-```js
-const directionName = down ? "down" : "up";
-if (root.dataset.direction !== directionName) {
-  root.dataset.direction = directionName;
-}
-```
-
-customHitErrorBar similarly caches the last applied X coordinate and checks class names before writing them. Apply that pattern to score text, judgement counts, colors, and settings-derived CSS—not just transforms.
-
-Sources: qt715's [unchanged direction guard](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/commit/c6fdbbc71cbc8ba52b4c197bc6f710d50a4136ac) and breadles5's [tick DOM update guards](https://github.com/breadles5/customHitErrorBar/blob/master/src/calculation/tickManager.ts).
-
-## 5. Avoid forced layout; animate transform and opacity
-
-A geometry read after a DOM/style write can force the browser to resolve pending layout immediately. Repeating write/read cycles during hit bursts is especially costly; transform and opacity animations avoid the geometry changes caused by properties such as `left` and `width`.
-
-**Before — customHitErrorBar restarted a CSS animation with forced reflow:**
-
-```js
-const originalDisplay = element.style.display;
-element.style.display = "none";
-void element.offsetHeight;
-element.style.display = originalDisplay || "";
-void element.offsetHeight;
-```
-
-**After — adapted from qt715's Web Animations API replacement:**
-
-```js
-currentAnimation?.cancel();
-element.style.opacity = String(tickOpacity);
-element.style.visibility = "visible";
-currentAnimation = element.animate([{ opacity: tickOpacity }, { opacity: 0 }], {
-  duration: fadeOutDuration,
-  delay: tickDuration,
-  easing: "linear",
-  fill: "forwards",
+// Subscription is that helper, not a built-in browser API.
+const nodes = [document.querySelector("#state"), document.querySelector("#mode")];
+new Subscription(["/state/number", "/play/mode/number"], (values, changed) => {
+  for (const index of changed) {
+    const text = values[index] == null ? "—" : String(values[index]);
+    nodes[index].textContent = text;
+  }
 });
 ```
 
-For movement, the tick manager writes `translate3d(...)` only when X changes. If layout measurements are necessary, collect them together before applying writes; do not use `offsetHeight` as an animation-reset mechanism. Transform/opacity are good defaults, **not a guarantee** of zero paint or GPU work: compositing depends on the actual page and renderer.
+For frequently changing fields, put these writes behind the batching pattern in the next section. Treat a removal as a visible reset, not a reason to keep showing stale data.
 
-Sources: qt715's [WAAPI and reflow-removal commit](https://github.com/breadles5/customHitErrorBar/commit/228feb9859c437150abb61c0460b262d52ed6876), [tick transform implementation](https://github.com/breadles5/customHitErrorBar/blob/master/src/calculation/tickManager.ts), and [MDN's rendering waterfall/property costs](https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/Animation_performance_and_frame_rate).
+### Cadence and compatibility
 
-## 6. Reuse scratch memory, but keep statistics honest
+`V2_SUBSCRIPTION_DEBOUNCE` controls selected-field sampling and the minimum interval between state frames per client. Its default is **1 ms**, its range is **1–60000 ms**, and fractional milliseconds are supported. It is **not** a wait-until-input-goes-quiet debounce: continuous changes can produce frames at that interval. Selected-field sampling runs while a selection exists and is never slower than regular/precise sampling; faster sampling reruns memory reads and live pp calculation. Do not increase backend work just to refresh a mostly static label. [vosu documents the settings and cadence](https://github.com/shiruviaa/vosu/blob/main/README.md#websocket-api).
 
-Copying an array to calculate a median creates temporary garbage on every update; rebuilding frame data has the same problem. Reuse scratch storage and calculate statistics when the input changes, rather than just because another frame arrived.
+For **tosu**, fall back to `/websocket/v2` full documents at its regular poll cadence. Extract your needed values and compare them before writing; a received document does not mean every displayed value changed. The selected-field endpoint is vosu-only. See [tosu's socket routes](https://github.com/tosuapp/tosu/blob/master/packages/server/router/socket.ts) and [WebSocket implementation](https://github.com/tosuapp/tosu/blob/master/packages/server/utils/socket.ts).
 
-**Before — customHitErrorBar median:**
+Use `/websocket/v2/precise` only for a concrete need for its precise fields/cadence. **Never poll HTTP in a loop for live telemetry**; use the streams. An intentional one-off snapshot is different from continuous polling. See the [WebSocket API](/vosu/dev/websocket-api) for schemas and fallback behavior.
+
+### Advanced: bound growing histories
+
+Selecting an array selects the whole value. If it grows on every event, every update can become more expensive throughout a session. Prefer a server aggregate when that is all you display; when you need events, keep only the history the visualization requires.
+
+**Real-world example:** qt715's [EZ2ON long-map fix](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/commit/c6fdbbc71cbc8ba52b4c197bc6f710d50a4136ac) replaces repeated whole `/play/hitErrorArray` delivery with sliding subscriptions to individual indices. Its [retry-anchor correction](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/commit/652e23383b8e46dbd4c552cdf484744db8b5ff9b) also watches the last delivered index: a removal/change detects resets even while future indices do not exist. Use the complete [`HitErrorStream`](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/blob/main/ez2on-timing-bar/js/hitErrors.js), with snapshot synchronization, overlapping windows, and deduplication—not just its pointer construction.
+
+## 3. Minimize and batch DOM writes
+
+Keep element references from initialization instead of finding the same nodes on every message. Write only the affected text, attribute, class, or style. Use `textContent` for plain labels: `innerHTML` invokes the HTML parser and replaces markup unnecessarily; it also treats input as HTML. Set text on a dedicated label node, since `textContent` replaces its children. See [MDN `textContent`](https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent) and [`querySelector`](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector).
+
+**Before — illustrative label update:**
 
 ```js
-const sorted = [...errors].sort((a, b) => a - b);
-```
-
-**After — shortened from qt715's reusable-buffer change:**
-
-```js
-let medianBuffer = []; // Outside the calculation function.
-function median(errors) {
-  if (errors.length === 0) return 0;
-  for (let i = 0; i < errors.length; i++) medianBuffer[i] = errors[i];
-  medianBuffer.length = errors.length;
-  medianBuffer.sort((a, b) => a - b);
-  const middle = Math.floor(errors.length / 2);
-  return errors.length % 2
-    ? medianBuffer[middle]
-    : (medianBuffer[middle - 1] + medianBuffer[middle]) / 2;
+function updateScore(score) {
+  document.querySelector("#score").innerHTML = String(score);
 }
 ```
 
-This removes the explicit spread-copy allocation; **it does not make sorting incremental or allocation-free**, and it still copies and sorts the input. Growing/trimming JavaScript arrays and the engine's sort implementation can allocate. Do not advertise an incremental median or UR algorithm based on this patch. If you display the server's statistic, prefer receiving that field over independently recomputing it every frame.
-
-For large numeric draw lists, qt715's EZ2ON key visualizer uses a reusable `Float32Array`: resetting the batch only sets `count = 0`, and storage grows only when capacity is exceeded. That is a better fit than allocating one object per rectangle, but not a reason to rewrite a small text counter.
-
-Source: qt715's [median-buffer patch](https://github.com/breadles5/customHitErrorBar/commit/de04edf49a9d84cac06f6590882bcbef5f3c3036) and [EZ2ON `InstanceBatch`](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/blob/main/ez2on-key-visualizer/js/renderer.js).
-
-### Reuse frame descriptors too
-
-Even small arrays add up when allocated every frame. In a renderer you already maintain, move reusable descriptor objects and submit arrays out of the hot loop; keep the per-frame GPU objects that the API actually requires.
-
-**Before — EZ2ON WebGPU submission:**
+**After — cache, compare, write:**
 
 ```js
-device.queue.submit([encoder.finish()]);
-```
-
-**After — qt715's change:**
-
-```js
-// Constructor:
-this.commandBuffers = [null];
-// Each frame:
-this.commandBuffers[0] = encoder.finish();
-device.queue.submit(this.commandBuffers);
-```
-
-The same patch reuses the render-pass descriptor and changes only the current texture view. This avoids the JavaScript wrapper allocations; it does not reuse a consumed command buffer or eliminate GPU resource costs.
-
-Source: qt715's [trim per-frame allocations commit](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/commit/652e23383b8e46dbd4c552cdf484744db8b5ff9b).
-
-## 7. Stop old work and reconnect with backoff
-
-Abandoned subscriptions, timers, and animation callbacks keep doing work after their widget is reset or removed. Reconnect immediately in a tight loop and a backend outage becomes another source of avoidable activity.
-
-**Before — illustrative reconnect/lifecycle mistake:**
-
-```js
-socket.onclose = () => connect();
-function close() {
-  socket.close();
-} // onclose opens it again.
-```
-
-**After — shortened from qt715's shared client:**
-
-```js
-function reconnectDelay(attempt) {
-  return Math.min(5000, 250 * 2 ** attempt);
-}
-// In connect(); reset attempt to 0 in onopen.
-socket.onclose = () => {
-  if (this.socket !== socket) return;
-  this.socket = null;
-  this.timer = setTimeout(() => this.connect(), reconnectDelay(this.attempt++));
-};
-// Explicit disposal; nulling first suppresses this socket's reconnect.
-function close() {
-  clearTimeout(this.timer);
-  const socket = this.socket;
-  this.socket = null;
-  socket?.close();
+const scoreNode = document.querySelector("#score");
+let displayedScore = null;
+function updateScore(score) {
+  const text = String(score);
+  if (text === displayedScore) return;
+  displayedScore = text;
+  scoreNode.textContent = text;
 }
 ```
 
-Also cancel pending rAF callbacks on reset/disposal and cancel an element's previous animation before reusing it. A completed `fill: "forwards"` animation can still control a pooled element's appearance until canceled. Cleanup should belong to the widget/subscription lifecycle, not rely solely on the browser eventually unloading the page.
+For bursts of updates, schedule **one pending `requestAnimationFrame`**, not one callback for every message. Keep model updates separate from drawing:
 
-Sources: qt715's [subscription `close()` change](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/commit/c6fdbbc71cbc8ba52b4c197bc6f710d50a4136ac), [backoff client](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/blob/main/ez2on-timing-bar/js/vosu.js), [rAF reset cleanup](https://github.com/breadles5/customHitErrorBar/commit/de04edf49a9d84cac06f6590882bcbef5f3c3036), and [animation cancellation](https://github.com/breadles5/customHitErrorBar/commit/228feb9859c437150abb61c0460b262d52ed6876).
+```js
+let frame = null;
+function receive(update) {
+  applyToModel(update); // Preserve every event needed by the visualization.
+  if (frame === null) frame = requestAnimationFrame(flush);
+}
+function flush() {
+  frame = null;
+  renderChangedWidgets(); // Reads the latest model; clears its dirty flags.
+}
+```
 
-## Measure the actual bottleneck
+`applyToModel` and `renderChangedWidgets` represent your overlay's existing model/render functions. The reusable `flush` callback avoids making a closure for each message. [rAF runs before a repaint](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame), so this caps DOM batches at the browser's display cadence without a separate fixed-rate timer. A label can keep only its latest value; an event plot must retain all new events before drawing once.
 
-1. Open the overlay in Chrome/Chromium and record a representative hit burst in the [DevTools Performance panel](https://developer.chrome.com/docs/devtools/performance). Look for JSON parsing, script time, garbage collection, style recalculation, layout, and paint—not just your drawing function. Inspect frame duration spikes as well as averages.
-2. Repeat near the end of a long map, after a retry, and after reconnecting. A test at the first ten hits will not reveal whole-history resend costs. Measure the full vosulay profile too; a standalone browser is useful for diagnosis but is not proof of in-game performance.
-3. For a Chromium-wide trace, `chrome://tracing` is another entry point. See [Chromium's tracing instructions](https://www.chromium.org/developers/how-tos/trace-event-profiling-tool/); do not assume an embedded CEF renderer exposes that internal page or DevTools by default.
-4. In OBS browser-source properties, check **Use custom frame rate** and **FPS**. Choose the rate the output actually needs; higher requested FPS does not repair slow JavaScript. [OBS documents these controls](https://obsproject.com/kb/browser-source). vosulay has its own [frame-rate scheduling limit](https://github.com/shiruviaa/vosulay/blob/main/README.md#frame-rate); it is a limit, not guaranteed rendered FPS.
+**Real-world examples:** qt715's [customHitErrorBar batching change](https://github.com/breadles5/customHitErrorBar/commit/de04edf49a9d84cac06f6590882bcbef5f3c3036) keeps one pending arrow position and one rAF callback. The [EZ2ON direction guard](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/commit/c6fdbbc71cbc8ba52b4c197bc6f710d50a4136ac) avoids writing a CSS-facing data attribute when its value is unchanged. breadles5's [tick updates](https://github.com/breadles5/customHitErrorBar/blob/master/src/calculation/tickManager.ts) similarly guard class and transform writes.
 
-For a quick local timing, use a monotonic timer:
+## 4. Control layout, paint, and compositing
+
+### Read geometry before writing styles
+
+A geometry read after a style change can force synchronous layout. Alternating writes and reads across many elements compounds that cost. Read the measurements you need once, then apply writes together. If you genuinely need post-change geometry, accept that layout work or defer the measurement rather than repeatedly forcing it. [web.dev explains layout thrashing](https://web.dev/articles/avoid-large-complex-layouts-and-layout-thrashing).
+
+```js
+// Before: interleaved read/write work.
+for (const bar of bars) bar.style.width = `${container.offsetWidth}px`;
+
+// After: measure once, then write.
+const width = container.offsetWidth;
+for (const bar of bars) bar.style.width = `${width}px`;
+```
+
+### Prefer cheap animated properties
+
+Move with `transform` and fade with `opacity` instead of animating geometry such as `left`, `top`, or `width`. Keep static decorations outside frequently repainted content where possible. Large blur/shadow effects make painting more expensive, particularly when repainted every frame; inspect paint flashing before deciding where to simplify them. See [MDN's property-cost model](https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/Animation_performance_and_frame_rate) and [web.dev's animation guide](https://web.dev/articles/animations-guide).
+
+Transform/opacity are defaults, **not guarantees** of GPU-only work or zero paint. Avoid blanket `will-change` or `translateZ(0)` on every node: layer promotion should respond to an observed problem, not substitute for profiling. [MDN warns about excessive `will-change`](https://developer.mozilla.org/en-US/docs/Web/CSS/will-change).
+
+### Isolate independent widgets carefully
+
+[CSS `contain`](https://developer.mozilla.org/en-US/docs/Web/CSS/contain) can limit layout/paint effects to a widget subtree. For a deliberately bounded HUD panel, consider:
+
+```css
+.hud-panel {
+  contain: layout paint;
+}
+```
+
+This changes layout/stacking behavior and **clips descendants at the panel bounds**; do not apply it blindly to a widget whose glows or popups extend outside. Size containment requires a deliberate sizing strategy rather than relying on descendants.
+
+[`content-visibility: auto`](https://developer.mozilla.org/en-US/docs/Web/CSS/content-visibility) can skip offscreen rendering for long editors or lists. It is not a speedup for an always-visible HUD, and it does not automatically stop your JavaScript. Preserve sensible placeholder geometry with `contain-intrinsic-size` where needed.
+
+**Real-world example:** qt715's [customHitErrorBar reflow removal](https://github.com/breadles5/customHitErrorBar/commit/228feb9859c437150abb61c0460b262d52ed6876) replaces animation resets that toggled `display` and read `offsetHeight` with an explicit animation lifecycle. That principle applies to any transient notification or reused element.
+
+## 5. Let the browser run simple animations
+
+Use CSS transitions for changes between states, CSS keyframes for predefined sequences, or WAAPI when you need a controllable animation handle. Do not implement a simple fade by writing opacity from a JavaScript timer on every frame. This removes your own interpolation loop and gives the browser scheduling control; it is not a claim that CSS is always faster than well-written JavaScript. For simulation-driven motion or canvas, rAF remains appropriate. See [MDN's CSS/JavaScript comparison](https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/CSS_JavaScript_animation_performance).
+
+Cancel an old animation before reusing a visual element, especially one with `fill: "forwards"`, which continues to affect its presentation after playback:
+
+```js
+// A widget-owned handle, retained between activations.
+let animation = null;
+function fadeNotification(element) {
+  animation?.cancel();
+  animation = element.animate([{ opacity: 1 }, { opacity: 0 }], {
+    duration: 300,
+    fill: "forwards",
+  });
+}
+```
+
+The duration is illustrative, not a recommended latency. Cancel and clear that handle on disposal too. References: [MDN `animate`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animate), [`Animation.cancel`](https://developer.mozilla.org/en-US/docs/Web/API/Animation/cancel), and [`animation-fill-mode`](https://developer.mozilla.org/en-US/docs/Web/CSS/animation-fill-mode).
+
+**Real-world example:** qt715's [WAAPI change](https://github.com/breadles5/customHitErrorBar/commit/228feb9859c437150abb61c0460b262d52ed6876) cancels a previous fade when a pooled tick is activated, reset, or hidden.
+
+## 6. Keep hot-path memory bounded
+
+Garbage collection follows allocation pressure. In a frequent render/update path, avoid rebuilding arrays, temporary objects, and DOM nodes when existing storage can be reused. First remove unnecessary work; only then optimize allocations a trace exposes. A simple text counter rarely needs a pool or typed array. See [MDN memory management](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Memory_management).
+
+| Workload                                    | Useful approach                                   | Caveat                                                                                |
+| ------------------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Transient markers, particles, notifications | Reuse a bounded element/object pool               | Define what happens at capacity; cancel old animation state.                          |
+| Recent-event graph                          | Keep bounded history or a ring buffer             | Reset cursors on a new attempt; do not discard events before the model consumes them. |
+| Large numeric draw list                     | Reuse a typed array with a logical count          | Grow outside the common path; do not copy the entire capacity each frame.             |
+| Repeated statistics                         | Recalculate on data changes; reuse scratch memory | Reused storage does not make an expensive algorithm incremental.                      |
+| Renderer descriptors                        | Reuse stable wrapper objects/arrays               | API-owned per-frame GPU objects may still need recreation.                            |
+
+**Real-world examples:**
+
+- breadles5's [tick-manager commit](https://github.com/breadles5/customHitErrorBar/commit/65298b3b6890b9ce3b677e1cfa747ccb182d3944) processes only new hits and reuses a bounded pool; [DOM elements are created once](https://github.com/breadles5/customHitErrorBar/blob/master/src/rendering/ticks.ts).
+- qt715's [median-buffer change](https://github.com/breadles5/customHitErrorBar/commit/de04edf49a9d84cac06f6590882bcbef5f3c3036) avoids an explicit spread-copy allocation. It still copies and sorts: it is **not an incremental median/UR algorithm or a zero-allocation guarantee**.
+- qt715's [EZ2ON `InstanceBatch`](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/blob/main/ez2on-key-visualizer/js/renderer.js) resets a logical count over a reusable `Float32Array`. The [per-frame allocation patch](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/commit/652e23383b8e46dbd4c552cdf484744db8b5ff9b) also reuses render-pass descriptors and the command-buffer submit array, while still creating the required current texture view and command buffer.
+
+## 7. Choose a renderer for the workload
+
+DOM is a good starting point for labels, panels, and modest numbers of independently styled elements. If a measured bottleneck is many moving primitives and their DOM/style work, consider canvas for a batched draw surface; WebGL/WebGPU can suit large GPU-batched visualizations. There is **no universal element-count threshold** and no guarantee a rewrite will help.
+
+Keep static content out of the constantly redrawn portion. Cache repeated drawing where appropriate, batch operations, and size the canvas for the intended output and device pixel ratio. Bigger backing buffers mean more pixels, so do not increase resolution without checking the cost. See [MDN canvas optimization](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas) and [WebGL best practices](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices).
+
+**Real-world example:** qt715's [EZ2ON key-visualizer renderer](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/blob/main/ez2on-key-visualizer/js/renderer.js) batches rectangle instance data for WebGPU/WebGL backends instead of maintaining a DOM node for each moving rectangle. Its design is evidence for batching a dense visualization, not a requirement for a score label. Check API availability in the actual OBS/vosulay renderer before choosing a backend.
+
+## 8. Prepare assets before they enter the hot path
+
+Asset loading affects startup, scene changes, and beatmap transitions, not just bundle size. Avoid making an unrelated frame wait for a newly inserted image to decode or for an oversized font to arrive.
+
+- **Fonts:** ship only required weights/styles and appropriate subsets. Preserve glyph coverage for dynamic player names and song titles. Choose `font-display` deliberately: `swap` shows fallback text promptly but may change metrics when the font arrives; `optional` accepts that the custom face might not appear on that load. See [web.dev font loading](https://web.dev/articles/optimize-webfont-loading) and [MDN `font-display`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display).
+- **Images:** provide dimensions or a stable aspect ratio so loading does not rearrange surrounding widgets. Use appropriately sized assets for the displayed result; see [web.dev image sizing](https://web.dev/articles/optimize-cls#images_without_dimensions) and [responsive images](https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Responsive_images).
+- **Decode before swapping:** [`HTMLImageElement.decode()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/decode) resolves when a fetched image is ready to display. Handle failures and stale asynchronous results if a newer asset request supersedes the old one.
+- **JavaScript:** ship a production bundle, avoid unnecessary dependencies, and inspect what your overlay imports. [Vite's production build](https://vite.dev/guide/build) is the deployment path; do not ship a development server as the overlay. Production bundling does not fix an inefficient update loop. See [web.dev on reducing JavaScript payloads](https://web.dev/articles/reduce-javascript-payloads-with-code-splitting) and [overlay tooling](/vosu/dev/tooling).
+
+**Before/after — illustrative image insertion:**
+
+```js
+// Before: insert before the image is ready.
+const image = new Image();
+image.src = url;
+host.replaceChildren(image);
+
+// After: decode first, preserving the old image if decoding fails.
+async function replaceImage(url) {
+  const image = new Image();
+  image.src = url;
+  try {
+    await image.decode();
+    host.replaceChildren(image);
+  } catch (error) {
+    console.warn("Overlay image failed to load", error);
+  }
+}
+```
+
+This illustrates decoding for a serialized replacement. If changes can overlap, add a request generation check before insertion so an older completed request cannot overwrite a newer one. Do not decode on every animation frame.
+
+## 9. Give every widget a lifecycle
+
+Every socket, timeout, interval, animation, listener, and pending rAF should have an owner and a disposal path. Cancel old work when resetting or removing a widget; do not leave reconnect timers running after an intentional close. [MDN covers timer cancellation](https://developer.mozilla.org/en-US/docs/Web/API/Window/clearTimeout), [rAF cancellation](https://developer.mozilla.org/en-US/docs/Web/API/Window/cancelAnimationFrame), and [listener removal](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener).
+
+Reconnect with bounded backoff rather than immediately looping through failures. Reset the attempt count on a successful open, discard frames from obsolete sockets, and establish fresh state after reconnecting.
+
+**Real-world example:** qt715's [shared EZ2ON client](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/blob/main/ez2on-timing-bar/js/vosu.js) delays retries with `Math.min(5000, 250 * 2 ** attempt)`. Its [explicit-close change](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/commit/c6fdbbc71cbc8ba52b4c197bc6f710d50a4136ac) clears the reconnect timer and invalidates the socket before closing it, preventing an intentional close from reconnecting. qt715's [arrow reset cleanup](https://github.com/breadles5/customHitErrorBar/commit/de04edf49a9d84cac06f6590882bcbef5f3c3036) cancels pending rAF work.
+
+Use [Page Visibility](https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API) to suspend unnecessary visual work when the document is hidden, and redraw current state when it becomes visible. Do not use focus loss as a substitute for invisibility. Browsers may throttle timers or pause rAF in background documents; do not make correctness depend on those callbacks continuing at a fixed rate. CSS-hiding an iframe does **not** change its document visibility, so per-widget hiding needs an explicit lifecycle signal. If you disconnect while hidden, resynchronize on return instead of assuming you received every intervening event.
+
+OBS can also [unload a browser source when it is not visible](https://obsproject.com/kb/browser-source). Design initialization to tolerate the subsequent reload rather than treating the browser process as persistent storage.
+
+## 10. Measure the complete workload
+
+1. Record a representative update burst in [Chrome DevTools Performance](https://developer.chrome.com/docs/devtools/performance). Look for JSON parsing, script time, garbage collection, style recalculation, layout, paint, and slow frames—not just your own function's duration.
+2. Compare idle behavior, dense activity, long sessions, resets, asset changes, and reconnects. Check that DOM size and retained history stop growing when intended. Test the complete OBS scene/vosulay profile: a standalone browser helps diagnosis but does not establish in-game performance.
+3. For a Chromium-wide trace, use `chrome://tracing` where available; see [Chromium tracing](https://www.chromium.org/developers/how-tos/trace-event-profiling-tool/). Do not assume an embedded CEF renderer exposes that page or DevTools by default.
+4. Measure at the intended output rate. In OBS, check **Use custom frame rate** and **FPS** in [browser-source properties](https://obsproject.com/kb/browser-source). vosulay has its own [frame-rate scheduling limit](https://github.com/shiruviaa/vosulay/blob/main/README.md#frame-rate). A requested limit is not guaranteed rendered FPS, and increasing it does not fix slow JavaScript.
+
+Use a monotonic timer for local synchronous work:
 
 ```js
 const start = performance.now();
 updateModelAndRender();
 const elapsedMs = performance.now() - start;
-// Aggregate samples; inspect/log the summary outside the hot path.
+// Aggregate samples; inspect a summary outside the hot path.
 ```
 
-This measures synchronous work, not a GPU-completed frame or end-to-end input latency. For named spans visible in tooling, use `performance.mark("overlay-start")`, `performance.mark("overlay-end")`, and `performance.measure("overlay-update", "overlay-start", "overlay-end")`; clear marks/measures after collecting samples so an endless session does not accumulate entries.
+This is not a measurement of completed GPU work or end-to-end input latency. Use `performance.mark` / `performance.measure` for named spans in tooling and clear recorded entries after collecting them. References: [MDN `performance.now`](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now) and [User Timing](https://developer.mozilla.org/en-US/docs/Web/API/Performance_API/User_timing).
 
-References: [MDN `performance.now()`](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now), [User Timing](https://developer.mozilla.org/en-US/docs/Web/API/Performance_API/User_timing), and [frame budgets/rendering costs](https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/Animation_performance_and_frame_rate). At 60 FPS the complete frame budget is roughly 16.7 ms; at 30 FPS it is roughly 33.3 ms. Your handler shares that budget with layout, paint, compositing, and other page work.
+The complete frame budget is approximately 16.7 ms at 60 FPS or 33.3 ms at 30 FPS—not an allowance for each callback. See [MDN on frame budgets](https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/Animation_performance_and_frame_rate). Change one expensive stage at a time and compare traces before adopting more complex machinery.
 
 ## Checklist
 
-- [ ] Use vosu's selected-field stream for only the values the overlay needs; use regular v2 full payloads for tosu compatibility.
-- [ ] Use precise data only for a concrete need; do not continuously poll HTTP.
-- [ ] Do not repeatedly receive an entire growing history when only new entries are needed.
-- [ ] Preserve all newly received events, but batch visual changes into one pending rAF callback.
-- [ ] Allocate tick elements once and reuse them; bound visible history deliberately.
-- [ ] Skip unchanged text, attribute, class, and transform writes.
-- [ ] Avoid forced write/read layout cycles; prefer transform/opacity for movement and fades.
-- [ ] Reuse scratch arrays and existing renderer descriptors; do not claim a reused-buffer sort is incremental or zero-allocation.
-- [ ] Reset attempt-specific cursors and visuals on retry; watch resets when streaming array indices.
-- [ ] Cancel animations, rAF callbacks, and timers when resetting/discarding a widget; close unused sockets without reconnecting them.
-- [ ] Reconnect with bounded backoff rather than a tight loop.
-- [ ] Measure long maps, bursts, retries, reconnects, and the complete OBS/vosulay workload at the intended frame rate.
+- [ ] Request only needed data; react to selected-field changes/removals, or compare values from full compatibility payloads.
+- [ ] Use streams rather than HTTP polling; request precise data only when needed.
+- [ ] Bound history and detect resets; preserve events in the model before coalescing drawing.
+- [ ] Cache DOM references, use plain-text updates for labels, and skip unchanged writes.
+- [ ] Batch dirty widgets behind one pending rAF callback; stay idle when nothing changes.
+- [ ] Read geometry before writing; avoid forced layout loops and animation-reset reflows.
+- [ ] Prefer transform/opacity animations; profile large blurred/shadowed areas and layer costs.
+- [ ] Apply containment only where its clipping and layout behavior are appropriate.
+- [ ] Reuse measured hot-path storage; use pools/typed arrays only where their complexity is justified.
+- [ ] Choose DOM, canvas, or a GPU renderer from the workload and traces—not a universal threshold.
+- [ ] Keep font/image/bundle payloads appropriate, reserve image geometry, and decode before dynamic swaps.
+- [ ] Cancel obsolete timers, animations, listeners, and rAF callbacks; intentionally closed sockets stay closed.
+- [ ] Reconnect with bounded backoff and fresh state; handle hidden/resumed/reloaded views deliberately.
+- [ ] Measure dense activity and long sessions in the complete target scene/profile at its intended frame rate.

@@ -20,6 +20,8 @@ export const pointers = [
   "/beatmap/stats/hitWindow",
 ];
 
+export const allFields = (1 << pointers.length) - 1;
+
 // Decode once, not for every full-document fallback message.
 const tokens = pointers.map((pointer) =>
   pointer
@@ -41,6 +43,31 @@ export function readPointer(document: unknown, path: readonly string[]): unknown
   return value;
 }
 
+// Full-stream fallback values are fresh JSON objects: reference equality is not enough.
+function sameValue(left: unknown, right: unknown): boolean {
+  if (Object.is(left, right)) return true;
+  if (!left || !right || typeof left !== "object" || typeof right !== "object") return false;
+  if (Array.isArray(left)) {
+    if (!Array.isArray(right) || left.length !== right.length) return false;
+    for (let index = 0; index < left.length; index++) {
+      if (!sameValue(left[index], right[index])) return false;
+    }
+    return true;
+  }
+  if (Array.isArray(right)) return false;
+  const a = left as ObjectValue;
+  const b = right as ObjectValue;
+  for (const key in a) {
+    if (Object.hasOwn(a, key) && (!Object.hasOwn(b, key) || !sameValue(a[key], b[key]))) {
+      return false;
+    }
+  }
+  for (const key in b) {
+    if (Object.hasOwn(b, key) && !Object.hasOwn(a, key)) return false;
+  }
+  return true;
+}
+
 declare global {
   interface Window {
     COUNTER_PATH?: string;
@@ -51,7 +78,9 @@ export function socketUrl(path: string): string {
   const query = new URLSearchParams(location.search);
   // Explicit override is useful on Vite's dev server or a separate preview server.
   const override = query.get("daemon");
-  const hosted = typeof window.COUNTER_PATH === "string" || location.port === "24050";
+  // Vite injects the counter name too, but its dev server is not the telemetry daemon.
+  const hosted =
+    !import.meta.env.DEV && (typeof window.COUNTER_PATH === "string" || location.port === "24050");
   const host = override || (hosted ? location.host : "127.0.0.1:24050");
   const scheme = !override && hosted && location.protocol === "https:" ? "wss:" : "ws:";
   return `${scheme}//${host}${path}`;
@@ -72,7 +101,7 @@ export class Telemetry {
   private stopped = false;
 
   constructor(
-    private readonly onData: (values: unknown[]) => void,
+    private readonly onData: (values: unknown[], changed: number) => void,
     private readonly onStatus: (status: string) => void,
   ) {
     this.connect(true);
@@ -82,7 +111,7 @@ export class Telemetry {
     if (this.stopped) return;
     this.values.fill(undefined);
     this.revision = -1;
-    this.onData(this.values);
+    this.onData(this.values, allFields);
     const socket = new WebSocket(
       socketUrl(subscribe ? "/websocket/v2/subscribe" : "/websocket/v2"),
     );
@@ -105,6 +134,7 @@ export class Telemetry {
       } catch {
         return;
       }
+      let changed = 0;
       if (subscribe) {
         if (!Array.isArray(frame)) return;
         if (frame[0] === 2) {
@@ -116,7 +146,10 @@ export class Telemetry {
         if (frame[1] <= this.revision || !Array.isArray(frame[2])) return;
         if (!received && frame[0] !== 0) return;
         this.revision = frame[1];
-        if (frame[0] === 0) this.values.fill(undefined);
+        if (frame[0] === 0) {
+          this.values.fill(undefined);
+          changed = allFields;
+        }
         for (const pair of frame[2]) {
           if (
             Array.isArray(pair) &&
@@ -125,12 +158,15 @@ export class Telemetry {
             pair[0] < pointers.length
           ) {
             this.values[pair[0]] = pair[1];
+            changed |= 1 << pair[0];
           }
         }
         if (frame[0] === 1 && Array.isArray(frame[3])) {
           for (const index of frame[3]) {
-            if (Number.isInteger(index) && index >= 0 && index < pointers.length)
+            if (Number.isInteger(index) && index >= 0 && index < pointers.length) {
               this.values[index] = undefined;
+              changed |= 1 << index;
+            }
           }
         }
       } else {
@@ -138,14 +174,14 @@ export class Telemetry {
         for (let index = 0; index < tokens.length; index++) {
           // Upstream tosu supplies keys on its precise stream, not regular v2.
           if (index === 4 && !("keys" in frame)) continue;
-          this.values[index] = readPointer(frame, tokens[index]);
+          changed |= this.compareFallback(index, readPointer(frame, tokens[index]));
         }
       }
       received = true;
       this.attempt = 0;
       clearTimeout(this.handshake);
       this.onStatus(subscribe ? "vosu subscription" : "Full v2 fallback");
-      this.onData(this.values);
+      if (changed !== 0) this.onData(this.values, changed);
     };
     socket.onerror = () => socket.close();
     socket.onclose = () => {
@@ -163,6 +199,12 @@ export class Telemetry {
     };
   }
 
+  private compareFallback(index: number, value: unknown): number {
+    if (sameValue(this.values[index], value)) return 0;
+    this.values[index] = value;
+    return 1 << index;
+  }
+
   private connectPrecise(): void {
     const socket = new WebSocket(socketUrl("/websocket/v2/precise"));
     this.precise = socket;
@@ -171,8 +213,8 @@ export class Telemetry {
       try {
         const data = object(JSON.parse(event.data));
         if (data.keys) {
-          this.values[4] = data.keys;
-          this.onData(this.values);
+          const changed = this.compareFallback(4, data.keys);
+          if (changed !== 0) this.onData(this.values, changed);
         }
       } catch {
         // Keep the last usable state until another message arrives.

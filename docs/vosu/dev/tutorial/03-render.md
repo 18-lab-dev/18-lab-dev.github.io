@@ -24,16 +24,22 @@ references, creates a fixed pool of 18 key nodes, and wires the telemetry callba
 
 ## Understand the update path
 
-1. A WebSocket message updates the fixed selected-value array.
-2. The callback replaces the current array reference and calls `schedule()`.
+1. A vosu frame updates the selected-value array and marks just the supplied indices
+   and removals. Unchanged selected values produce no server frame.
+2. The callback ORs that mask into `dirty` and calls `schedule()`.
 3. `schedule()` requests a frame only if one is not already pending.
-4. `render()` consumes the latest values, updates only changed text/classes/visibility,
-   and clears the pending frame ID.
+4. `render()` writes only the DOM groups selected by the accumulated mask, then clears
+   it. Indices 5–8 share one timing row; index 4 owns the bounded key strip.
 
-There is **no permanently running frame loop**. Messages arriving before a paint
-coalesce into the latest HUD state. No arrays, DOM nodes, or callbacks are created by
-an idle animation loop. JSON parsing and formatted text still allocate when new data
-arrives; this is not an allocation-free renderer.
+For vosu, these are already change events: there is no client-side value/DOM diff or
+polling loop. On tosu's full-stream fallback, `compareFallback()` performs structural
+value comparison first and produces the same mask; repeated identical payloads do
+not repaint the HUD.
+
+There is **no permanently running frame loop**. Events arriving before a paint
+coalesce, retaining all changed bits and the latest values. No arrays, DOM nodes, or
+callbacks are created by an idle animation loop. JSON parsing and formatted text
+still allocate on data events; this is not an allocation-free renderer.
 
 Use `textContent`, never interpolate daemon data into `innerHTML`. Cache references
 rather than querying the DOM in every callback. Do not force layout measurements
@@ -52,6 +58,9 @@ pnpm dev
 Open the printed Vite URL and play a map with vosu or tosu running. The status line
 shows `vosu subscription` or `Full v2 fallback`. Before live data arrives, numeric
 values show zero and missing timing values show a dash.
+
+Use HMR with `pnpm dev` for UI work. For testing inside vosu, OBS, or vosulay,
+use the [symlinked build loop](/vosu/dev/tutorial/06-package#recommended-build-loop).
 
 For deeper advice, read [overlay performance](/vosu/dev/performance).
 

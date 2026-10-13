@@ -1,4 +1,4 @@
-import { object, SettingsChannel, Telemetry } from "./connection";
+import { allFields, object, SettingsChannel, Telemetry } from "./connection";
 import "./style.css";
 
 function element(id: string): HTMLElement {
@@ -29,10 +29,6 @@ function number(value: unknown): number {
   return typeof value === "number" && Number.isFinite(value) ? value : 0;
 }
 
-function text(node: HTMLElement, value: string): void {
-  if (node.textContent !== value) node.textContent = value;
-}
-
 function latest(value: unknown): string {
   if (!Array.isArray(value) || value.length === 0) return "—";
   const last = value[value.length - 1];
@@ -42,41 +38,47 @@ function latest(value: unknown): string {
 let values: unknown[] = [];
 let pending = 0;
 let statusText = "Connecting…";
+let dirty = allFields;
+let statusDirty = true;
 
 function render(): void {
   pending = 0;
-  text(pp, number(values[0]).toFixed(0));
-  text(accuracy, `${number(values[1]).toFixed(2)}%`);
-  text(combo, `${number(values[2])}×`);
-  const counts = object(values[3]);
-  text(
-    hits,
-    `300: ${number(counts["300"])} · 100: ${number(counts["100"])} · 50: ${number(counts["50"])} · miss: ${number(counts["0"])} · geki: ${number(counts.geki)} · katu: ${number(counts.katu)}`,
-  );
-  // Preserve a present-but-empty press array: it is not a reason to mix in releases.
-  const presses = Array.isArray(values[5]) ? values[5] : values[7];
-  const window = object(values[8]);
-  const great =
-    typeof window.great === "number" && window.great > 0 ? `${window.great.toFixed(1)} ms` : "—";
-  text(
-    timing,
-    `Press: ${latest(presses)} · Release: ${latest(values[6])} · Great window: ${great}`,
-  );
-  const source = object(values[4]);
-  const all = Array.isArray(source.all) && source.all.length > 0 ? source.all : null;
-  const length = Math.min(all ? all.length : keyNames.length, keyNodes.length);
-  for (let index = 0; index < keyNodes.length; index++) {
-    const node = keyNodes[index];
-    const hidden = index >= length;
-    if (node.hidden !== hidden) node.hidden = hidden;
-    if (hidden) continue;
-    const key = object(all ? all[index] : source[keyNames[index]]);
-    const name = all && typeof key.name === "string" ? key.name : keyNames[index];
-    text(node, `${name} ${number(key.count)}`);
-    const pressed = key.isPressed === true;
-    if (node.classList.contains("pressed") !== pressed) node.classList.toggle("pressed", pressed);
+  const changed = dirty;
+  dirty = 0;
+  // Subscribe indices are already change events; do not re-diff their values or DOM.
+  if (changed & 1) pp.textContent = number(values[0]).toFixed(0);
+  if (changed & 2) accuracy.textContent = `${number(values[1]).toFixed(2)}%`;
+  if (changed & 4) combo.textContent = `${number(values[2])}×`;
+  if (changed & 8) {
+    const counts = object(values[3]);
+    hits.textContent = `300: ${number(counts["300"])} · 100: ${number(counts["100"])} · 50: ${number(counts["50"])} · miss: ${number(counts["0"])} · geki: ${number(counts.geki)} · katu: ${number(counts.katu)}`;
   }
-  text(status, statusText);
+  if (changed & 480) {
+    // Indices 5–8 share a timing row. An empty press array is not missing.
+    const presses = Array.isArray(values[5]) ? values[5] : values[7];
+    const window = object(values[8]);
+    const great =
+      typeof window.great === "number" && window.great > 0 ? `${window.great.toFixed(1)} ms` : "—";
+    timing.textContent = `Press: ${latest(presses)} · Release: ${latest(values[6])} · Great window: ${great}`;
+  }
+  if (changed & 16) {
+    const source = object(values[4]);
+    const all = Array.isArray(source.all) && source.all.length > 0 ? source.all : null;
+    const length = Math.min(all ? all.length : keyNames.length, keyNodes.length);
+    for (let index = 0; index < keyNodes.length; index++) {
+      const node = keyNodes[index];
+      node.hidden = index >= length;
+      if (node.hidden) continue;
+      const key = object(all ? all[index] : source[keyNames[index]]);
+      const name = all && typeof key.name === "string" ? key.name : keyNames[index];
+      node.textContent = `${name} ${number(key.count)}`;
+      node.classList.toggle("pressed", key.isPressed === true);
+    }
+  }
+  if (statusDirty) {
+    status.textContent = statusText;
+    statusDirty = false;
+  }
 }
 
 function schedule(): void {
@@ -84,13 +86,17 @@ function schedule(): void {
 }
 
 const telemetry = new Telemetry(
-  (next) => {
+  (next, changed) => {
     values = next;
+    dirty |= changed;
     schedule();
   },
   (next) => {
-    statusText = next;
-    schedule();
+    if (statusText !== next) {
+      statusText = next;
+      statusDirty = true;
+      schedule();
+    }
   },
 );
 

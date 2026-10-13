@@ -45,7 +45,12 @@ example, run `pnpm install` in `examples/starter-overlay/`, not in an unrelated 
 
 ## Configure the project
 
-`vite.config.ts` sets `base: "./"` for counter-folder-relative asset URLs:
+`vite.config.ts` sets `base: "./"` for counter-relative asset URLs and builds into
+`dist/<package name>/`. The unscoped package name is the installed folder name.
+Vite copies `public/` metadata and schemas on every build, including watch builds.
+JavaScript targets ES2026; `cssTarget: "es2025"` works around Lightning CSS's unsupported
+`es2026` target. TypeScript 7.0.2 uses `ESNext` for no-emit checks, while Vite handles
+ES2026 lowering. Its serve-only plugin supplies the same counter-path value as a daemon.
 
 <<< ../../../examples/starter-overlay/vite.config.ts
 
@@ -69,21 +74,23 @@ The tutorial's complete `package.json` is the source of these commands:
 
 <<< ../../../examples/starter-overlay/package.json
 
-| Command             | Result                                                              |
-| ------------------- | ------------------------------------------------------------------- |
-| `pnpm dev`          | Vite development server; daemon defaults to `127.0.0.1:24050`.      |
-| `pnpm lint`         | `oxlint --deny-warnings`; warnings also fail the command.           |
-| `pnpm format`       | `oxfmt --write`; edits files in place.                              |
-| `pnpm format:check` | `oxfmt --check`; fails if formatting differs.                       |
-| `pnpm typecheck`    | `tsc --noEmit`; checks types without generating assets.             |
-| `pnpm build`        | `vite build`, then copy metadata and settings schemas into `dist/`. |
-| `pnpm preview`      | Preview built files; this is not the osu! telemetry daemon.         |
+| Command             | Result                                                                           |
+| ------------------- | -------------------------------------------------------------------------------- |
+| `pnpm dev`          | Vite development server; daemon defaults to `127.0.0.1:24050`.                   |
+| `pnpm lint`         | `oxlint --deny-warnings`; warnings also fail the command.                        |
+| `pnpm format`       | `oxfmt --write`; edits files in place.                                           |
+| `pnpm format:check` | `oxfmt --check`; fails if formatting differs.                                    |
+| `pnpm typecheck`    | `tsc --noEmit`; checks types without generating assets.                          |
+| `pnpm build`        | `vite build`; output and copied `public/` files go into `dist/starter-overlay/`. |
+| `pnpm preview`      | Preview built files; this is not the osu! telemetry daemon.                      |
 
 oxfmt writes by default; use `--check` in automation. Both tools honor the project
 ignore files; the example's `.gitignore` excludes `node_modules/` and `dist/`.
 `oxfmt --threads=1` is available when limiting formatting parallelism matters.
 
-## Editor integration
+## Editors and IDEs
+
+### VS Code
 
 Install the official [Oxc VS Code extension](https://marketplace.visualstudio.com/items?itemName=oxc.oxc-vscode),
 also available on [Open VSX](https://open-vsx.org/extension/oxc/oxc-vscode).
@@ -112,6 +119,41 @@ Use `.vscode/settings.json`:
 See the official [linter editor setup](https://oxc.rs/docs/guide/usage/linter/editors.html)
 and [formatter editor setup](https://oxc.rs/docs/guide/usage/formatter/editors.html).
 Other LSP-capable editors can use `oxlint --lsp` and `oxfmt --lsp`.
+
+### JetBrains IDEs
+
+Install the [Oxc plugin](https://plugins.jetbrains.com/plugin/27061-oxc) through
+**Settings → Plugins → Marketplace**, search **Oxc**, and select **Install**.
+It supports both oxlint and oxfmt: inline lint diagnostics, quick fixes/fix-on-save,
+and formatting through **Code → Reformat Code** / **Reformat File**, plus format-on-save.
+See the [official plugin README](https://github.com/oxc-project/oxc-intellij-plugin)
+for capabilities and installation.
+
+### Zed
+
+Open **Extensions** (`zed: extensions`), search **Oxc**, and install the
+[official extension](https://github.com/oxc-project/oxc-zed). Its documented minimums
+are **Zed 0.205.0** and **oxlint 1.35.0**; the pinned oxlint here satisfies that minimum.
+
+Configure `.zed/settings.json` to use oxfmt on save for JavaScript and TypeScript,
+following the extension's [combined configuration example](https://github.com/oxc-project/oxc-zed/blob/main/examples/both/.zed/settings.json):
+
+```json
+{
+  "languages": {
+    "JavaScript": {
+      "format_on_save": "on",
+      "prettier": { "allowed": false },
+      "formatter": [{ "language_server": { "name": "oxfmt" } }]
+    },
+    "TypeScript": {
+      "format_on_save": "on",
+      "prettier": { "allowed": false },
+      "formatter": [{ "language_server": { "name": "oxfmt" } }]
+    }
+  }
+}
+```
 
 ## CI
 

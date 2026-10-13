@@ -9,6 +9,8 @@ vosu keeps the tosu-compatible API families while adding optional native feature
 
 The README says the additive input fields are planned for a tosu port **soon(tm)**. Treat all extensions as optional; do not make server-name guesses into required capabilities.
 
+The selected-field subscription <Badge type="tip" text="vosu only" /> provides **change-only delivery**: after the initial baseline, each update is an event naming exactly which selected fields changed or disappeared. Nothing changed means no update frame. Overlays can react without client-side diffing, polling, or full-document parsing, unlike compatibility streams that republish the whole document every poll interval.
+
 ## Added endpoints, parameters, and headers
 
 | vosu addition                                                                                                                                                                    | Upstream comparison                                                                                                               | Reference                                                                    |
@@ -42,10 +44,6 @@ Each field below is additive; original timing arrays and four-button shapes rema
 | `keys.all[].name`, `.isPressed`, `.count`, `.pressedAt`, `.releasedAt` (and precise tournament equivalents) <Badge type="tip" text="vosu only" />            | String, boolean, integer, nullable number, nullable number; timestamps are sampled gameplay milliseconds | No all-key element in tosu                                                  |
 
 Release classification can lag the original array; converted or unavailable metadata remains press-only. Edge timestamps only record observed sampled transitions, not every tap implied by count changes. See [schema](/vosu/dev/schema#timing-and-input-semantics).
-
-### `beatmap.stats.hitWindow` is shared
-
-**Do not label this field vosu-only.** Upstream tosu's [v2 Stats type](https://github.com/tosuapp/tosu/blob/HEAD/packages/tosu/src/api/types/v2.ts) declares `hitWindow`, and its [v2 builder](https://github.com/tosuapp/tosu/blob/HEAD/packages/tosu/src/api/utils/buildResultV2.ts) copies the calculated judgement windows. vosu publishes optional `miss`, `meh`, `ok`, `good`, `great`, and `perfect` in milliseconds after clock rate. It is distinct from the also-shared scalar `stars.hitWindow`.
 
 ## Package-level differences
 
@@ -90,7 +88,7 @@ function inputCapabilities(regular, precise) {
 }
 ```
 
-`null` here means unsupported, not an observed empty history. The [tutorial](/vosu/dev/tutorial/) shows subscription-first fallback handling. The published subscribe endpoint supports native Ping/Pong only; see the [README discrepancy warning](/vosu/dev/websocket-api#ping-pong-and-closes).
+`null` here means unsupported, not an observed empty history. The [tutorial](/vosu/dev/tutorial/) shows subscription-first fallback handling. Keepalive uses [WebSocket control Ping/Pong only](/vosu/dev/websocket-api#ping-pong-and-closes); browser clients send no heartbeat.
 
 ## Comparison sources
 

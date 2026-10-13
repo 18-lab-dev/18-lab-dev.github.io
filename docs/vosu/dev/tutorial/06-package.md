@@ -5,13 +5,10 @@ description: "Build a self-contained counter folder and test it in a browser, OB
 
 # 6. Package, install, and test
 
-Add `metadata.txt`. The size is the browser viewport, not a responsive layout promise.
+Add `public/metadata.txt`. The size is the browser viewport, not a responsive layout
+promise. Vite copies metadata and both settings schemas from `public/` on every build.
 
-<<< ../../../../examples/starter-overlay/metadata.txt{text}
-
-Add `scripts/package.mjs` so `pnpm build` includes both settings formats and metadata:
-
-<<< ../../../../examples/starter-overlay/scripts/package.mjs{js}
+<<< ../../../../examples/starter-overlay/public/metadata.txt{text}
 
 ## Check and build
 
@@ -23,52 +20,70 @@ pnpm typecheck
 pnpm build
 ```
 
-For formatting changes, run `pnpm format`, then re-run the checks. `dist/` contains
-the deployable counter. Source TypeScript, tooling configs, and `node_modules/` are
-not runtime dependencies and should not go into the installed folder.
+For formatting changes, run `pnpm format`, then re-run the checks.
+`dist/starter-overlay/` is the deployable folder: its name comes from `package.json`.
+Source TypeScript, tooling configs, and `node_modules/` are not runtime dependencies.
 
 ## Install the built folder
 
-Copy the **contents** of `dist/` into `starter-overlay/` below the daemon's static root.
-Do not install an extra nesting level like `starter-overlay/dist/index.html`.
+Copy the **whole** `dist/starter-overlay/` folder into the daemon's static root.
+The output is already correctly named: do not rename `dist/` or add a nested `dist/`
+inside the counter.
 
-| Daemon                | Destination                                                                   |
-| --------------------- | ----------------------------------------------------------------------------- |
-| vosu, Linux default   | `${XDG_DATA_HOME:-$HOME/.local/share}/vosu/static/starter-overlay/`           |
-| vosu, Windows default | `<program>/static/starter-overlay/`                                           |
-| tosu                  | `starter-overlay/` below its configured static folder (`STATIC_FOLDER_PATH`). |
+| Daemon                | Static root                                          |
+| --------------------- | ---------------------------------------------------- |
+| vosu, Linux default   | `${XDG_DATA_HOME:-$HOME/.local/share}/vosu/static/`  |
+| vosu, Windows default | `<program>/static/`                                  |
+| tosu                  | Its configured static folder (`STATIC_FOLDER_PATH`). |
 
-For the default vosu Linux path:
+For the default vosu Linux root:
 
 ```sh
-mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}/vosu/static/starter-overlay"
-cp -R dist/. "${XDG_DATA_HOME:-$HOME/.local/share}/vosu/static/starter-overlay/"
+mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}/vosu/static"
+cp -R dist/starter-overlay "${XDG_DATA_HOME:-$HOME/.local/share}/vosu/static/"
+```
+
+Each overlay has its own `dist/<package name>/`; rebuilding one clears only its own
+output folder, not sibling counter folders. If several built overlays share a
+`dist/` directory, install all correctly named folders in one copy:
+
+```sh
+cp -R dist/* "${XDG_DATA_HOME:-$HOME/.local/share}/vosu/static/"
 ```
 
 Open `http://127.0.0.1:24050/starter-overlay/` while the daemon is running. If its
 listener is customized, use that host and port. The daemon injects the counter path,
 so settings and sockets follow the hosting server.
 
-## Live development with a vosu mount
+## Recommended build loop
 
-Instead of a copy, use a top-level symlink to the built directory. Choose this **instead
-of** the copy above, and use an unused mount name; do not overwrite an existing counter.
+For ongoing development, build once and symlink the **named output directory**.
+Choose this instead of copying, and use an unused mount name; do not overwrite an
+existing counter.
 
 ```sh
 pnpm build
 mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}/vosu/static"
-ln -s "$PWD/dist" "${XDG_DATA_HOME:-$HOME/.local/share}/vosu/static/starter-overlay"
-pnpm exec vite build --watch --emptyOutDir=false
+ln -s "$PWD/dist/starter-overlay" "${XDG_DATA_HOME:-$HOME/.local/share}/vosu/static/starter-overlay"
+pnpm exec vite build --watch
 ```
 
-vosu follows explicit top-level directory aliases and confines requests to their target.
-Mount **built files**, not source TypeScript. Reload the hosted page after changes;
-`vite build --watch` is not HMR. Disabling output cleanup preserves the descriptors
-copied by the initial `pnpm build`. If metadata or either schema changes, stop the
-watcher, run `pnpm build`, then restart it. Use the separate Vite dev server for HMR.
+Every `pnpm build` or watch build updates the installed overlay in place, including
+regular metadata/settings files copied from `public/`. Default output cleanup stays
+enabled: Vite empties the target's contents and keeps the directory, so the existing
+directory symlink remains valid. This was verified by rebuilding through a temporary
+static mount and checking the target and copied files.
 
-See [vosu's mount rules](https://github.com/shiruviaa/vosu/blob/main/README.md#dashboard-and-counters)
+vosu permits a **top-level directory symlink** as an explicit mount, even outside its
+static root. It rejects symlinked **settings files**, not regular settings files
+inside that mounted directory. Vite's copies are regular files, so this layout is valid.
+See [ADR 0005](https://github.com/shiruviaa/vosu/blob/main/docs/decisions/0005-root-confined-file-serving.md),
+[settings file checks](https://github.com/shiruviaa/vosu/blob/main/src/counters/settings.rs),
 and the [counter package reference](/vosu/dev/counter-packages).
+
+Use `pnpm dev` with HMR for UI work. Use this symlinked build when testing inside vosu,
+OBS, or vosulay. Mount **built files**, never source TypeScript; reload the hosted page
+after rebuilding because `vite build --watch` is not HMR.
 
 ## Test the actual consumers
 

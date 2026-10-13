@@ -20,17 +20,24 @@ and run `pnpm install` in its folder.
 
 ## Scripts and configuration
 
-Use this `package.json`. The package script copies counter descriptors into the build.
+Use this `package.json`. Its unscoped `name`, `starter-overlay`, is the installed
+counter-folder name by convention; use one normal path component for each overlay.
 
 <<< ../../../../examples/starter-overlay/package.json
 
-`vite.config.ts` uses a **relative base**: installed assets must resolve below the counter
-folder, not the daemon's `/assets/` directory. The explicit output target is ES2020;
-you still need to test the actual browser engine used by OBS and vosulay.
+`vite.config.ts` uses a **relative base**: assets resolve below the counter folder,
+not the daemon's `/assets/` directory. It builds into `dist/<package name>/`.
+JavaScript targets **ES2026**; CSS targets **ES2025** because Lightning CSS does not
+accept `es2026` yet. Test the actual browser engine used by OBS and vosulay.
+
+The small serve-only plugin injects `window.COUNTER_PATH="starter-overlay";` for
+Vite development. Both daemons supply the same counter-directory value when hosting
+the built page; the plugin never injects it into production output.
 
 <<< ../../../../examples/starter-overlay/vite.config.ts
 
-Use `tsconfig.json` for strict, no-emit type checking:
+Use `tsconfig.json` for strict, no-emit type checking. TypeScript 7.0.2 does not accept
+`ES2026`, so it uses `ESNext` and browser libraries; Vite handles ES2026 lowering.
 
 <<< ../../../../examples/starter-overlay/tsconfig.json
 
@@ -57,19 +64,20 @@ starter-overlay/                 # development project
   src/connection.ts
   src/main.ts
   src/style.css
-  scripts/package.mjs
-  metadata.txt
-  settings.schema.toml
-  settings.json
-  vite.config.ts
-  tsconfig.json
-  package.json
-  dist/                         # created by pnpm build; install this content
-    index.html
-    assets/
+  public/                       # Vite copies these every build
     metadata.txt
     settings.schema.toml
     settings.json
+  vite.config.ts
+  tsconfig.json
+  package.json
+  dist/
+    starter-overlay/            # copy this correctly named folder into static/
+      index.html
+      assets/
+      metadata.txt
+      settings.schema.toml
+      settings.json
 ```
 
 | Installed file         | Purpose                                                    |

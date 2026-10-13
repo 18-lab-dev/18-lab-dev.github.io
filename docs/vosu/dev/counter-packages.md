@@ -41,7 +41,7 @@ AuthorLinks: https://github.com/your-name,https://your-site.example
 | `Resolution`  | `WxH` size (`x` or `X`); parsed integer dimensions, otherwise `Any × Any` |
 | `AuthorLinks` | Comma-separated author links                                              |
 
-Keys are lowercased (case-insensitive), lines split at the first colon, values are trimmed, and `##` starts an inline comment. Other metadata keys are not consumed by this parser; do not assume a description or compatibility field in `metadata.txt` changes the card. Catalog objects have their own fields.
+Recognized keys are `Name`, `Author`, `AuthorLinks` (comma-separated), `Version`, and `Resolution` (`WxH`), matched case-insensitively. Other keys are ignored. Lines split at the first colon, values are trimmed, and `##` starts an inline comment.
 
 ## `window.COUNTER_PATH`
 

@@ -20,6 +20,8 @@ vosu serves HTTP and WebSocket APIs at **`http://127.0.0.1:24050`** by default. 
 
 For new overlays, use v2 and precise v2. Prefer the selected-field stream when available; it selects from the regular v2 document, including vosu's added keys. For tosu fallback, regular v2 does **not** include keys: use its precise stream. See [extensions and feature detection](/vosu/dev/vosu-extensions).
 
+The selected-field stream is **change-only**: after its initial baseline, each update is an event naming exactly which selected fields changed or disappeared. If nothing changed, vosu sends no update. Overlays can react to those events without client-side diffing, polling, or parsing the full document; compatibility streams republish the whole document every poll interval.
+
 ## Readiness and delivery
 
 State HTTP requests return `500 {"error":"osu is not ready/running"}` until a focused ready instance is published. Treat this as readiness, not evidence of a broken HTTP server. Compatibility streams can also carry error documents; do not assume every received object has `beatmap` or `play`.

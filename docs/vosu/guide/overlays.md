@@ -32,7 +32,7 @@ static/
     settings.schema.toml
 ```
 
-`index.html` is the usual entry point. Optional `metadata.txt` supplies the displayed name, author links, description, version, and `WxH` resolution. An immediate `ignore.txt` excludes that directory; discovery never traverses directories named `node_modules`.
+`index.html` is the usual entry point. Optional `metadata.txt` supplies the displayed name, author, author links, version, and `WxH` resolution. An immediate `ignore.txt` excludes that directory; discovery never traverses directories named `node_modules`.
 
 | OS      | Default static root                                 |
 | ------- | --------------------------------------------------- |

@@ -18,7 +18,7 @@ Default origin: `ws://127.0.0.1:24050`. All upgrades require GET and the configu
 
 ## Compatibility state streams
 
-Text frames contain JSON documents. Check for `error` before reading game fields. Regular streams retain `POLL_RATE` publication; precise v2 retains `PRECISE_DATA_POLL_RATE`. vosu's regular v2 includes keys; upstream tosu's regular v2 does not, so use its precise endpoint for fallback keys.
+Text frames contain JSON documents. Check for `error` before reading game fields. Compatibility streams republish the whole document every poll interval: regular streams use `POLL_RATE`, and precise v2 uses `PRECISE_DATA_POLL_RATE`. vosu's regular v2 includes keys; upstream tosu's regular v2 does not, so use its precise endpoint for fallback keys.
 
 ```js
 const socket = new WebSocket("ws://127.0.0.1:24050/websocket/v2");
@@ -32,6 +32,8 @@ socket.onmessage = ({ data }) => {
 The legacy streams also accept the command protocol below. `/tokens` additionally accepts a raw JSON filter array, normalizing it to `applyFilters`.
 
 ## Selected-field subscription <Badge type="tip" text="vosu only" />
+
+**Change-only delivery:** after the initial baseline, an update is an event identifying exactly which selected fields changed or disappeared. If no selected value changed, **no update frame is sent**. Each update contains only changed `[index, value]` pairs and removed indices, so your overlay can react to those events without client-side diffing, polling, or full-document parsing. Select the fields you need rather than the root document; compatibility streams instead republish the whole document every poll interval.
 
 Send exactly one complete text message **within five seconds of upgrading**: a JSON array of **1–256 non-overlapping RFC 6901 JSON Pointers**.
 
@@ -77,11 +79,9 @@ While at least one established selection exists, vosu samples using `V2_SUBSCRIP
 
 ### Ping/pong and closes
 
-Native WebSocket Ping frames receive native Pong frames with the same payload. Native Pong is ignored. A full established pong control queue closes 1011. Browser WebSocket APIs handle native control frames automatically and do not expose a method to send Ping.
+Keepalive uses **WebSocket control Ping/Pong only**. vosu answers each Ping with a Pong carrying the same payload; native Pong is ignored. A full established pong control queue closes 1011. Browser `WebSocket` cannot send control pings, so browser clients send **no heartbeat**.
 
-::: warning Published README discrepancy
-The README describes application text `["ping", nonce]` and response `["pong", nonce, revision]`. The published transport does **not** implement these: every post-subscription text message, including that ping, triggers error 5 and close 1008. Use native WebSocket control ping/pong where your client supports it; do not send an application text heartbeat.
-:::
+After the selection is established, **any text message**, including `["ping", nonce]`, receives `[2, 5, "subscription already established"]` followed by close **1008**. Reconnect to change your selection; do not send an application text heartbeat.
 
 | Application code | Message                            | Close |
 | ---------------- | ---------------------------------- | ----- |

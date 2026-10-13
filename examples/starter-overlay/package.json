@@ -1,12 +1,12 @@
 {
-  "name": "shiruviaa-starter-overlay",
+  "name": "starter-overlay",
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/package.mjs",
+    "build": "vite build",
     "preview": "vite preview",
     "lint": "oxlint --deny-warnings",
     "format": "oxfmt --write",
