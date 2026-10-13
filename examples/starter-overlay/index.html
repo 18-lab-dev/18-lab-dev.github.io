@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Starter Play HUD</title>
+  </head>
+  <body>
+    <main id="hud">
+      <div class="metrics">
+        <div><strong id="pp">0</strong><span>pp</span></div>
+        <div><strong id="accuracy">0.00%</strong><span>accuracy</span></div>
+        <div><strong id="combo">0×</strong><span>combo</span></div>
+      </div>
+      <p id="hits">300: 0 · 100: 0 · 50: 0 · miss: 0 · geki: 0 · katu: 0</p>
+      <p id="timing">Press: — · Release: — · Great window: —</p>
+      <div id="keys" aria-label="Inputs"></div>
+      <small id="status">Connecting…</small>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

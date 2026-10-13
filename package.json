@@ -1,0 +1,26 @@
+{
+  "name": "shiruviaa-site",
+  "private": true,
+  "description": "shiruviaa.github.io: the shiruviaa organization site and documentation for vosu and vosulay.",
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs",
+    "lint": "oxlint",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "check": "oxlint && oxfmt --check && vitepress build docs"
+  },
+  "devDependencies": {
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "oxfmt": "^0.72.0",
+    "oxlint": "^1.87.0",
+    "vitepress": "^1.6.4",
+    "vue": "^3.5.0"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@11.28.5"
+}

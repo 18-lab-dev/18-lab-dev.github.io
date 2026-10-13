@@ -1,0 +1,18 @@
+[
+  {
+    "uniqueID": "accent",
+    "type": "color",
+    "title": "Accent color",
+    "description": "Highlight color for pressed keys",
+    "options": "",
+    "value": "#8fe3cf"
+  },
+  {
+    "uniqueID": "showKeys",
+    "type": "checkbox",
+    "title": "Show keys",
+    "description": "Display the input strip",
+    "options": "",
+    "value": true
+  }
+]

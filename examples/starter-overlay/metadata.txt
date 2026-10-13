@@ -1,0 +1,6 @@
+Name: Starter Play HUD
+Author: shiruviaa
+Version: 1.0.0
+Usecase: ingame,obs-overlay
+Resolution: 640x220
+Notes: Compact pp, accuracy, combo, judgements, timing and keys HUD

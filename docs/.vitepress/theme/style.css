@@ -1,0 +1,251 @@
+/* shiruviaa palette: night #0E0B1A, pink #FF6FB5, violet #8B6CFF, deep #5A45D6,
+   blush #FFE0F1, lilac #E6DEFF, gold #FFD58A, ink #FBF8FF. */
+
+:root {
+  --sh-night: #0e0b1a;
+  --sh-night-hi: #171230;
+  --sh-ink: #fbf8ff;
+  --sh-pink: #ff6fb5;
+  --sh-violet: #8b6cff;
+  --sh-deep: #5a45d6;
+  --sh-blush: #ffe0f1;
+  --sh-lilac: #e6deff;
+  --sh-gold: #ffd58a;
+
+  --vp-font-family-mono:
+    "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, "SFMono-Regular", "SF Mono", Menlo,
+    Monaco, Consolas, "Liberation Mono", monospace;
+
+  /* light */
+  --vp-c-brand-1: #c2337a;
+  --vp-c-brand-2: #d94f97;
+  --vp-c-brand-3: #c2337a;
+  --vp-c-brand-soft: rgba(255, 111, 181, 0.14);
+
+  --vp-c-tip-1: #5a45d6;
+  --vp-c-tip-2: #6f58e8;
+  --vp-c-tip-3: #5a45d6;
+  --vp-c-tip-soft: rgba(139, 108, 255, 0.14);
+
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(120deg, #ff6fb5 10%, #8b6cff 55%, #5a45d6 95%);
+  --vp-home-hero-image-background-image: none;
+  --vp-home-hero-image-filter: none;
+
+  --vp-button-brand-bg: #c2337a;
+  --vp-button-brand-hover-bg: #d94f97;
+  --vp-button-brand-active-bg: #a82a69;
+}
+
+.dark {
+  --vp-c-bg: #0e0b1a;
+  --vp-c-bg-alt: #0b0916;
+  --vp-c-bg-soft: #171230;
+  --vp-c-bg-elv: #151029;
+
+  --vp-c-text-1: #fbf8ff;
+  --vp-c-text-2: rgba(230, 222, 255, 0.74);
+  --vp-c-text-3: rgba(230, 222, 255, 0.5);
+
+  --vp-c-divider: rgba(139, 108, 255, 0.16);
+  --vp-c-border: rgba(139, 108, 255, 0.3);
+  --vp-c-gutter: #07060d;
+
+  --vp-c-default-soft: rgba(139, 108, 255, 0.12);
+
+  --vp-c-brand-1: #ff8cc4;
+  --vp-c-brand-2: #ff6fb5;
+  --vp-c-brand-3: #e2559c;
+  --vp-c-brand-soft: rgba(255, 111, 181, 0.16);
+
+  --vp-c-tip-1: #b3a0ff;
+  --vp-c-tip-2: #9f87ff;
+  --vp-c-tip-3: #8b6cff;
+  --vp-c-tip-soft: rgba(139, 108, 255, 0.16);
+
+  --vp-home-hero-name-background: linear-gradient(
+    120deg,
+    #ffe0f1 5%,
+    #ff6fb5 38%,
+    #b3a0ff 70%,
+    #8b6cff 95%
+  );
+
+  --vp-button-brand-text: #1a0b16;
+  --vp-button-brand-bg: #ff6fb5;
+  --vp-button-brand-hover-text: #1a0b16;
+  --vp-button-brand-hover-bg: #ff8cc4;
+  --vp-button-brand-active-text: #1a0b16;
+  --vp-button-brand-active-bg: #e2559c;
+
+  --vp-button-alt-bg: rgba(139, 108, 255, 0.14);
+  --vp-button-alt-hover-bg: rgba(139, 108, 255, 0.24);
+  --vp-button-alt-border: rgba(139, 108, 255, 0.4);
+  --vp-button-alt-hover-border: rgba(179, 160, 255, 0.6);
+
+  --vp-code-block-bg: #120e24;
+  --vp-code-tab-bg: #120e24;
+  --vp-code-copy-code-bg: #1d173a;
+  --vp-c-mute: #120e24;
+
+  --vp-local-search-bg: #0e0b1a;
+  --vp-local-search-result-bg: #151029;
+  --vp-local-search-highlight-text: #ffd58a;
+}
+
+::selection {
+  background: rgba(255, 111, 181, 0.32);
+}
+
+/* ------------------------------------------------------------ home page -- */
+
+.dark .VPContent.is-home {
+  background:
+    radial-gradient(60rem 36rem at 22% -6%, rgba(139, 108, 255, 0.22), transparent 70%),
+    radial-gradient(48rem 30rem at 92% 8%, rgba(255, 111, 181, 0.14), transparent 70%),
+    radial-gradient(60rem 40rem at 50% 105%, rgba(90, 69, 214, 0.16), transparent 70%),
+    url("/stars.svg") repeat;
+  background-size:
+    auto,
+    auto,
+    auto,
+    900px 900px;
+}
+
+.VPHome {
+  padding-bottom: 72px !important;
+}
+
+.VPHero .name {
+  letter-spacing: -0.035em;
+  padding-bottom: 6px;
+}
+
+.VPHero .text {
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 640px) {
+  .VPHero .image-container {
+    width: 380px;
+    height: 380px;
+  }
+
+  .VPHero .image-src {
+    max-width: 380px;
+    max-height: 380px;
+  }
+}
+
+@media (min-width: 960px) {
+  .VPHero .image-container {
+    width: 480px;
+    height: 480px;
+  }
+
+  .VPHero .image-src {
+    max-width: 480px;
+    max-height: 480px;
+  }
+}
+
+.VPHome .VPFeature {
+  border: 1px solid var(--vp-c-divider);
+  background: color-mix(in srgb, var(--vp-c-bg-soft) 72%, transparent);
+  backdrop-filter: blur(6px);
+  transition:
+    border-color 0.25s,
+    transform 0.25s;
+}
+
+.VPHome .VPFeature:hover {
+  border-color: var(--vp-c-border);
+  transform: translateY(-2px);
+}
+
+/* ------------------------------------------------------------ doc pages -- */
+
+.dark .VPDoc {
+  background: radial-gradient(48rem 18rem at 50% -8rem, rgba(139, 108, 255, 0.1), transparent 70%);
+}
+
+.vp-doc h1 {
+  letter-spacing: -0.025em;
+}
+
+.dark .vp-doc h1 {
+  background: linear-gradient(110deg, #fbf8ff 30%, #ffc4e2 70%, #c8b9ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.dark .vp-doc tr:nth-child(2n) {
+  background-color: rgba(139, 108, 255, 0.05);
+}
+
+.dark .VPSidebar {
+  background-image: linear-gradient(180deg, rgba(139, 108, 255, 0.05), transparent 30rem);
+}
+
+.VPBadge {
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .VPHome .VPFeature,
+  .VPHome .VPFeature:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* --------------------------------------------------- overview path cards -- */
+
+.sh-paths {
+  display: grid;
+  gap: 14px;
+  margin: 28px 0 8px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 720px) {
+  .sh-paths {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.vp-doc a.sh-path {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 18px 20px;
+  border-radius: 14px;
+  border: 1px solid var(--vp-c-divider);
+  background: color-mix(in srgb, var(--vp-c-bg-soft) 70%, transparent);
+  color: var(--vp-c-text-2);
+  font-size: 14px;
+  line-height: 1.6;
+  text-decoration: none;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
+}
+
+.vp-doc a.sh-path:hover {
+  border-color: var(--vp-c-brand-1);
+  transform: translateY(-2px);
+}
+
+.vp-doc a.sh-path strong {
+  color: var(--vp-c-brand-1);
+  font-size: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vp-doc a.sh-path,
+  .vp-doc a.sh-path:hover {
+    transition: none;
+    transform: none;
+  }
+}

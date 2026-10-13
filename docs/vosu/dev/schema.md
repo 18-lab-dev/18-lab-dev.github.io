@@ -1,0 +1,621 @@
+---
+title: State schema
+description: Complete regular and precise v2 field trees derived from vosu’s serialized Rust models.
+---
+
+# State schema
+
+This reference uses JSON names from the published Rust model, including serde renames. `integer` is a JSON number whose model type is integral; ordinary `number` is floating-point. Objects marked omitted are absent when unavailable, not necessarily null. Nullable fields explicitly retain null. Large score/ID numbers follow JavaScript-number representation; do not assume arbitrary-precision integers.
+
+The fields vary with client, ruleset, map readiness, and available process data. A stream can return an error document instead of this tree; HTTP readiness is 500 `{"error":"osu is not ready/running"}`.
+
+## Regular v2
+
+`GET /json/v2` and `/websocket/v2` publish this document. `/websocket/v2/subscribe` selects pointers into it. The table recursively expands reused Rust types so each JSON path is explicit; `[]` denotes array elements.
+
+| Field                                                   | JSON type                                      | Availability / compatibility                                                                |
+| ------------------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `game`                                                  | `Game`                                         |                                                                                             |
+| `game.focused`                                          | `boolean`                                      | Omitted when unavailable.                                                                   |
+| `game.paused`                                           | `boolean`                                      |                                                                                             |
+| `client`                                                | `string`                                       |                                                                                             |
+| `server`                                                | `string`                                       |                                                                                             |
+| `state`                                                 | `NumberName`                                   |                                                                                             |
+| `state.number`                                          | `integer`                                      | Omitted when unavailable.                                                                   |
+| `state.name`                                            | `string`                                       |                                                                                             |
+| `session`                                               | `Session`                                      |                                                                                             |
+| `session.playTime`                                      | `number`                                       |                                                                                             |
+| `session.playCount`                                     | `integer`                                      |                                                                                             |
+| `rankedPlay`                                            | `RankedPlay`                                   | Omitted when unavailable.                                                                   |
+| `rankedPlay.stage`                                      | `integer (0–9)`                                |                                                                                             |
+| `rankedPlay.currentRound`                               | `integer`                                      |                                                                                             |
+| `rankedPlay.starRating`                                 | `number`                                       |                                                                                             |
+| `rankedPlay.damageMultiplier`                           | `number`                                       |                                                                                             |
+| `rankedPlay.activeUserId`                               | `integer`                                      |                                                                                             |
+| `rankedPlay.winningUserId`                              | `integer`                                      |                                                                                             |
+| `rankedPlay.users`                                      | `RankedPlayUserInfo[]`                         |                                                                                             |
+| `rankedPlay.users[].id`                                 | `integer`                                      |                                                                                             |
+| `rankedPlay.users[].rating`                             | `number`                                       |                                                                                             |
+| `rankedPlay.users[].life`                               | `number`                                       |                                                                                             |
+| `rankedPlay.users[].roundsWon`                          | `integer`                                      |                                                                                             |
+| `rankedPlay.users[].damageMultiplier`                   | `number`                                       |                                                                                             |
+| `settings`                                              | `Settings`                                     |                                                                                             |
+| `settings.interfaceVisible`                             | `boolean`                                      |                                                                                             |
+| `settings.replayUIVisible`                              | `boolean`                                      |                                                                                             |
+| `settings.chatVisibilityStatus`                         | `NumberName`                                   |                                                                                             |
+| `settings.chatVisibilityStatus.number`                  | `integer`                                      | Omitted when unavailable.                                                                   |
+| `settings.chatVisibilityStatus.name`                    | `string`                                       |                                                                                             |
+| `settings.leaderboard`                                  | `LeaderboardSettings`                          |                                                                                             |
+| `settings.leaderboard.visible`                          | `boolean`                                      |                                                                                             |
+| `settings.leaderboard.type`                             | `NumberName`                                   |                                                                                             |
+| `settings.leaderboard.type.number`                      | `integer`                                      | Omitted when unavailable.                                                                   |
+| `settings.leaderboard.type.name`                        | `string`                                       |                                                                                             |
+| `settings.progressBar`                                  | `NumberName`                                   |                                                                                             |
+| `settings.progressBar.number`                           | `integer`                                      | Omitted when unavailable.                                                                   |
+| `settings.progressBar.name`                             | `string`                                       |                                                                                             |
+| `settings.bassDensity`                                  | `number`                                       |                                                                                             |
+| `settings.resolution`                                   | `Resolution`                                   |                                                                                             |
+| `settings.resolution.fullscreen`                        | `boolean`                                      |                                                                                             |
+| `settings.resolution.width`                             | `integer`                                      |                                                                                             |
+| `settings.resolution.height`                            | `integer`                                      |                                                                                             |
+| `settings.resolution.widthFullscreen`                   | `integer`                                      |                                                                                             |
+| `settings.resolution.heightFullscreen`                  | `integer`                                      |                                                                                             |
+| `settings.client`                                       | `Client`                                       |                                                                                             |
+| `settings.client.updateAvailable`                       | `boolean`                                      |                                                                                             |
+| `settings.client.branch`                                | `integer`                                      |                                                                                             |
+| `settings.client.version`                               | `string`                                       |                                                                                             |
+| `settings.scoreMeter`                                   | `ScoreMeter`                                   |                                                                                             |
+| `settings.scoreMeter.type`                              | `NumberName`                                   |                                                                                             |
+| `settings.scoreMeter.type.number`                       | `integer`                                      | Omitted when unavailable.                                                                   |
+| `settings.scoreMeter.type.name`                         | `string`                                       |                                                                                             |
+| `settings.scoreMeter.size`                              | `number`                                       |                                                                                             |
+| `settings.cursor`                                       | `Cursor`                                       |                                                                                             |
+| `settings.cursor.useSkinCursor`                         | `boolean`                                      |                                                                                             |
+| `settings.cursor.autoSize`                              | `boolean`                                      |                                                                                             |
+| `settings.cursor.size`                                  | `number`                                       |                                                                                             |
+| `settings.cursor.menuSize`                              | `number`                                       |                                                                                             |
+| `settings.mouse`                                        | `Mouse`                                        |                                                                                             |
+| `settings.mouse.rawInput`                               | `boolean`                                      |                                                                                             |
+| `settings.mouse.disableButtons`                         | `boolean`                                      |                                                                                             |
+| `settings.mouse.disableWheel`                           | `boolean`                                      |                                                                                             |
+| `settings.mouse.sensitivity`                            | `number`                                       |                                                                                             |
+| `settings.tablet`                                       | `Tablet`                                       |                                                                                             |
+| `settings.tablet.enabled`                               | `boolean`                                      |                                                                                             |
+| `settings.tablet.x`                                     | `number`                                       |                                                                                             |
+| `settings.tablet.y`                                     | `number`                                       |                                                                                             |
+| `settings.tablet.width`                                 | `number`                                       |                                                                                             |
+| `settings.tablet.height`                                | `number`                                       |                                                                                             |
+| `settings.tablet.rotation`                              | `number`                                       |                                                                                             |
+| `settings.tablet.pressureThreshold`                     | `number`                                       |                                                                                             |
+| `settings.mania`                                        | `Mania`                                        |                                                                                             |
+| `settings.mania.speedBPMScale`                          | `boolean`                                      |                                                                                             |
+| `settings.mania.usePerBeatmapSpeedScale`                | `boolean`                                      |                                                                                             |
+| `settings.mania.scrollSpeed`                            | `integer`                                      |                                                                                             |
+| `settings.mania.scrollDirection`                        | `ScrollDirection`                              |                                                                                             |
+| `settings.mania.scrollDirection.number`                 | `integer`                                      |                                                                                             |
+| `settings.mania.scrollDirection.name`                   | `string`                                       | Omitted when unavailable.                                                                   |
+| `settings.sort`                                         | `NumberName`                                   |                                                                                             |
+| `settings.sort.number`                                  | `integer`                                      | Omitted when unavailable.                                                                   |
+| `settings.sort.name`                                    | `string`                                       |                                                                                             |
+| `settings.group`                                        | `NumberName`                                   |                                                                                             |
+| `settings.group.number`                                 | `integer`                                      | Omitted when unavailable.                                                                   |
+| `settings.group.name`                                   | `string`                                       |                                                                                             |
+| `settings.skin`                                         | `Skin`                                         |                                                                                             |
+| `settings.skin.useDefaultSkinInEditor`                  | `boolean`                                      |                                                                                             |
+| `settings.skin.ignoreBeatmapSkins`                      | `boolean`                                      |                                                                                             |
+| `settings.skin.tintSliderBall`                          | `boolean`                                      |                                                                                             |
+| `settings.skin.useTaikoSkin`                            | `boolean`                                      |                                                                                             |
+| `settings.skin.name`                                    | `string`                                       |                                                                                             |
+| `settings.mode`                                         | `NumberName`                                   |                                                                                             |
+| `settings.mode.number`                                  | `integer`                                      | Omitted when unavailable.                                                                   |
+| `settings.mode.name`                                    | `string`                                       |                                                                                             |
+| `settings.audio`                                        | `Audio`                                        |                                                                                             |
+| `settings.audio.ignoreBeatmapSounds`                    | `boolean`                                      |                                                                                             |
+| `settings.audio.useSkinSamples`                         | `boolean`                                      |                                                                                             |
+| `settings.audio.volume`                                 | `Volume`                                       |                                                                                             |
+| `settings.audio.volume.masterInactive`                  | `number`                                       |                                                                                             |
+| `settings.audio.volume.master`                          | `number`                                       |                                                                                             |
+| `settings.audio.volume.music`                           | `number`                                       |                                                                                             |
+| `settings.audio.volume.effect`                          | `number`                                       |                                                                                             |
+| `settings.audio.offset`                                 | `Offset`                                       |                                                                                             |
+| `settings.audio.offset.universal`                       | `number`                                       |                                                                                             |
+| `settings.background`                                   | `Background`                                   |                                                                                             |
+| `settings.background.storyboard`                        | `boolean`                                      |                                                                                             |
+| `settings.background.video`                             | `boolean`                                      |                                                                                             |
+| `settings.background.blur`                              | `number`                                       |                                                                                             |
+| `settings.background.dim`                               | `number`                                       |                                                                                             |
+| `settings.keybinds`                                     | `Keybinds`                                     |                                                                                             |
+| `settings.keybinds.osu`                                 | `KeybindsOsu`                                  |                                                                                             |
+| `settings.keybinds.osu.k1`                              | `string`                                       |                                                                                             |
+| `settings.keybinds.osu.k2`                              | `string`                                       |                                                                                             |
+| `settings.keybinds.osu.smokeKey`                        | `string`                                       |                                                                                             |
+| `settings.keybinds.fruits`                              | `KeybindsFruits`                               |                                                                                             |
+| `settings.keybinds.fruits.k1`                           | `string`                                       |                                                                                             |
+| `settings.keybinds.fruits.k2`                           | `string`                                       |                                                                                             |
+| `settings.keybinds.fruits.Dash`                         | `string`                                       |                                                                                             |
+| `settings.keybinds.taiko`                               | `KeybindsTaiko`                                |                                                                                             |
+| `settings.keybinds.taiko.innerLeft`                     | `string`                                       |                                                                                             |
+| `settings.keybinds.taiko.innerRight`                    | `string`                                       |                                                                                             |
+| `settings.keybinds.taiko.outerLeft`                     | `string`                                       |                                                                                             |
+| `settings.keybinds.taiko.outerRight`                    | `string`                                       |                                                                                             |
+| `settings.keybinds.quickRetry`                          | `string`                                       |                                                                                             |
+| `profile`                                               | `Profile`                                      |                                                                                             |
+| `profile.userStatus`                                    | `NumberName`                                   | Omitted when unavailable.                                                                   |
+| `profile.userStatus.number`                             | `integer`                                      | Omitted when unavailable.                                                                   |
+| `profile.userStatus.name`                               | `string`                                       |                                                                                             |
+| `profile.banchoStatus`                                  | `NumberName`                                   | Omitted when unavailable.                                                                   |
+| `profile.banchoStatus.number`                           | `integer`                                      | Omitted when unavailable.                                                                   |
+| `profile.banchoStatus.name`                             | `string`                                       |                                                                                             |
+| `profile.id`                                            | `integer`                                      | Omitted when unavailable.                                                                   |
+| `profile.name`                                          | `string`                                       | Omitted when unavailable.                                                                   |
+| `profile.mode`                                          | `NumberName`                                   | Omitted when unavailable.                                                                   |
+| `profile.mode.number`                                   | `integer`                                      | Omitted when unavailable.                                                                   |
+| `profile.mode.name`                                     | `string`                                       |                                                                                             |
+| `profile.rankedScore`                                   | `number`                                       | Omitted when unavailable.                                                                   |
+| `profile.level`                                         | `number`                                       | Omitted when unavailable.                                                                   |
+| `profile.accuracy`                                      | `number`                                       | Omitted when unavailable.                                                                   |
+| `profile.pp`                                            | `number`                                       | Omitted when unavailable.                                                                   |
+| `profile.playCount`                                     | `integer`                                      | Omitted when unavailable.                                                                   |
+| `profile.globalRank`                                    | `integer`                                      | Omitted when unavailable.                                                                   |
+| `profile.countryCode`                                   | `NumberName`                                   | Omitted when unavailable.                                                                   |
+| `profile.countryCode.number`                            | `integer`                                      | Omitted when unavailable.                                                                   |
+| `profile.countryCode.name`                              | `string`                                       |                                                                                             |
+| `profile.backgroundColour`                              | `string`                                       | Omitted when unavailable.                                                                   |
+| `profile.matchmaking`                                   | `MatchmakingStats or null`                     | Omitted when unavailable.                                                                   |
+| `profile.matchmaking.rating`                            | `number`                                       |                                                                                             |
+| `profile.matchmaking.rank`                              | `integer or null`                              |                                                                                             |
+| `profile.matchmaking.plays`                             | `integer`                                      |                                                                                             |
+| `profile.matchmaking.wins`                              | `integer`                                      |                                                                                             |
+| `profile.matchmaking.isProvisional`                     | `boolean`                                      |                                                                                             |
+| `beatmap`                                               | `Beatmap`                                      |                                                                                             |
+| `beatmap.isKiai`                                        | `boolean`                                      |                                                                                             |
+| `beatmap.isBreak`                                       | `boolean`                                      |                                                                                             |
+| `beatmap.isConvert`                                     | `boolean`                                      |                                                                                             |
+| `beatmap.time`                                          | `BeatmapTime`                                  |                                                                                             |
+| `beatmap.time.live`                                     | `number`                                       |                                                                                             |
+| `beatmap.time.firstObject`                              | `integer`                                      |                                                                                             |
+| `beatmap.time.lastObject`                               | `number`                                       |                                                                                             |
+| `beatmap.time.mp3Length`                                | `number`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.status`                                        | `BeatmapStatus`                                |                                                                                             |
+| `beatmap.status.number`                                 | `number`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.status.name`                                   | `string`                                       |                                                                                             |
+| `beatmap.checksum`                                      | `string`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.id`                                            | `integer`                                      | Omitted when unavailable.                                                                   |
+| `beatmap.set`                                           | `integer`                                      | Omitted when unavailable.                                                                   |
+| `beatmap.mode`                                          | `NumberName`                                   |                                                                                             |
+| `beatmap.mode.number`                                   | `integer`                                      | Omitted when unavailable.                                                                   |
+| `beatmap.mode.name`                                     | `string`                                       |                                                                                             |
+| `beatmap.artist`                                        | `string`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.artistUnicode`                                 | `string`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.title`                                         | `string`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.titleUnicode`                                  | `string`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.mapper`                                        | `string`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.version`                                       | `string`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.source`                                        | `string`                                       |                                                                                             |
+| `beatmap.tags`                                          | `string`                                       |                                                                                             |
+| `beatmap.stats`                                         | `Stats`                                        |                                                                                             |
+| `beatmap.stats.stars`                                   | `Stars`                                        |                                                                                             |
+| `beatmap.stats.stars.live`                              | `number`                                       |                                                                                             |
+| `beatmap.stats.stars.aim`                               | `number`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.stats.stars.speed`                             | `number`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.stats.stars.flashlight`                        | `number`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.stats.stars.sliderFactor`                      | `number`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.stats.stars.stamina`                           | `number`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.stats.stars.rhythm`                            | `number`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.stats.stars.color`                             | `number`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.stats.stars.reading`                           | `number`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.stats.stars.hitWindow`                         | `number`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.stats.stars.total`                             | `number`                                       |                                                                                             |
+| `beatmap.stats.ar`                                      | `Ar`                                           |                                                                                             |
+| `beatmap.stats.ar.original`                             | `number`                                       |                                                                                             |
+| `beatmap.stats.ar.converted`                            | `number`                                       |                                                                                             |
+| `beatmap.stats.cs`                                      | `Cs`                                           |                                                                                             |
+| `beatmap.stats.cs.original`                             | `number`                                       |                                                                                             |
+| `beatmap.stats.cs.converted`                            | `number`                                       |                                                                                             |
+| `beatmap.stats.od`                                      | `Od`                                           |                                                                                             |
+| `beatmap.stats.od.original`                             | `number`                                       |                                                                                             |
+| `beatmap.stats.od.converted`                            | `number`                                       |                                                                                             |
+| `beatmap.stats.hp`                                      | `Hp`                                           |                                                                                             |
+| `beatmap.stats.hp.original`                             | `number`                                       |                                                                                             |
+| `beatmap.stats.hp.converted`                            | `number`                                       |                                                                                             |
+| `beatmap.stats.bpm`                                     | `Bpm`                                          |                                                                                             |
+| `beatmap.stats.bpm.realtime`                            | `number`                                       |                                                                                             |
+| `beatmap.stats.bpm.common`                              | `number`                                       |                                                                                             |
+| `beatmap.stats.bpm.min`                                 | `number`                                       |                                                                                             |
+| `beatmap.stats.bpm.max`                                 | `number`                                       |                                                                                             |
+| `beatmap.stats.objects`                                 | `Objects`                                      |                                                                                             |
+| `beatmap.stats.objects.circles`                         | `integer`                                      |                                                                                             |
+| `beatmap.stats.objects.sliders`                         | `integer`                                      |                                                                                             |
+| `beatmap.stats.objects.spinners`                        | `integer`                                      |                                                                                             |
+| `beatmap.stats.objects.holds`                           | `integer`                                      |                                                                                             |
+| `beatmap.stats.objects.total`                           | `integer`                                      |                                                                                             |
+| `beatmap.stats.hitWindow`                               | `HitWindow`                                    | Absolute timing boundaries in milliseconds after clock rate; also present in upstream tosu. |
+| `beatmap.stats.hitWindow.miss`                          | `number`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.stats.hitWindow.meh`                           | `number`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.stats.hitWindow.ok`                            | `number`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.stats.hitWindow.good`                          | `number`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.stats.hitWindow.great`                         | `number`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.stats.hitWindow.perfect`                       | `number`                                       | Omitted when unavailable.                                                                   |
+| `beatmap.stats.maxCombo`                                | `integer`                                      |                                                                                             |
+| `play`                                                  | `Play`                                         |                                                                                             |
+| `play.failed`                                           | `boolean`                                      |                                                                                             |
+| `play.playerName`                                       | `string`                                       |                                                                                             |
+| `play.mode`                                             | `NumberName`                                   |                                                                                             |
+| `play.mode.number`                                      | `integer`                                      | Omitted when unavailable.                                                                   |
+| `play.mode.name`                                        | `string`                                       |                                                                                             |
+| `play.score`                                            | `number`                                       |                                                                                             |
+| `play.accuracy`                                         | `number`                                       |                                                                                             |
+| `play.healthBar`                                        | `HealthBar`                                    |                                                                                             |
+| `play.healthBar.normal`                                 | `number`                                       |                                                                                             |
+| `play.healthBar.smooth`                                 | `number`                                       |                                                                                             |
+| `play.hits`                                             | `PlayHits`                                     |                                                                                             |
+| `play.hits.0`                                           | `integer`                                      |                                                                                             |
+| `play.hits.50`                                          | `integer`                                      |                                                                                             |
+| `play.hits.100`                                         | `integer`                                      |                                                                                             |
+| `play.hits.300`                                         | `integer`                                      |                                                                                             |
+| `play.hits.geki`                                        | `integer`                                      |                                                                                             |
+| `play.hits.katu`                                        | `integer`                                      |                                                                                             |
+| `play.hits.sliderBreaks`                                | `integer`                                      |                                                                                             |
+| `play.hits.sliderEndHits`                               | `integer`                                      |                                                                                             |
+| `play.hits.smallTickHits`                               | `integer`                                      |                                                                                             |
+| `play.hits.largeTickHits`                               | `integer`                                      |                                                                                             |
+| `play.hitErrorArray`                                    | `number[]`                                     |                                                                                             |
+| `play.pressHitErrors`                                   | `number[]`                                     | <Badge type="tip" text="vosu only" />                                                       |
+| `play.releaseHitErrors`                                 | `number[]`                                     | <Badge type="tip" text="vosu only" />                                                       |
+| `play.combo`                                            | `Combo`                                        |                                                                                             |
+| `play.combo.current`                                    | `integer`                                      |                                                                                             |
+| `play.combo.max`                                        | `integer`                                      |                                                                                             |
+| `play.mods`                                             | `CalculateMods`                                |                                                                                             |
+| `play.mods.checksum`                                    | `string`                                       |                                                                                             |
+| `play.mods.number`                                      | `integer`                                      |                                                                                             |
+| `play.mods.name`                                        | `string`                                       |                                                                                             |
+| `play.mods.array`                                       | `Mod[]`                                        |                                                                                             |
+| `play.mods.array[].acronym`                             | `string`                                       |                                                                                             |
+| `play.mods.array[].settings`                            | `JSON object`                                  | Omitted when unavailable.                                                                   |
+| `play.mods.rate`                                        | `number`                                       |                                                                                             |
+| `play.rank`                                             | `Rank`                                         |                                                                                             |
+| `play.rank.current`                                     | `string`                                       |                                                                                             |
+| `play.rank.maxThisPlay`                                 | `string`                                       |                                                                                             |
+| `play.pp`                                               | `Pp`                                           |                                                                                             |
+| `play.pp.current`                                       | `number`                                       |                                                                                             |
+| `play.pp.fc`                                            | `number`                                       |                                                                                             |
+| `play.pp.maxAchieved`                                   | `number`                                       |                                                                                             |
+| `play.pp.maxAchievable`                                 | `number`                                       |                                                                                             |
+| `play.pp.detailed`                                      | `DetailedPp`                                   |                                                                                             |
+| `play.pp.detailed.current`                              | `DetailedPpAttributes`                         |                                                                                             |
+| `play.pp.detailed.current.aim`                          | `number`                                       |                                                                                             |
+| `play.pp.detailed.current.speed`                        | `number`                                       |                                                                                             |
+| `play.pp.detailed.current.accuracy`                     | `number`                                       |                                                                                             |
+| `play.pp.detailed.current.difficulty`                   | `number`                                       |                                                                                             |
+| `play.pp.detailed.current.flashlight`                   | `number`                                       |                                                                                             |
+| `play.pp.detailed.current.total`                        | `number`                                       |                                                                                             |
+| `play.pp.detailed.fc`                                   | `DetailedPpAttributes`                         |                                                                                             |
+| `play.pp.detailed.fc.aim`                               | `number`                                       |                                                                                             |
+| `play.pp.detailed.fc.speed`                             | `number`                                       |                                                                                             |
+| `play.pp.detailed.fc.accuracy`                          | `number`                                       |                                                                                             |
+| `play.pp.detailed.fc.difficulty`                        | `number`                                       |                                                                                             |
+| `play.pp.detailed.fc.flashlight`                        | `number`                                       |                                                                                             |
+| `play.pp.detailed.fc.total`                             | `number`                                       |                                                                                             |
+| `play.unstableRate`                                     | `number`                                       |                                                                                             |
+| `keys`                                                  | `Keys`                                         | <Badge type="tip" text="vosu only" />                                                       |
+| `keys.k1`                                               | `KeyOverlayButton`                             | <Badge type="tip" text="vosu only" />                                                       |
+| `keys.k1.isPressed`                                     | `boolean`                                      | <Badge type="tip" text="vosu only" />                                                       |
+| `keys.k1.count`                                         | `integer`                                      | <Badge type="tip" text="vosu only" />                                                       |
+| `keys.k2`                                               | `KeyOverlayButton`                             | <Badge type="tip" text="vosu only" />                                                       |
+| `keys.k2.isPressed`                                     | `boolean`                                      | <Badge type="tip" text="vosu only" />                                                       |
+| `keys.k2.count`                                         | `integer`                                      | <Badge type="tip" text="vosu only" />                                                       |
+| `keys.m1`                                               | `KeyOverlayButton`                             | <Badge type="tip" text="vosu only" />                                                       |
+| `keys.m1.isPressed`                                     | `boolean`                                      | <Badge type="tip" text="vosu only" />                                                       |
+| `keys.m1.count`                                         | `integer`                                      | <Badge type="tip" text="vosu only" />                                                       |
+| `keys.m2`                                               | `KeyOverlayButton`                             | <Badge type="tip" text="vosu only" />                                                       |
+| `keys.m2.isPressed`                                     | `boolean`                                      | <Badge type="tip" text="vosu only" />                                                       |
+| `keys.m2.count`                                         | `integer`                                      | <Badge type="tip" text="vosu only" />                                                       |
+| `keys.all`                                              | `Keypress[]`                                   | <Badge type="tip" text="vosu only" />                                                       |
+| `keys.all[].name`                                       | `string`                                       | <Badge type="tip" text="vosu only" />                                                       |
+| `keys.all[].isPressed`                                  | `boolean`                                      | <Badge type="tip" text="vosu only" />                                                       |
+| `keys.all[].count`                                      | `integer`                                      | <Badge type="tip" text="vosu only" />                                                       |
+| `keys.all[].pressedAt`                                  | `number or null`                               | Nullable sampled gameplay time in milliseconds. <Badge type="tip" text="vosu only" />       |
+| `keys.all[].releasedAt`                                 | `number or null`                               | Nullable sampled gameplay time in milliseconds. <Badge type="tip" text="vosu only" />       |
+| `leaderboard`                                           | `Leaderboard[]`                                |                                                                                             |
+| `leaderboard[].isFailed`                                | `boolean`                                      |                                                                                             |
+| `leaderboard[].position`                                | `integer`                                      |                                                                                             |
+| `leaderboard[].team`                                    | `integer`                                      |                                                                                             |
+| `leaderboard[].id`                                      | `integer`                                      |                                                                                             |
+| `leaderboard[].name`                                    | `string`                                       |                                                                                             |
+| `leaderboard[].score`                                   | `number`                                       |                                                                                             |
+| `leaderboard[].accuracy`                                | `number`                                       |                                                                                             |
+| `leaderboard[].hits`                                    | `LeaderboardHits`                              |                                                                                             |
+| `leaderboard[].hits.0`                                  | `integer`                                      |                                                                                             |
+| `leaderboard[].hits.50`                                 | `integer`                                      |                                                                                             |
+| `leaderboard[].hits.100`                                | `integer`                                      |                                                                                             |
+| `leaderboard[].hits.300`                                | `integer`                                      |                                                                                             |
+| `leaderboard[].hits.geki`                               | `integer`                                      |                                                                                             |
+| `leaderboard[].hits.katu`                               | `integer`                                      |                                                                                             |
+| `leaderboard[].combo`                                   | `Combo`                                        |                                                                                             |
+| `leaderboard[].combo.current`                           | `integer`                                      |                                                                                             |
+| `leaderboard[].combo.max`                               | `integer`                                      |                                                                                             |
+| `leaderboard[].mods`                                    | `CalculateMods`                                |                                                                                             |
+| `leaderboard[].mods.checksum`                           | `string`                                       |                                                                                             |
+| `leaderboard[].mods.number`                             | `integer`                                      |                                                                                             |
+| `leaderboard[].mods.name`                               | `string`                                       |                                                                                             |
+| `leaderboard[].mods.array`                              | `Mod[]`                                        |                                                                                             |
+| `leaderboard[].mods.array[].acronym`                    | `string`                                       |                                                                                             |
+| `leaderboard[].mods.array[].settings`                   | `JSON object`                                  | Omitted when unavailable.                                                                   |
+| `leaderboard[].mods.rate`                               | `number`                                       |                                                                                             |
+| `leaderboard[].rank`                                    | `string`                                       |                                                                                             |
+| `performance`                                           | `Performance`                                  |                                                                                             |
+| `performance.accuracy`                                  | `Accuracy`                                     |                                                                                             |
+| `performance.accuracy.90`                               | `number`                                       |                                                                                             |
+| `performance.accuracy.91`                               | `number`                                       |                                                                                             |
+| `performance.accuracy.92`                               | `number`                                       |                                                                                             |
+| `performance.accuracy.93`                               | `number`                                       |                                                                                             |
+| `performance.accuracy.94`                               | `number`                                       |                                                                                             |
+| `performance.accuracy.95`                               | `number`                                       |                                                                                             |
+| `performance.accuracy.96`                               | `number`                                       |                                                                                             |
+| `performance.accuracy.97`                               | `number`                                       |                                                                                             |
+| `performance.accuracy.98`                               | `number`                                       |                                                                                             |
+| `performance.accuracy.99`                               | `number`                                       |                                                                                             |
+| `performance.accuracy.100`                              | `number`                                       |                                                                                             |
+| `performance.graph`                                     | `Graph`                                        |                                                                                             |
+| `performance.graph.series`                              | `Series[]`                                     |                                                                                             |
+| `performance.graph.series[].name`                       | `string`                                       |                                                                                             |
+| `performance.graph.series[].data`                       | `number[]`                                     |                                                                                             |
+| `performance.graph.xaxis`                               | `number[]`                                     |                                                                                             |
+| `resultsScreen`                                         | `ResultsScreen`                                |                                                                                             |
+| `resultsScreen.scoreId`                                 | `number`                                       |                                                                                             |
+| `resultsScreen.playerName`                              | `string`                                       |                                                                                             |
+| `resultsScreen.mode`                                    | `NumberName`                                   |                                                                                             |
+| `resultsScreen.mode.number`                             | `integer`                                      | Omitted when unavailable.                                                                   |
+| `resultsScreen.mode.name`                               | `string`                                       |                                                                                             |
+| `resultsScreen.score`                                   | `number`                                       |                                                                                             |
+| `resultsScreen.accuracy`                                | `number`                                       |                                                                                             |
+| `resultsScreen.name`                                    | `string`                                       |                                                                                             |
+| `resultsScreen.hits`                                    | `ResultsHits`                                  |                                                                                             |
+| `resultsScreen.hits.0`                                  | `integer`                                      |                                                                                             |
+| `resultsScreen.hits.50`                                 | `integer`                                      |                                                                                             |
+| `resultsScreen.hits.100`                                | `integer`                                      |                                                                                             |
+| `resultsScreen.hits.300`                                | `integer`                                      |                                                                                             |
+| `resultsScreen.hits.geki`                               | `integer`                                      |                                                                                             |
+| `resultsScreen.hits.katu`                               | `integer`                                      |                                                                                             |
+| `resultsScreen.hits.sliderEndHits`                      | `integer`                                      |                                                                                             |
+| `resultsScreen.hits.smallTickHits`                      | `integer`                                      |                                                                                             |
+| `resultsScreen.hits.largeTickHits`                      | `integer`                                      |                                                                                             |
+| `resultsScreen.mods`                                    | `CalculateMods`                                |                                                                                             |
+| `resultsScreen.mods.checksum`                           | `string`                                       |                                                                                             |
+| `resultsScreen.mods.number`                             | `integer`                                      |                                                                                             |
+| `resultsScreen.mods.name`                               | `string`                                       |                                                                                             |
+| `resultsScreen.mods.array`                              | `Mod[]`                                        |                                                                                             |
+| `resultsScreen.mods.array[].acronym`                    | `string`                                       |                                                                                             |
+| `resultsScreen.mods.array[].settings`                   | `JSON object`                                  | Omitted when unavailable.                                                                   |
+| `resultsScreen.mods.rate`                               | `number`                                       |                                                                                             |
+| `resultsScreen.maxCombo`                                | `integer`                                      |                                                                                             |
+| `resultsScreen.rank`                                    | `string`                                       |                                                                                             |
+| `resultsScreen.pp`                                      | `ResultsPp`                                    |                                                                                             |
+| `resultsScreen.pp.current`                              | `number`                                       |                                                                                             |
+| `resultsScreen.pp.fc`                                   | `number`                                       |                                                                                             |
+| `resultsScreen.createdAt`                               | `string`                                       |                                                                                             |
+| `folders`                                               | `Folders`                                      |                                                                                             |
+| `folders.game`                                          | `string`                                       |                                                                                             |
+| `folders.skin`                                          | `string`                                       |                                                                                             |
+| `folders.songs`                                         | `string`                                       |                                                                                             |
+| `folders.beatmap`                                       | `string`                                       | Omitted when unavailable.                                                                   |
+| `files`                                                 | `Files`                                        |                                                                                             |
+| `files.beatmap`                                         | `string`                                       | Omitted when unavailable.                                                                   |
+| `files.background`                                      | `string`                                       | Omitted when unavailable.                                                                   |
+| `files.audio`                                           | `string`                                       | Omitted when unavailable.                                                                   |
+| `directPath`                                            | `DirectPath`                                   |                                                                                             |
+| `directPath.beatmapFile`                                | `string`                                       |                                                                                             |
+| `directPath.beatmapBackground`                          | `string`                                       |                                                                                             |
+| `directPath.beatmapAudio`                               | `string`                                       |                                                                                             |
+| `directPath.beatmapFolder`                              | `string`                                       | Omitted when unavailable.                                                                   |
+| `directPath.skinFolder`                                 | `string`                                       |                                                                                             |
+| `tourney`                                               | `Tourney`                                      | Omitted when unavailable.                                                                   |
+| `tourney.scoreVisible`                                  | `boolean`                                      |                                                                                             |
+| `tourney.starsVisible`                                  | `boolean`                                      |                                                                                             |
+| `tourney.ipcState`                                      | `integer`                                      |                                                                                             |
+| `tourney.bestOF`                                        | `integer`                                      |                                                                                             |
+| `tourney.team`                                          | `{ left: string, right: string }`              |                                                                                             |
+| `tourney.points`                                        | `{ left: integer, right: integer }`            |                                                                                             |
+| `tourney.chat`                                          | `{ team, name, message, timestamp: string }[]` |                                                                                             |
+| `tourney.totalScore`                                    | `{ left: number, right: number }`              |                                                                                             |
+| `tourney.clients`                                       | `TourneyClient[]`                              |                                                                                             |
+| `tourney.clients[].ipcId`                               | `number`                                       |                                                                                             |
+| `tourney.clients[].team`                                | `"left" or "right"`                            |                                                                                             |
+| `tourney.clients[].settings`                            | `TourneyClientSettings`                        |                                                                                             |
+| `tourney.clients[].settings.mania`                      | `TourneyManiaSettings`                         |                                                                                             |
+| `tourney.clients[].settings.mania.scrollSpeed`          | `integer`                                      |                                                                                             |
+| `tourney.clients[].user`                                | `TourneyUser`                                  |                                                                                             |
+| `tourney.clients[].user.id`                             | `integer`                                      |                                                                                             |
+| `tourney.clients[].user.name`                           | `string`                                       |                                                                                             |
+| `tourney.clients[].user.country`                        | `string`                                       |                                                                                             |
+| `tourney.clients[].user.accuracy`                       | `number`                                       |                                                                                             |
+| `tourney.clients[].user.rankedScore`                    | `number`                                       |                                                                                             |
+| `tourney.clients[].user.playCount`                      | `integer`                                      |                                                                                             |
+| `tourney.clients[].user.globalRank`                     | `integer`                                      |                                                                                             |
+| `tourney.clients[].user.totalPP`                        | `number`                                       |                                                                                             |
+| `tourney.clients[].beatmap`                             | `TourneyBeatmap`                               |                                                                                             |
+| `tourney.clients[].beatmap.stats`                       | `Stats`                                        |                                                                                             |
+| `tourney.clients[].beatmap.stats.stars`                 | `Stars`                                        |                                                                                             |
+| `tourney.clients[].beatmap.stats.stars.live`            | `number`                                       |                                                                                             |
+| `tourney.clients[].beatmap.stats.stars.aim`             | `number`                                       | Omitted when unavailable.                                                                   |
+| `tourney.clients[].beatmap.stats.stars.speed`           | `number`                                       | Omitted when unavailable.                                                                   |
+| `tourney.clients[].beatmap.stats.stars.flashlight`      | `number`                                       | Omitted when unavailable.                                                                   |
+| `tourney.clients[].beatmap.stats.stars.sliderFactor`    | `number`                                       | Omitted when unavailable.                                                                   |
+| `tourney.clients[].beatmap.stats.stars.stamina`         | `number`                                       | Omitted when unavailable.                                                                   |
+| `tourney.clients[].beatmap.stats.stars.rhythm`          | `number`                                       | Omitted when unavailable.                                                                   |
+| `tourney.clients[].beatmap.stats.stars.color`           | `number`                                       | Omitted when unavailable.                                                                   |
+| `tourney.clients[].beatmap.stats.stars.reading`         | `number`                                       | Omitted when unavailable.                                                                   |
+| `tourney.clients[].beatmap.stats.stars.hitWindow`       | `number`                                       | Omitted when unavailable.                                                                   |
+| `tourney.clients[].beatmap.stats.stars.total`           | `number`                                       |                                                                                             |
+| `tourney.clients[].beatmap.stats.ar`                    | `Ar`                                           |                                                                                             |
+| `tourney.clients[].beatmap.stats.ar.original`           | `number`                                       |                                                                                             |
+| `tourney.clients[].beatmap.stats.ar.converted`          | `number`                                       |                                                                                             |
+| `tourney.clients[].beatmap.stats.cs`                    | `Cs`                                           |                                                                                             |
+| `tourney.clients[].beatmap.stats.cs.original`           | `number`                                       |                                                                                             |
+| `tourney.clients[].beatmap.stats.cs.converted`          | `number`                                       |                                                                                             |
+| `tourney.clients[].beatmap.stats.od`                    | `Od`                                           |                                                                                             |
+| `tourney.clients[].beatmap.stats.od.original`           | `number`                                       |                                                                                             |
+| `tourney.clients[].beatmap.stats.od.converted`          | `number`                                       |                                                                                             |
+| `tourney.clients[].beatmap.stats.hp`                    | `Hp`                                           |                                                                                             |
+| `tourney.clients[].beatmap.stats.hp.original`           | `number`                                       |                                                                                             |
+| `tourney.clients[].beatmap.stats.hp.converted`          | `number`                                       |                                                                                             |
+| `tourney.clients[].beatmap.stats.bpm`                   | `Bpm`                                          |                                                                                             |
+| `tourney.clients[].beatmap.stats.bpm.realtime`          | `number`                                       |                                                                                             |
+| `tourney.clients[].beatmap.stats.bpm.common`            | `number`                                       |                                                                                             |
+| `tourney.clients[].beatmap.stats.bpm.min`               | `number`                                       |                                                                                             |
+| `tourney.clients[].beatmap.stats.bpm.max`               | `number`                                       |                                                                                             |
+| `tourney.clients[].beatmap.stats.objects`               | `Objects`                                      |                                                                                             |
+| `tourney.clients[].beatmap.stats.objects.circles`       | `integer`                                      |                                                                                             |
+| `tourney.clients[].beatmap.stats.objects.sliders`       | `integer`                                      |                                                                                             |
+| `tourney.clients[].beatmap.stats.objects.spinners`      | `integer`                                      |                                                                                             |
+| `tourney.clients[].beatmap.stats.objects.holds`         | `integer`                                      |                                                                                             |
+| `tourney.clients[].beatmap.stats.objects.total`         | `integer`                                      |                                                                                             |
+| `tourney.clients[].beatmap.stats.hitWindow`             | `HitWindow`                                    |                                                                                             |
+| `tourney.clients[].beatmap.stats.hitWindow.miss`        | `number`                                       | Omitted when unavailable.                                                                   |
+| `tourney.clients[].beatmap.stats.hitWindow.meh`         | `number`                                       | Omitted when unavailable.                                                                   |
+| `tourney.clients[].beatmap.stats.hitWindow.ok`          | `number`                                       | Omitted when unavailable.                                                                   |
+| `tourney.clients[].beatmap.stats.hitWindow.good`        | `number`                                       | Omitted when unavailable.                                                                   |
+| `tourney.clients[].beatmap.stats.hitWindow.great`       | `number`                                       | Omitted when unavailable.                                                                   |
+| `tourney.clients[].beatmap.stats.hitWindow.perfect`     | `number`                                       | Omitted when unavailable.                                                                   |
+| `tourney.clients[].beatmap.stats.maxCombo`              | `integer`                                      |                                                                                             |
+| `tourney.clients[].play`                                | `Play`                                         |                                                                                             |
+| `tourney.clients[].play.failed`                         | `boolean`                                      |                                                                                             |
+| `tourney.clients[].play.playerName`                     | `string`                                       |                                                                                             |
+| `tourney.clients[].play.mode`                           | `NumberName`                                   |                                                                                             |
+| `tourney.clients[].play.mode.number`                    | `integer`                                      | Omitted when unavailable.                                                                   |
+| `tourney.clients[].play.mode.name`                      | `string`                                       |                                                                                             |
+| `tourney.clients[].play.score`                          | `number`                                       |                                                                                             |
+| `tourney.clients[].play.accuracy`                       | `number`                                       |                                                                                             |
+| `tourney.clients[].play.healthBar`                      | `HealthBar`                                    |                                                                                             |
+| `tourney.clients[].play.healthBar.normal`               | `number`                                       |                                                                                             |
+| `tourney.clients[].play.healthBar.smooth`               | `number`                                       |                                                                                             |
+| `tourney.clients[].play.hits`                           | `PlayHits`                                     |                                                                                             |
+| `tourney.clients[].play.hits.0`                         | `integer`                                      |                                                                                             |
+| `tourney.clients[].play.hits.50`                        | `integer`                                      |                                                                                             |
+| `tourney.clients[].play.hits.100`                       | `integer`                                      |                                                                                             |
+| `tourney.clients[].play.hits.300`                       | `integer`                                      |                                                                                             |
+| `tourney.clients[].play.hits.geki`                      | `integer`                                      |                                                                                             |
+| `tourney.clients[].play.hits.katu`                      | `integer`                                      |                                                                                             |
+| `tourney.clients[].play.hits.sliderBreaks`              | `integer`                                      |                                                                                             |
+| `tourney.clients[].play.hits.sliderEndHits`             | `integer`                                      |                                                                                             |
+| `tourney.clients[].play.hits.smallTickHits`             | `integer`                                      |                                                                                             |
+| `tourney.clients[].play.hits.largeTickHits`             | `integer`                                      |                                                                                             |
+| `tourney.clients[].play.hitErrorArray`                  | `number[]`                                     |                                                                                             |
+| `tourney.clients[].play.pressHitErrors`                 | `number[]`                                     | <Badge type="tip" text="vosu only" />                                                       |
+| `tourney.clients[].play.releaseHitErrors`               | `number[]`                                     | <Badge type="tip" text="vosu only" />                                                       |
+| `tourney.clients[].play.combo`                          | `Combo`                                        |                                                                                             |
+| `tourney.clients[].play.combo.current`                  | `integer`                                      |                                                                                             |
+| `tourney.clients[].play.combo.max`                      | `integer`                                      |                                                                                             |
+| `tourney.clients[].play.mods`                           | `CalculateMods`                                |                                                                                             |
+| `tourney.clients[].play.mods.checksum`                  | `string`                                       |                                                                                             |
+| `tourney.clients[].play.mods.number`                    | `integer`                                      |                                                                                             |
+| `tourney.clients[].play.mods.name`                      | `string`                                       |                                                                                             |
+| `tourney.clients[].play.mods.array`                     | `Mod[]`                                        |                                                                                             |
+| `tourney.clients[].play.mods.array[].acronym`           | `string`                                       |                                                                                             |
+| `tourney.clients[].play.mods.array[].settings`          | `JSON object`                                  | Omitted when unavailable.                                                                   |
+| `tourney.clients[].play.mods.rate`                      | `number`                                       |                                                                                             |
+| `tourney.clients[].play.rank`                           | `Rank`                                         |                                                                                             |
+| `tourney.clients[].play.rank.current`                   | `string`                                       |                                                                                             |
+| `tourney.clients[].play.rank.maxThisPlay`               | `string`                                       |                                                                                             |
+| `tourney.clients[].play.pp`                             | `Pp`                                           |                                                                                             |
+| `tourney.clients[].play.pp.current`                     | `number`                                       |                                                                                             |
+| `tourney.clients[].play.pp.fc`                          | `number`                                       |                                                                                             |
+| `tourney.clients[].play.pp.maxAchieved`                 | `number`                                       |                                                                                             |
+| `tourney.clients[].play.pp.maxAchievable`               | `number`                                       |                                                                                             |
+| `tourney.clients[].play.pp.detailed`                    | `DetailedPp`                                   |                                                                                             |
+| `tourney.clients[].play.pp.detailed.current`            | `DetailedPpAttributes`                         |                                                                                             |
+| `tourney.clients[].play.pp.detailed.current.aim`        | `number`                                       |                                                                                             |
+| `tourney.clients[].play.pp.detailed.current.speed`      | `number`                                       |                                                                                             |
+| `tourney.clients[].play.pp.detailed.current.accuracy`   | `number`                                       |                                                                                             |
+| `tourney.clients[].play.pp.detailed.current.difficulty` | `number`                                       |                                                                                             |
+| `tourney.clients[].play.pp.detailed.current.flashlight` | `number`                                       |                                                                                             |
+| `tourney.clients[].play.pp.detailed.current.total`      | `number`                                       |                                                                                             |
+| `tourney.clients[].play.pp.detailed.fc`                 | `DetailedPpAttributes`                         |                                                                                             |
+| `tourney.clients[].play.pp.detailed.fc.aim`             | `number`                                       |                                                                                             |
+| `tourney.clients[].play.pp.detailed.fc.speed`           | `number`                                       |                                                                                             |
+| `tourney.clients[].play.pp.detailed.fc.accuracy`        | `number`                                       |                                                                                             |
+| `tourney.clients[].play.pp.detailed.fc.difficulty`      | `number`                                       |                                                                                             |
+| `tourney.clients[].play.pp.detailed.fc.flashlight`      | `number`                                       |                                                                                             |
+| `tourney.clients[].play.pp.detailed.fc.total`           | `number`                                       |                                                                                             |
+| `tourney.clients[].play.unstableRate`                   | `number`                                       |                                                                                             |
+| `room`                                                  | `Room`                                         | Omitted when unavailable.                                                                   |
+| `room.roomID`                                           | `integer`                                      |                                                                                             |
+| `room.users`                                            | `RoomUser[]`                                   |                                                                                             |
+| `room.users[].id`                                       | `integer`                                      |                                                                                             |
+| `room.users[].username`                                 | `string`                                       |                                                                                             |
+| `room.users[].countryCode`                              | `integer`                                      |                                                                                             |
+| `room.users[].avatarUrl`                                | `string`                                       | Omitted when unavailable.                                                                   |
+
+## Precise v2
+
+`GET /json/v2/precise` and `/websocket/v2/precise` publish this smaller, independently sampled document. It is not a complete regular v2 state object.
+
+| Field                             | JSON type          | Availability / compatibility                                                          |
+| --------------------------------- | ------------------ | ------------------------------------------------------------------------------------- |
+| `keys`                            | `Keys`             |                                                                                       |
+| `keys.k1`                         | `KeyOverlayButton` |                                                                                       |
+| `keys.k1.isPressed`               | `boolean`          |                                                                                       |
+| `keys.k1.count`                   | `integer`          |                                                                                       |
+| `keys.k2`                         | `KeyOverlayButton` |                                                                                       |
+| `keys.k2.isPressed`               | `boolean`          |                                                                                       |
+| `keys.k2.count`                   | `integer`          |                                                                                       |
+| `keys.m1`                         | `KeyOverlayButton` |                                                                                       |
+| `keys.m1.isPressed`               | `boolean`          |                                                                                       |
+| `keys.m1.count`                   | `integer`          |                                                                                       |
+| `keys.m2`                         | `KeyOverlayButton` |                                                                                       |
+| `keys.m2.isPressed`               | `boolean`          |                                                                                       |
+| `keys.m2.count`                   | `integer`          |                                                                                       |
+| `keys.all`                        | `Keypress[]`       | <Badge type="tip" text="vosu only" />                                                 |
+| `keys.all[].name`                 | `string`           | <Badge type="tip" text="vosu only" />                                                 |
+| `keys.all[].isPressed`            | `boolean`          | <Badge type="tip" text="vosu only" />                                                 |
+| `keys.all[].count`                | `integer`          | <Badge type="tip" text="vosu only" />                                                 |
+| `keys.all[].pressedAt`            | `number or null`   | Nullable sampled gameplay time in milliseconds. <Badge type="tip" text="vosu only" /> |
+| `keys.all[].releasedAt`           | `number or null`   | Nullable sampled gameplay time in milliseconds. <Badge type="tip" text="vosu only" /> |
+| `hitErrors`                       | `number[]`         |                                                                                       |
+| `pressHitErrors`                  | `number[]`         | <Badge type="tip" text="vosu only" />                                                 |
+| `releaseHitErrors`                | `number[]`         | <Badge type="tip" text="vosu only" />                                                 |
+| `tourney`                         | `PreciseTourney[]` |                                                                                       |
+| `tourney[].ipcId`                 | `number`           |                                                                                       |
+| `tourney[].keys`                  | `Keys`             |                                                                                       |
+| `tourney[].keys.k1`               | `KeyOverlayButton` |                                                                                       |
+| `tourney[].keys.k1.isPressed`     | `boolean`          |                                                                                       |
+| `tourney[].keys.k1.count`         | `integer`          |                                                                                       |
+| `tourney[].keys.k2`               | `KeyOverlayButton` |                                                                                       |
+| `tourney[].keys.k2.isPressed`     | `boolean`          |                                                                                       |
+| `tourney[].keys.k2.count`         | `integer`          |                                                                                       |
+| `tourney[].keys.m1`               | `KeyOverlayButton` |                                                                                       |
+| `tourney[].keys.m1.isPressed`     | `boolean`          |                                                                                       |
+| `tourney[].keys.m1.count`         | `integer`          |                                                                                       |
+| `tourney[].keys.m2`               | `KeyOverlayButton` |                                                                                       |
+| `tourney[].keys.m2.isPressed`     | `boolean`          |                                                                                       |
+| `tourney[].keys.m2.count`         | `integer`          |                                                                                       |
+| `tourney[].keys.all`              | `Keypress[]`       | <Badge type="tip" text="vosu only" />                                                 |
+| `tourney[].keys.all[].name`       | `string`           | <Badge type="tip" text="vosu only" />                                                 |
+| `tourney[].keys.all[].isPressed`  | `boolean`          | <Badge type="tip" text="vosu only" />                                                 |
+| `tourney[].keys.all[].count`      | `integer`          | <Badge type="tip" text="vosu only" />                                                 |
+| `tourney[].keys.all[].pressedAt`  | `number or null`   | Nullable sampled gameplay time in milliseconds. <Badge type="tip" text="vosu only" /> |
+| `tourney[].keys.all[].releasedAt` | `number or null`   | Nullable sampled gameplay time in milliseconds. <Badge type="tip" text="vosu only" /> |
+| `tourney[].hitErrors`             | `number[]`         |                                                                                       |
+| `tourney[].pressHitErrors`        | `number[]`         | <Badge type="tip" text="vosu only" />                                                 |
+| `tourney[].releaseHitErrors`      | `number[]`         | <Badge type="tip" text="vosu only" />                                                 |
+
+## Timing and input semantics
+
+- `beatmap.stats.hitWindow` is **not vosu-exclusive**: upstream tosu already declares and populates it. Optional judgement members are `miss`, `meh`, `ok`, `good`, `great`, and `perfect`; unsupported members are omitted. Missing/unparsed maps use `{}`. Catch publishes zeros for all six and omits `stars.hitWindow`; spatial catcher width is not a timing window.
+- `hitErrorArray` (regular v2) and `hitErrors` (precise v2) retain the original ordered timing-event history. `pressHitErrors` and `releaseHitErrors` <Badge type="tip" text="vosu only" /> split note presses and osu!mania hold-note releases. Classification may lag the original while evidence is pending. Stable outside native mania, converted maps, or unavailable map metadata remain press-only.
+- Pause/results retain the current attempt’s history. Exiting the attempt clears it; a genuine quick retry begins fresh history. Polling before the first object and temporarily shrinking native lists do not clear history.
+- `keys.all` <Badge type="tip" text="vosu only" /> includes all source-reported logical inputs in source order. Nullable edge timestamps update only for sampled edges; count jumps do not fabricate timestamps for missed complete taps. The old four buttons remain compatible.
+- The whole regular-v2 `keys` object <Badge type="tip" text="vosu only" /> is additional relative to upstream tosu; tosu exposes its four-button object only in precise v2.
+- `rankedPlay.stage`: 0 WaitForJoin, 1 RoundWarmup, 2 CardDiscard, 3 FinishCardDiscard, 4 CardPlay, 5 FinishCardPlay, 6 GameplayWarmup, 7 Gameplay, 8 Results, 9 Ended.
+
+## v1 and streamCompanion
+
+The v1 family (`/json`, `/ws`) exposes the gosuMemory-compatible grouped snapshot; streamCompanion (`/json/sc`, `/tokens`) exposes the compatibility token object. Use the [upstream tosu wiki](https://github.com/tosuapp/tosu/wiki) for those full compatibility references rather than a second duplicated schema.
+
+vosu retains v1 `hitErrorArray` and streamCompanion `hitErrors` and adds sibling `pressHitErrors` / `releaseHitErrors` <Badge type="tip" text="vosu only" />. Their split-history semantics are the same as above. Treat these additions as optional on other servers. Do not infer that the added v2 keys tree exists in the older schemas.
+
+## Sources
+
+- [Regular/precise DTOs](https://github.com/shiruviaa/vosu/blob/main/src/model/api/v2.rs) and [settings DTOs](https://github.com/shiruviaa/vosu/blob/main/src/model/api/v2/settings.rs)
+- [Mods](https://github.com/shiruviaa/vosu/blob/main/src/model/states.rs), [ranked-play types](https://github.com/shiruviaa/vosu/blob/main/src/model/memory.rs)
+- [Upstream tosu types](https://github.com/tosuapp/tosu/blob/HEAD/packages/tosu/src/api/types/v2.ts) and [builder](https://github.com/tosuapp/tosu/blob/HEAD/packages/tosu/src/api/utils/buildResultV2.ts)
