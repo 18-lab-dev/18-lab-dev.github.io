@@ -24,26 +24,31 @@ guide holds the full tables, method, and caveats; this page charts every measure
 ## Coming in 1.1.0: before and after
 
 The performance work for the next release is on vosu's `main` branch and not released yet. These
-charts compare the same synthetic Linux benchmarks before and after it (vosu commit `60875d7`,
-[paired section](https://github.com/shiruviaa/vosu/blob/60875d7/docs/testing/benchmarks.md#performance-changes-for-110-paired)
-of the benchmark guide). Both builds ran alternately three times, pinned to one CPU with nothing
-else running; each bar is the median of three Criterion means, and the range spans them. The
-`before / after` chip is the speedup.
+charts run the same synthetic Linux benchmarks on three builds: the 1.0.2 code, after the first
+round of optimization, and after the second (vosu commit `2c977bf`,
+[paired section](https://github.com/shiruviaa/vosu/blob/2c977bf/docs/testing/benchmarks.md#performance-changes-for-110-paired)
+of the benchmark guide). The builds ran alternately three times, pinned to one CPU with no other
+benchmark running; each bar is the median of three Criterion means, and the range spans them. The
+chip on each row is the total speedup since 1.0.2.
 
 <BenchChart v-for="chart in paired.charts" :key="chart.id" :chart="chart" />
 
 ::: details What changed, and what these numbers don't show
-- **Linux native reader:** osu!lazer reads are batched, so a gameplay capture makes 32 native read
-  calls instead of 268, and each read checks the process generation once afterwards instead of
-  before and after. This targets the one live row tosu still wins below (Linux osu!lazer regular
-  cycle); a live rerun is still to come.
+- **Linux native reader:** osu!lazer and osu!stable reads are batched by pointer level, so a capture
+  makes 21 to 72 native read calls instead of 135 to 314, and each read checks the process
+  generation once afterwards instead of before and after. Every batched path falls back to the
+  original one-field-at-a-time reader on any failure. This targets the one live row tosu still
+  wins below (Linux osu!lazer regular cycle); a live rerun is still to come.
 - **Filtered WebSocket fan-out:** clients with the same filter share one encoded payload per
-  broadcast (bounded to 64 variants and 1 MiB), and only the fields a filter can read get
-  serialized.
-- **Selected-field subscriptions:** frames are written straight into a shared buffer, and
-  per-client delivery uses lighter locking and a one-frame mailbox.
-- **Cold serializers:** the precise document is written directly as bytes. The v1, v2, and
-  streamCompanion encoders are unchanged; their bars differ only within run-to-run spread.
+  broadcast, the schema document is built once per broadcast, top-level properties are shared
+  across different filters within a budget, and filtered JSON is written straight from the
+  selected fields.
+- **Selected-field subscriptions:** eligibility and delivery happen in one pass, each client has
+  one mailbox, and frames are written straight into a shared buffer.
+- **Cold serializers:** v1, v2, streamCompanion and the precise document are written directly as
+  bytes. The serializer cases are short enough that the desktop session running during the
+  benchmark (osu!, vosulay, a browser) widened their ranges; a separate six-round check showed
+  the second round left `v2 precise` and the precise reader unchanged.
 - These are synthetic, Linux-only fixtures. They don't measure live clients, Windows, network
   transport, or whole-daemon CPU and memory. Windows has no batched cross-process read, so the
   reader batching won't cut native calls there the same way.

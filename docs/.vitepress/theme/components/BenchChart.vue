@@ -27,13 +27,16 @@ const LABELS: Record<string, string> = {
   vosu: "vosu",
   vosuAlone: "vosu alone",
   before: "before",
-  after: "after",
+  v102: "1.0.2 code",
+  r1: "after round 1",
+  after: "1.1.0 so far",
 };
 
 // The chip compares the reference series with vosu's: tosu vs vosu, or vosu before vs after.
-const RATIO_PAIRS: [string, string][] = [
-  ["tosu", "vosu"],
-  ["before", "after"],
+const RATIO_PAIRS: [string, string, string][] = [
+  ["tosu", "vosu", "tosu / vosu"],
+  ["before", "after", "before / after"],
+  ["v102", "after", "speedup since 1.0.2"],
 ];
 
 const pair = computed(() =>
@@ -80,7 +83,7 @@ function ratio(row: Row): { text: string; better: boolean } | null {
           class="ratio"
           :class="{ worse: !ratio(row)!.better }"
           :title="`${pair![0]} ÷ ${pair![1]}; above 1× means ${pair![1]} is lower`"
-          >{{ pair![0] }} / {{ pair![1] }} {{ ratio(row)!.text }}</span
+          >{{ pair![2] }} {{ ratio(row)!.text }}</span
         >
       </div>
       <div v-for="key in chart.series" :key="key" class="line">
@@ -227,8 +230,15 @@ code.title {
 }
 
 .swatch.before,
-.bar.before {
+.bar.before,
+.swatch.v102,
+.bar.v102 {
   background: linear-gradient(90deg, #6b6385, #9a91b8);
+}
+
+.swatch.r1,
+.bar.r1 {
+  background: linear-gradient(90deg, #8b6cff, #b3a0ff);
 }
 
 .swatch.after,

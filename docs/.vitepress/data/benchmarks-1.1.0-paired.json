@@ -1,7 +1,7 @@
 {
   "source": {
     "repo": "shiruviaa/vosu",
-    "commit": "60875d7",
+    "commit": "2c977bf",
     "path": "docs/testing/benchmarks.md",
     "section": "Performance changes for 1.1.0 (paired)"
   },
@@ -9,87 +9,85 @@
     {
       "id": "reader",
       "title": "Linux native reader (regular capture cycle)",
-      "series": ["before", "after"],
+      "series": ["v102", "r1", "after"],
       "rows": [
         {
           "label": "lazer gameplay",
           "values": {
-            "before": {
-              "v": 89.49,
-              "s": "89.49 µs",
-              "range": "89.24–90.00"
+            "v102": {
+              "v": 90.99,
+              "s": "90.99 µs",
+              "range": "90.16–91.61"
+            },
+            "r1": {
+              "v": 16.67,
+              "s": "16.67 µs",
+              "range": "16.56–16.68"
             },
             "after": {
-              "v": 16.58,
-              "s": "16.58 µs",
-              "range": "16.38–16.62"
+              "v": 15.61,
+              "s": "15.61 µs",
+              "range": "15.56–16.32"
             }
           }
         },
         {
           "label": "lazer menu",
           "values": {
-            "before": {
-              "v": 107.29,
-              "s": "107.29 µs",
-              "range": "106.13–108.05"
+            "v102": {
+              "v": 107.18,
+              "s": "107.18 µs",
+              "range": "106.49–111.46"
+            },
+            "r1": {
+              "v": 42.51,
+              "s": "42.51 µs",
+              "range": "42.24–42.55"
             },
             "after": {
-              "v": 42.44,
-              "s": "42.44 µs",
-              "range": "41.92–43.00"
+              "v": 28.15,
+              "s": "28.15 µs",
+              "range": "28.03–28.70"
             }
           }
         },
         {
           "label": "stable gameplay",
           "values": {
-            "before": {
-              "v": 45.43,
-              "s": "45.43 µs",
-              "range": "45.31–46.03"
+            "v102": {
+              "v": 46.55,
+              "s": "46.55 µs",
+              "range": "46.40–47.12"
+            },
+            "r1": {
+              "v": 36.32,
+              "s": "36.32 µs",
+              "range": "36.12–36.67"
             },
             "after": {
-              "v": 36.53,
-              "s": "36.53 µs",
-              "range": "35.69–38.08"
+              "v": 12.14,
+              "s": "12.14 µs",
+              "range": "12.01–12.16"
             }
           }
         },
         {
           "label": "stable menu",
           "values": {
-            "before": {
-              "v": 49.39,
-              "s": "49.39 µs",
-              "range": "49.19–49.53"
+            "v102": {
+              "v": 50.37,
+              "s": "50.37 µs",
+              "range": "50.07–50.80"
+            },
+            "r1": {
+              "v": 39.14,
+              "s": "39.14 µs",
+              "range": "38.95–39.17"
             },
             "after": {
-              "v": 39.17,
-              "s": "39.17 µs",
-              "range": "38.68–40.51"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "precise",
-      "title": "Linux lazer precise capture (memory_reader_bench)",
-      "series": ["before", "after"],
-      "rows": [
-        {
-          "label": "lazer precise",
-          "values": {
-            "before": {
-              "v": 10.67,
-              "s": "10.67 µs",
-              "range": "10.44–10.88"
-            },
-            "after": {
-              "v": 8.94,
-              "s": "8.94 µs",
-              "range": "8.72–9.05"
+              "v": 10.05,
+              "s": "10.05 µs",
+              "range": "9.86–10.31"
             }
           }
         }
@@ -98,35 +96,45 @@
     {
       "id": "filtered",
       "title": "Filtered WebSocket fan-out, v2, 100 clients",
-      "series": ["before", "after"],
+      "series": ["v102", "r1", "after"],
       "rows": [
         {
           "label": "identical filters",
           "values": {
-            "before": {
-              "v": 5201.0,
-              "s": "5.201 ms",
-              "range": "5.169–5.208"
+            "v102": {
+              "v": 5262.0,
+              "s": "5.262 ms",
+              "range": "5.242–5.854 ms"
+            },
+            "r1": {
+              "v": 23.65,
+              "s": "23.65 µs",
+              "range": "23.42–23.77"
             },
             "after": {
-              "v": 23.35,
-              "s": "23.35 µs",
-              "range": "23.27–23.45"
+              "v": 18.99,
+              "s": "18.99 µs",
+              "range": "18.93–19.85"
             }
           }
         },
         {
           "label": "unique filters",
           "values": {
-            "before": {
-              "v": 5758.0,
-              "s": "5.758 ms",
-              "range": "5.735–5.787"
+            "v102": {
+              "v": 5867.0,
+              "s": "5.867 ms",
+              "range": "5.836–6.337 ms"
+            },
+            "r1": {
+              "v": 558.9,
+              "s": "558.90 µs",
+              "range": "552.8–563.3"
             },
             "after": {
-              "v": 558.8,
-              "s": "558.80 µs",
-              "range": "547.5–572.6"
+              "v": 30.41,
+              "s": "30.41 µs",
+              "range": "29.37–31.11"
             }
           }
         }
@@ -135,35 +143,45 @@
     {
       "id": "subscribe",
       "title": "Selected-field subscription, 1000 clients",
-      "series": ["before", "after"],
+      "series": ["v102", "r1", "after"],
       "rows": [
         {
           "label": "distinct plans",
           "values": {
-            "before": {
-              "v": 397.6,
-              "s": "397.60 µs",
-              "range": "396.0–403.8"
+            "v102": {
+              "v": 425.8,
+              "s": "425.80 µs",
+              "range": "420.8–426.8"
+            },
+            "r1": {
+              "v": 161.0,
+              "s": "161.00 µs",
+              "range": "159.7–161.4"
             },
             "after": {
-              "v": 159.3,
-              "s": "159.30 µs",
-              "range": "158.7–160.8"
+              "v": 83.05,
+              "s": "83.05 µs",
+              "range": "81.63–84.85"
             }
           }
         },
         {
           "label": "shared plan",
           "values": {
-            "before": {
-              "v": 200.9,
-              "s": "200.90 µs",
-              "range": "200.5–206.2"
+            "v102": {
+              "v": 220.0,
+              "s": "220.00 µs",
+              "range": "217.8–221.0"
+            },
+            "r1": {
+              "v": 102.9,
+              "s": "102.90 µs",
+              "range": "102.5–104.4"
             },
             "after": {
-              "v": 104.2,
-              "s": "104.20 µs",
-              "range": "101.3–115.5"
+              "v": 59.12,
+              "s": "59.12 µs",
+              "range": "58.63–59.76"
             }
           }
         }
@@ -172,65 +190,112 @@
     {
       "id": "serializers",
       "title": "Cold serializers",
-      "series": ["before", "after"],
+      "series": ["v102", "r1", "after"],
       "rows": [
-        {
-          "label": "v2 precise",
-          "values": {
-            "before": {
-              "v": 4.185,
-              "s": "4.18 µs",
-              "range": "3.925–5.427"
-            },
-            "after": {
-              "v": 2.948,
-              "s": "2.95 µs",
-              "range": "2.885–3.005"
-            }
-          }
-        },
         {
           "label": "v1",
           "values": {
-            "before": {
-              "v": 4.538,
-              "s": "4.54 µs",
-              "range": "4.516–4.680"
+            "v102": {
+              "v": 7.377,
+              "s": "7.38 µs",
+              "range": "5.917–7.476"
+            },
+            "r1": {
+              "v": 6.898,
+              "s": "6.90 µs",
+              "range": "5.662–6.952"
             },
             "after": {
-              "v": 4.475,
-              "s": "4.47 µs",
-              "range": "4.191–4.878"
+              "v": 4.851,
+              "s": "4.85 µs",
+              "range": "3.752–4.976"
             }
           }
         },
         {
           "label": "v2",
           "values": {
-            "before": {
-              "v": 10.585,
-              "s": "10.59 µs",
-              "range": "10.112–13.387"
+            "v102": {
+              "v": 16.3,
+              "s": "16.30 µs",
+              "range": "13.58–17.68"
+            },
+            "r1": {
+              "v": 14.25,
+              "s": "14.25 µs",
+              "range": "12.56–15.18"
             },
             "after": {
-              "v": 10.208,
-              "s": "10.21 µs",
-              "range": "9.609–11.427"
+              "v": 6.808,
+              "s": "6.81 µs",
+              "range": "5.805–7.509"
+            }
+          }
+        },
+        {
+          "label": "v2 precise",
+          "values": {
+            "v102": {
+              "v": 5.946,
+              "s": "5.95 µs",
+              "range": "5.115–6.208"
+            },
+            "r1": {
+              "v": 4.246,
+              "s": "4.25 µs",
+              "range": "3.659–5.193"
+            },
+            "after": {
+              "v": 5.231,
+              "s": "5.23 µs",
+              "range": "4.045–5.417"
             }
           }
         },
         {
           "label": "streamCompanion",
           "values": {
-            "before": {
-              "v": 6.653,
-              "s": "6.65 µs",
-              "range": "6.247–7.926"
+            "v102": {
+              "v": 8.142,
+              "s": "8.14 µs",
+              "range": "7.815–9.402"
+            },
+            "r1": {
+              "v": 9.396,
+              "s": "9.40 µs",
+              "range": "8.282–10.12"
             },
             "after": {
-              "v": 6.338,
-              "s": "6.34 µs",
-              "range": "6.313–6.371"
+              "v": 4.955,
+              "s": "4.96 µs",
+              "range": "4.716–6.259"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "precise",
+      "title": "Linux lazer precise capture (memory_reader_bench)",
+      "series": ["v102", "r1", "after"],
+      "rows": [
+        {
+          "label": "lazer precise",
+          "values": {
+            "v102": {
+              "v": 10.64,
+              "s": "10.64 µs",
+              "range": "10.43–11.36"
+            },
+            "r1": {
+              "v": 8.9,
+              "s": "8.90 µs",
+              "range": "8.74–9.13"
+            },
+            "after": {
+              "v": 9.75,
+              "s": "9.75 µs",
+              "range": "8.74–11.32"
             }
           }
         }
@@ -240,57 +305,73 @@
   "calls": {
     "id": "calls",
     "title": "Native read calls per capture cycle",
-    "series": ["before", "after"],
+    "series": ["v102", "r1", "after"],
     "rows": [
       {
         "label": "lazer gameplay",
         "values": {
-          "before": {
+          "v102": {
             "v": 268,
             "s": "268"
           },
-          "after": {
+          "r1": {
             "v": 32,
             "s": "32"
+          },
+          "after": {
+            "v": 28,
+            "s": "28"
           }
         }
       },
       {
         "label": "lazer menu",
         "values": {
-          "before": {
+          "v102": {
             "v": 314,
             "s": "314"
           },
-          "after": {
+          "r1": {
             "v": 136,
             "s": "136"
+          },
+          "after": {
+            "v": 72,
+            "s": "72"
           }
         }
       },
       {
         "label": "stable gameplay",
         "values": {
-          "before": {
+          "v102": {
+            "v": 135,
+            "s": "135"
+          },
+          "r1": {
             "v": 135,
             "s": "135"
           },
           "after": {
-            "v": 135,
-            "s": "135"
+            "v": 29,
+            "s": "29"
           }
         }
       },
       {
         "label": "stable menu",
         "values": {
-          "before": {
+          "v102": {
+            "v": 148,
+            "s": "148"
+          },
+          "r1": {
             "v": 148,
             "s": "148"
           },
           "after": {
-            "v": 148,
-            "s": "148"
+            "v": 21,
+            "s": "21"
           }
         }
       }
