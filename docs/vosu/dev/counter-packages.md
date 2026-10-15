@@ -49,6 +49,23 @@ Successful full HTML responses append a script that sets `window.COUNTER_PATH` t
 
 The script is appended **after** the file content, not injected before your inline scripts. Read it after document loading, or in a deferred/module entry point; do not expect an early inline script to see it. Use it for your own settings namespace and URL-encode it when constructing query/path values. It is not a token or authorization secret.
 
+### Per-instance settings profiles
+
+<Badge type="tip" text="vosu only" /> **Added in vosu 1.1.0.** Pin one hosted instance with `http://127.0.0.1:24050/my-counter/?vosuProfile=stream`. With a valid override vosu injects:
+
+```js
+window.COUNTER_PATH = "/@vosu-profile/stream/my-counter";
+window.VOSU_PROFILE = "stream";
+```
+
+Use the qualified `COUNTER_PATH` in the commands socket's encoded `l` parameter and `getSettings`, `saveSettings`, and `updateSettings` frames. Unmodified tosu settings clients then resolve that instance's pinned profile without a new protocol field. **It is not an asset URL**: no static-file alias exists for `/@vosu-profile/...`. Overlays that build asset URLs from `COUNTER_PATH` must adapt to use the page URL before opting into profiles.
+
+Without `vosuProfile`, the served bytes and injected metadata are unchanged; settings use the global active profile. Unknown page overrides resolve to the active profile at page load. Renaming/deleting a pinned profile requires reloading the instance with a valid override; open socket identities do not change.
+
+The reserved `default` profile retains the legacy values paths below. Other profiles store values at `<config>/settings/profiles/<profile>/<name>.settings.values.toml`; `<config>/settings/profiles.json` records names and global activation. Schemas stay shared; missing profile values use schema defaults, not another profile's values. Developer schema writes affect every profile.
+
+Use `/settings?overlay=<name>&profile=<p>` for the hosted profile editor (the editor uses `profile`, not `vosuProfile`). See the [profiles HTTP API](/vosu/dev/http-api#settings-profiles) for create/copy/rename/delete/activate actions and `?profile=` settings requests, and [profile-aware commands](/vosu/dev/websocket-api#profile-aware-commands) for refresh targeting.
+
 ## Setting schema <Badge type="tip" text="vosu only" />
 
 The package owns authoritative `settings.schema.toml`. It is a TOML document with a `settings` array of descriptors, normally written as repeated `[[settings]]` tables.

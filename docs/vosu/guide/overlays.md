@@ -63,6 +63,16 @@ Use an installed card's **Settings** button when present. The package owns `sett
 
 Controls can include text, colors, numbers, checkboxes, buttons, choices, commands, textareas, passwords, and headers. File-loaded or other non-hosted overlays may read settings, but must use the **hosted settings page** to write them because writes require same-origin browser provenance.
 
+### Settings profiles
+
+<Badge type="tip" text="vosu only" /> **Added in vosu 1.1.0.** The card settings editor and hosted `/settings?overlay=<name>&profile=<p>` page share profile selection, creation/copying, rename, deletion and global activation. Use profiles to switch a complete streaming setup while keeping the same overlay packages and schemas.
+
+The search box matches setting titles, descriptions and IDs; matching sections keep their headers. Header navigation jumps between sections and is absent when the schema has no headers. This hosted inline page is also the supported settings editor embedded by vosulay.
+
+`default` preserves the values paths above. Other profiles use `<config>/settings/profiles/<profile>/<counter>.settings.values.toml`. Unsaved overlays use their schema defaults, not another profile's saved values. Names are 1–48 ASCII letters, digits, `_` or `-`, case-insensitively unique; references are case-sensitive. You can have up to 32 profiles including `default`, which cannot be renamed/deleted. Deleting the active profile selects `default`.
+
+Activation switches unpinned instances. To pin one OBS/browser instance, append `?vosuProfile=stream` to its overlay URL; an unknown name falls back to the active profile at page load. Reload pinned instances after renaming/deleting their profile. Some overlays build asset URLs from their settings identity and must adapt before using an override; see [package limitations](/vosu/dev/counter-packages#per-instance-settings-profiles).
+
 ## Add to OBS
 
 1. Click the installed card's URL bar to copy the hosted URL.

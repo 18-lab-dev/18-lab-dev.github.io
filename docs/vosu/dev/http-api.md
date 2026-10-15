@@ -97,6 +97,34 @@ Search retains letters, digits, and whitespace; any word can match name, author,
 
 Daemon saves reject the **whole** request if interval/port values are nonfinite or outside: `POLL_RATE` 100–60000 ms, `PRECISE_DATA_POLL_RATE` 1–60000 ms, `V2_SUBSCRIPTION_DEBOUNCE` 1–60000 ms <Badge type="tip" text="vosu only" />, `SERVER_PORT` integral 1–65535. Other bindings are described in [configuration](/vosu/guide/configuration).
 
+### Settings profiles
+
+<Badge type="tip" text="vosu only" /> **Added in vosu 1.1.0.** Profiles group per-overlay values while package schemas stay shared.
+
+| Method + path                                                            | Input                 | Response                                                                                            |
+| ------------------------------------------------------------------------ | --------------------- | --------------------------------------------------------------------------------------------------- |
+| `GET /api/counters/profiles`                                             | None                  | Initially `{"active":"default","profiles":["default"]}`                                             |
+| `POST /api/counters/profiles` <Badge type="warning" text="management" /> | One JSON action below | Updated registry on success; HTTP 200 `{"error":"..."}` on domain errors, including unknown actions |
+
+| Action                    | JSON body                                                                               |
+| ------------------------- | --------------------------------------------------------------------------------------- |
+| Create empty profile      | `{"action":"create","name":"stream"}`                                                   |
+| Create by copying         | `{"action":"create","name":"stream","copyFrom":"default"}`                              |
+| Rename                    | `{"action":"rename","name":"stream","target":"live"}`                                   |
+| Delete                    | `{"action":"delete","name":"live"}`                                                     |
+| Activate globally         | `{"action":"activate","name":"stream"}`                                                 |
+| Copy one overlay's values | `{"action":"copyOverlay","name":"counter-folder","source":"default","target":"stream"}` |
+
+POST uses the same exact-origin provenance and body limits as other management writes. Names are case-sensitive references but case-insensitively unique: 1–48 ASCII letters, digits, `_` or `-`. At most 32 profiles including reserved `default` are allowed. `default` cannot be renamed/deleted; deleting the active profile selects `default`.
+
+`GET /api/counters/settings/<name>?profile=stream` keeps the existing `{"settings":[...],"values":{...}}` response. POST to that URL accepts the usual `[{"uniqueID":"field","value":...}]` and returns `{"result":"success"}`. Omit `profile` to use the global active profile. Explicit unknown profiles return a JSON error, not a write to a fallback profile. `update=yes` still edits the **shared** developer schema for every profile.
+
+`default` keeps `<config>/settings/<counter>.settings.values.toml`; other profiles use `<config>/settings/profiles/<profile>/<counter>.settings.values.toml`. `<config>/settings/profiles.json` stores the names and active selection; files are atomically replaced within their own directory. Missing overlay values use schema defaults, never another profile's saved values.
+
+`/settings?overlay=<name>&profile=<p>` opens the inline overlay editor for a profile; without `profile`, it uses the active profile. It and the dashboard card editor share profile selection, creation/copying, rename, deletion, global activation, title/description/ID search, and header navigation (absent for schemas with no headers). Matching sections retain their headers. This is the supported settings embedding surface for vosulay.
+
+For an individual overlay page, use [`?vosuProfile=<name>`](/vosu/dev/counter-packages#per-instance-settings-profiles), not the editor's `profile` query. The injected qualified `COUNTER_PATH` selects the profile in [commands sockets](/vosu/dev/websocket-api#profile-aware-commands). Activating profiles refreshes unpinned clients; saving/copying values refreshes clients pinned to that profile and unpinned clients when it is active.
+
 ## Reports and updates
 
 | Method + path                                                                                               | Input             | Response                                                         |

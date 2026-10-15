@@ -48,6 +48,12 @@ The **Settings** page at `/settings` includes General, Game data, Server, and Ad
 
 See the complete [configuration reference](/vosu/guide/configuration). **Automatic updates** is disabled with an explanation for externally managed installations; use [package updates](/vosu/guide/updates) instead.
 
+### Overlay settings
+
+<Badge type="tip" text="vosu only" /> **Added in vosu 1.1.0.** Installed-card settings and `/settings?overlay=<name>&profile=<p>` share named profiles: select, create/copy, rename, delete, or activate a profile globally. This is separate from the daemon's General/Game data/Server/Advanced settings. Existing values remain in reserved `default`; other profiles use schema defaults where values have not been saved.
+
+The overlay editor's search box matches titles, descriptions and IDs while retaining matching section headers. Header navigation jumps to sections; it is hidden for schemas without headers. The inline page is the supported vosulay embedding surface. See [profiles and per-instance pinning](/vosu/guide/overlays#settings-profiles).
+
 ### Start at login
 
 On Linux, **Settings → General → Start at login** records the current executable in a marked systemd user unit for the next graphical session. Enabling it does not launch a second daemon now; disabling it does not stop the running daemon. An unrelated `vosu.service` is never overwritten. A service-change failure leaves the saved setting unchanged and displays an error.

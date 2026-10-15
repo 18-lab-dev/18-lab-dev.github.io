@@ -127,6 +127,16 @@ socket.onmessage = ({ data }) => {
 };
 ```
 
+### Profile-aware commands
+
+<Badge type="tip" text="vosu only" /> **Added in vosu 1.1.0.** An overlay page pinned with `?vosuProfile=stream` receives `window.COUNTER_PATH="/@vosu-profile/stream/<overlay>"` and `window.VOSU_PROFILE="stream"`. Keep using the injected `COUNTER_PATH`, URI-encoded, for **both** the socket's `l` parameter and `getSettings`, `saveSettings`, and `updateSettings` envelope names. The existing example works without a new frame format: vosu decodes the qualified identity at the settings boundary and resolves the pinned profile.
+
+Without a page override, the existing counter identity and injected metadata remain unchanged; commands use the global active profile. Global activation refreshes only unpinned clients over `/websocket/commands`. Saving or copying overlay values refreshes clients pinned to that profile and unpinned clients when it is active. Existing bounded queues and save coalescing still apply.
+
+Renaming/deleting a profile does not rewrite already-open socket identities: reload pinned instances with a valid override. An unknown page override resolves to the active profile at page load, whereas explicit unknown HTTP API profiles fail. The qualified `COUNTER_PATH` is a **settings identity, not an asset URL**; construct assets from the page URL.
+
+Management uses [`GET/POST /api/counters/profiles` and `?profile=` on `/api/counters/settings/<name>`](/vosu/dev/http-api#settings-profiles). For user editing/embedding, use `/settings?overlay=<name>&profile=<p>`; its `profile` parameter is separate from the overlay page's `vosuProfile`.
+
 ### Filter syntax and bounds
 
 Filters are an array of field strings or nested `{ "field": "fieldName", "keys": [...] }` descriptors. Strings select whole fields; nested descriptors select child fields. An empty filter list restores unfiltered state. The parser accepts JavaScript-compatible truthy/coerced descriptor `field` values, but use nonempty strings. Non-descriptor items are ignored; exceeding **256 nodes** or **eight nesting levels** rejects the whole filter request. Equivalent filter plans are deduplicated. Ordered overlapping selections follow last-write projection behavior, not JSON Pointer subscription rules.
