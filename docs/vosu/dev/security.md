@@ -34,7 +34,7 @@ If a product genuinely needs a management operation, document its exact scope an
 
 - Read-only state: `/json/v2`, `/json/v2/precise`, and matching [WebSocket streams](/vosu/dev/websocket-api); prefer selected-field subscriptions where supported.
 - Your **own** settings read: `GET /api/counters/settings/<name>` or `getSettings` on a socket whose `l` matches your counter.
-- User edits: link the hosted **`/settings?overlay=<name>`** page. URL-encode the name. This is also the write path for file-loaded or other non-hosted overlays.
+- User edits: link the hosted **`/settings?overlay=<name>`** page. URL-encode the name. Counters in OBS or browsers still save via this page; vosulay uses the local broker credential below so counters running in game can save their own settings.
 - Per-counter package schema and values: [counter settings](/vosu/dev/counter-packages), not a shared in-game namespace.
 
 Hosted counters that intentionally implement their own settings UI may use the existing own-counter settings protocol, but shared-origin technical permission is not permission to manage unrelated counters or the daemon.
@@ -43,11 +43,23 @@ Hosted counters that intentionally implement their own settings UI may use the e
 
 Read authorization uses the configured trusted-peer/network and Origin/Referer policy; headerless and opaque/file-origin reads remain possible for trusted peers. Management POSTs additionally require provenance matching the native listener's **exact scheme, host, and port**. `Origin` is authoritative; only if absent may `Referer` authorize a mutation. Missing, malformed, duplicate, or `null` provenance does not authorize writes. Rejections return 403.
 
-`saveSettings` uses provenance captured at WebSocket upgrade and closes 1008 before saving/relaying when it is missing. Reads (`getSettings`), echo replies (`updateSettings`), and own-socket filters (`applyFilters`) remain available without write provenance.
+`saveSettings` uses provenance captured at WebSocket upgrade, or a valid local broker credential on `/websocket/commands`, and closes 1008 before saving/relaying when neither authorizes the write. Reads (`getSettings`), echo replies (`updateSettings`), and own-socket filters (`applyFilters`) remain available without write provenance.
 
 This is **CSRF protection, not authentication** against installed counter scripts or malicious local programs. Native clients can forge Origin. Forwarded headers are not trusted; an HTTPS reverse-proxy origin is not automatically a same-origin exception. CORS headers are not a grant of management authority.
 
 Keep loopback binding and normal-user execution. Root-confined file serving, escaped reports, bounded requests, HTTPS download checks, and ZIP safety checks reduce particular risks; they do not sandbox counter JavaScript or provide a global resource budget.
+
+## Local broker trust boundary
+
+vosu rotates a private `broker.json` credential each start. On Linux it lives at `$XDG_RUNTIME_DIR/vosu/broker.json`, falling back to `${XDG_CONFIG_HOME:-$HOME/.config}/vosu/broker.json` when `XDG_RUNTIME_DIR` is unset or empty; directory/file modes are 0700/0600. On Windows it lives at `%LOCALAPPDATA%\vosu\broker.json`, not next to the executable.
+
+Native brokers such as vosulay may send `Authorization: Bearer <token>` **only on loopback `/websocket/commands` upgrades**, matching the credential file's origin. It grants exactly the same-origin command-socket write permission, **not HTTP management authority**. Bearer is case-insensitive; other authorization schemes are ignored. A wrong/stale token fails the upgrade with 401 even when Origin would authorize it; no token preserves existing behavior. See the [command WebSocket contract](/vosu/dev/websocket-api#native-broker-credential) for origin matching and restart/retry handling.
+
+Any same-account process that can read this file can write counter settings and invoke other same-origin command-socket mutations. This makes native-client trust explicit, rather than solving the existing ability to forge Origin. Keep the token out of page JavaScript and logs. The broker must authorize its own inbound counter-frame Origin/Host and session secret before forwarding requests.
+
+**Windows residual risk:** the file inherits its directory's ACL. A pre-existing `%LOCALAPPDATA%\vosu` directory or its parents with broad inheritable permissions can expose the token to other accounts. vosu does not reset those ACLs; protect the directory and its parents. LocalAppData placement alone is not a security guarantee, and administrators or other principals already entitled to read remain trusted.
+
+Sources: [broker integration contract](https://github.com/shiruviaa/vosu/blob/main/README.md#native-overlay-brokers), [network exposure and ACL limits](https://github.com/shiruviaa/vosu/blob/main/docs/security.md#network-exposure), [ADR 0013 amendment](https://github.com/shiruviaa/vosu/blob/main/docs/decisions/0013-counters-share-dashboard-origin.md#native-broker-authentication-2026-10-16-amendment).
 
 ## Removed in-game endpoint <Badge type="danger" text="deprecated" />
 
