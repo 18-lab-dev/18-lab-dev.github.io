@@ -1,20 +1,22 @@
 ---
 title: Overlay security
-description: Understand the shared dashboard origin, management authority, and safe settings paths.
+description: Understand the separate dashboard origin, management authority, and safe settings paths.
 ---
 
 # Overlay security
 
-## Same origin means shared authority
+## Separate dashboard origin in vosu 1.1.0
 
-Installed counters run their authors' JavaScript at the same origin as vosu's dashboard: `http://127.0.0.1:24050` by default. They are **trusted code, not isolated tenants**. A counter can technically satisfy the management checks and act beyond its own settings. A catalog listing does not make third-party code safe.
+Installed counters stay at `http://127.0.0.1:24050` (`SERVER_IP:SERVER_PORT`), preserving URLs, localStorage, and IndexedDB. Trusted dashboard pages and management APIs move to `http://127.0.0.1:24052` (`DASHBOARD_IP:DASHBOARD_PORT`). The dashboard never serves overlay scripts or static files; previews use the overlay origin.
 
-[ADR 0013](https://github.com/shiruviaa/vosu/blob/main/docs/decisions/0013-counters-share-dashboard-origin.md) deliberately preserves counter URLs, browser storage, settings links, and compatibility rather than adding a separate origin or sandbox. That is a disclosed trust boundary, not an authentication guarantee.
+[ADR 0016](https://github.com/shiruviaa/vosu/blob/63cf797/docs/decisions/0016-separate-dashboard-origin.md) supersedes ADR 0013's shared-origin decision. Installed overlays no longer have dashboard management authority. This is browser-origin separation, not a general-purpose sandbox: overlays retain game-data reads and their settings command protocol, and third-party code can make external requests.
+
+Old overlay-origin dashboard page links redirect with HTTP 302, preserving path and query. `GET /api/dashboard` on the overlay origin publishes the effective dashboard origin. Redirect authorities use the effective listener rather than arbitrary Host headers; wildcard binds map to loopback for local discovery.
 
 ## Do not cross the management boundary
 
 ::: danger Developer responsibility
-Do not call management endpoints from an overlay without a **strong, documented justification** that the user can understand. Rendering a counter is not justification to install/delete code, change the daemon, collect diagnostics, or write another counter's settings.
+Do not attempt dashboard management operations from an overlay. Overlay-origin browser management mutations return **403**, even with matching overlay provenance. Rendering a counter is not justification to install/delete code, change the daemon, collect diagnostics, or write another counter's settings.
 :::
 
 | Management surface <Badge type="warning" text="management" />    | Why an overlay should not invoke it                                                          |
@@ -28,24 +30,26 @@ Do not call management endpoints from an overlay without a **strong, documented 
 | `saveSettings` targeting **other counters**                      | Changes persisted settings; the connection `l` is the save namespace, not the payload's name |
 | `POST /api/generateReport`                                       | Captures machine/configuration/log diagnostics that may contain private information          |
 
-If a product genuinely needs a management operation, document its exact scope and user-visible purpose, and make the action deliberate rather than a background effect of opening an overlay. Do not hide it behind a routine telemetry connection.
+These HTTP management operations live on the dashboard origin and require its provenance plus CSRF token. Explicitly scoped API keys retain only their documented overlay-origin value/profile exceptions. The existing command-socket settings protocol is unchanged; technical access to unrelated settings is not a user authorization to change them.
 
 ## What to use instead
 
 - Read-only state: `/json/v2`, `/json/v2/precise`, and matching [WebSocket streams](/vosu/dev/websocket-api); prefer selected-field subscriptions where supported.
 - Your **own** settings read: `GET /api/counters/settings/<name>` or `getSettings` on a socket whose `l` matches your counter.
-- User edits: link the hosted **`/settings?overlay=<name>`** page. URL-encode the name. Counters in OBS or browsers still save via this page; vosulay uses the local broker credential below so counters running in game can save their own settings.
+- User edits: link the hosted **`/settings?overlay=<name>`** page on the discovered dashboard origin. URL-encode the name; old overlay-origin settings links redirect. vosulay uses the local broker credential below so counters running in game can save their own settings.
 - Per-counter package schema and values: [counter settings](/vosu/dev/counter-packages), not a shared in-game namespace.
 
-Hosted counters that intentionally implement their own settings UI may use the existing own-counter settings protocol, but shared-origin technical permission is not permission to manage unrelated counters or the daemon.
+Hosted counters that intentionally implement their own settings UI may use the existing own-counter settings protocol. This does not grant daemon or dashboard management authority.
 
 ## What the checks actually protect
 
-Read authorization uses the configured trusted-peer/network and Origin/Referer policy; headerless and opaque/file-origin reads remain possible for trusted peers. Management POSTs require provenance matching the native listener's **exact scheme, host, and port**, unless an [API key](#api-key-trust-boundary) grants the specific value/profile write. `Origin` is authoritative; only if absent may `Referer` authorize a mutation. Missing, malformed, duplicate, or `null` provenance does not itself authorize writes. Provenance rejections return 403.
+Read authorization uses the configured trusted-peer/network and Origin/Referer policy; headerless and opaque/file-origin reads remain possible for trusted peers. Dashboard mutations require trusted peers, the dashboard's **exact scheme, host, and port**, and a per-start random **`X-Vosu-CSRF`** token injected only into dashboard pages. `Origin` is authoritative; only if absent may `Referer` supply provenance. Missing, malformed, duplicate, or `null` provenance does not authorize writes. Provenance/CSRF rejections return 403. Scoped API keys retain their specific overlay-origin value/profile grants.
 
 `saveSettings` uses provenance captured at WebSocket upgrade, a valid local broker credential on `/websocket/commands`, or an API key with `settings:write`, and closes 1008 before saving/relaying when none authorizes the write. Reads (`getSettings`), echo replies (`updateSettings`), and own-socket filters (`applyFilters`) remain available without write provenance.
 
-This is **CSRF protection, not authentication** against installed counter scripts or malicious local programs. Native clients can forge Origin. Forwarded headers are not trusted; an HTTPS reverse-proxy origin is not automatically a same-origin exception. CORS headers are not a grant of management authority.
+Dashboard requests also check Host against the effective safe origin and reject all WebSocket upgrades. Dashboard HTML uses same-origin-script CSP, inert JSON runtime context, and `X-Content-Type-Options: nosniff`. Normal pages send `frame-ancestors 'none'`; only `/settings?overlay=…&embed=1`, with a nonempty first `overlay` and first `embed=1`, permits framing. Embed mode is not an authorization grant and retains a clickjacking residual. Its postMessage payload/behavior is unchanged, but messages now originate from the **dashboard origin**; validate `event.origin`, `event.source`, and message shape.
+
+Native same-account clients can read dashboard pages and forge browser provenance. This boundary isolates installed browser overlays, **not malicious local programs**. Forwarded headers are not trusted; an HTTPS reverse-proxy origin is not automatically a same-origin exception. CORS headers are not a management grant.
 
 Keep loopback binding and normal-user execution. Root-confined file serving, escaped reports, bounded requests, HTTPS download checks, and ZIP safety checks reduce particular risks; they do not sandbox counter JavaScript or provide a global resource budget.
 
@@ -55,7 +59,7 @@ Keep loopback binding and normal-user execution. Root-confined file serving, esc
 
 - `settings:write` grants command-socket writes and HTTP overlay value saves, never `?update=yes` schema saves.
 - `profiles:manage` grants all profile mutations.
-- Neither grants updates, counter installation/deletion, reports, daemon settings, or key management. Key management, including metadata listing, requires exact same-origin dashboard provenance.
+- Neither grants updates, counter installation/deletion, reports, daemon settings, or key management. Key management, including metadata listing, requires dashboard-origin provenance and the dashboard's per-start CSRF token.
 
 Native clients present Bearer headers for [HTTP](/vosu/dev/http-api#api-keys) or command WebSocket upgrades. Browser WebSockets offer `vosu.key` and `vosu.key.<key>`; only `vosu.key` is echoed. **Never put keys in query strings**: no URL parameter authenticates them. Cross-origin browser HTTP is not supported; CORS does not allow Authorization. Invalid/revoked keys and insufficient scopes return 401.
 
@@ -65,9 +69,9 @@ Revocation immediately closes associated command sockets with **1008**, even whi
 
 Keys persist across restarts. Config-root `api-keys.toml` stores SHA-256 hashes and metadata, not recoverable secrets. Unix files are created 0600 and atomically replaced; unsafe ownership or group/world access warns without disabling otherwise valid keys. Windows inherits directory ACLs: protect the directory and its parents. Malformed/unreadable registries disable keys with a warning without stopping vosu or overwriting the file; back it up before an explicit key-management change replaces it.
 
-The per-start loopback `broker.json` token below is **unchanged**, keeping zero-config native broker integration; it does not authorize HTTP writes. API keys also do **not** isolate installed same-origin overlays: those still share dashboard authority.
+The per-start loopback `broker.json` token below is **unchanged**, keeping zero-config native broker integration on the overlay origin; it does not authorize HTTP writes. Scoped API-key settings/profile writes also remain on that origin, without granting general dashboard authority.
 
-Sources: [API key contract](https://github.com/shiruviaa/vosu/blob/09341cc/README.md#api-keys), [ADR 0015](https://github.com/shiruviaa/vosu/blob/09341cc/docs/decisions/0015-user-managed-api-keys.md), [network exposure](https://github.com/shiruviaa/vosu/blob/09341cc/docs/security.md#network-exposure), [operations runbook](https://github.com/shiruviaa/vosu/blob/09341cc/docs/operations/runbook.md).
+Sources: [ADR 0016](https://github.com/shiruviaa/vosu/blob/63cf797/docs/decisions/0016-separate-dashboard-origin.md), [API key contract](https://github.com/shiruviaa/vosu/blob/63cf797/README.md#api-keys), [network exposure](https://github.com/shiruviaa/vosu/blob/63cf797/docs/security.md#network-exposure), and [operations runbook](https://github.com/shiruviaa/vosu/blob/63cf797/docs/operations/runbook.md).
 
 ## Local broker trust boundary
 

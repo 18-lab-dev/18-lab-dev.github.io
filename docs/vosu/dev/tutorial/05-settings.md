@@ -47,8 +47,10 @@ not keep a retry queue. `pagehide` closes it along with the telemetry sockets.
 ## Let users edit the hosted page
 
 Users open the counter's settings from the daemon dashboard. Both servers expose a
-hosted `/settings?overlay=starter-overlay` page. Saving there sends updates back to
-the overlay; your UI does not need its own settings editor.
+hosted `/settings?overlay=starter-overlay` page. In vosu 1.1.0 that page lives on
+the separate dashboard origin (default `http://127.0.0.1:24052`); old overlay-origin
+links redirect. Saving there sends updates back to the overlay; your UI does not
+need its own settings editor.
 
 ::: warning Read, do not manage
 The overlay must not send `saveSettings`, call privileged management endpoints, or

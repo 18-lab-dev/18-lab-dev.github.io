@@ -29,7 +29,7 @@ State HTTP requests return `500 {"error":"osu is not ready/running"}` until a fo
 WebSocket frames and assembled inbound messages are limited to **1 MiB**. Slow clients receive latest-state delivery, not an unbounded replay of every sample. Subscription revisions are snapshots, not an event log; arrays and counts must be interpreted accordingly.
 
 ::: warning Counters are trusted code
-Installed counter JavaScript shares the dashboard origin and can pass its management checks. Keep overlays on read-only state APIs and their own settings; read the [security boundary](/vosu/dev/security) before implementing writes.
+Installed counter JavaScript runs on the overlay origin, separate from the dashboard/management origin (default `http://127.0.0.1:24052`) in vosu 1.1.0. It retains game-data reads and its settings protocol, not general dashboard authority. Keep overlays on read-only state APIs and their own settings; read the [security boundary](/vosu/dev/security) before implementing writes.
 :::
 
 ## Start building

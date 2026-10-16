@@ -15,12 +15,12 @@ Memory access is read-only. vosu does not inject code, write game memory/files, 
 
 ## Local access and trusted counters
 
-The default `127.0.0.1:24050` listener serves plain HTTP/WebSocket. Local applications that connect can read its game data. Browser reads are governed by the allowed peer and Origin/Referer policy.
+The overlay/data listener defaults to `127.0.0.1:24050` (plain HTTP/WebSocket); the independent trusted dashboard defaults to `127.0.0.1:24052` (`DASHBOARD_IP:DASHBOARD_PORT`). Both require allowed peers. Local applications can read game data. Browser reads are governed by the allowed peer and Origin/Referer policy.
 
-Management actions additionally require exact same-origin browser provenance. That protects against other websites, **not** native programs that forge headers or counters served from vosu's own origin.
+Dashboard management mutations additionally require exact dashboard-origin provenance and a per-start `X-Vosu-CSRF` token injected only into dashboard pages. Overlay-origin management writes fail with 403, except explicit scoped API-key value/profile grants; the overlay command-socket settings protocol and loopback broker token remain unchanged. Native same-account programs can still read dashboard pages and forge headers: origin separation is **not** protection against hostile local programs.
 
 ::: danger Counters are not sandboxed
-Installed counters share the dashboard's management authority. They may read all API data and invoke actions beyond their own settings. Install only counters whose authors and code you trust. Their scripts may load external resources or send data elsewhere; vosu does not review or control them.
+Installed counters no longer share dashboard management authority, and their scripts/static files are never served by the dashboard listener. They still read game data and use their existing settings protocol, so this is not a general-purpose sandbox. Install only counters whose authors and code you trust. Their scripts may load external resources or send data elsewhere; vosu does not review or control them. Overlay URLs, localStorage, and IndexedDB stay unchanged; dashboard storage moves to its new origin.
 :::
 
 Never expose vosu to the internet. Remote access is unencrypted and has no login; see [listener configuration](/vosu/guide/configuration#listener-and-remote-access) and [developer security](/vosu/dev/security) for the full boundary.
@@ -54,7 +54,7 @@ Disable automatic updates to stop startup **installation**, not the update check
 | Linux start-at-login unit                     | `${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user/vosu.service`, when enabled |
 | Pins and last installed/available counts      | Browser local storage for the dashboard origin                              |
 
-See exact [platform paths](/vosu/guide/configuration#file-locations) and [removal steps](/vosu/guide/uninstall). **Download report** generates machine information, config, installed-overlay lists, and recent logs locally and never uploads them. Review before sharing.
+See exact [platform paths](/vosu/guide/configuration#file-locations) and [removal steps](/vosu/guide/uninstall). **Diagnostics report** uses an authenticated dashboard fetch to generate machine information, config, installed-overlay lists, and recent logs locally and never uploads them. Review before sharing.
 
 ## System changes
 

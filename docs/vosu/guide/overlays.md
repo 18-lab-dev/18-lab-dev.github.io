@@ -8,7 +8,7 @@ description: Install trusted counters, configure them, and use their hosted URLs
 vosu calls browser overlays **counters**. It serves their HTML, JavaScript, and assets from its static folder and supplies live game data through compatible APIs.
 
 ::: warning Install only trusted counters
-Counters are third-party web pages, not isolated plugins. Their scripts share the dashboard's origin and can read game data and invoke dashboard management actions, including installing or deleting counters and changing settings. Their authors may also make external network requests. vosu does not review or endorse them.
+Counters are third-party web pages, not isolated plugins. Their scripts can read game data and use the existing settings protocol, and their authors may make external network requests. In vosu 1.1.0 they remain on the overlay origin (port 24050) but no longer share the dashboard's management authority (port 24052). vosu does not review or endorse them.
 :::
 
 ## Install from Available

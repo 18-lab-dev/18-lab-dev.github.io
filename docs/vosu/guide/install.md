@@ -22,7 +22,7 @@ chmod +x vosu
 ```
 :::
 
-vosu opens the dashboard by default. You can also open `http://127.0.0.1:24050/` yourself. On Linux, complete [capability setup](/vosu/guide/linux).
+vosu opens the dashboard by default. You can also open `http://127.0.0.1:24052/` yourself (`DASHBOARD_IP:DASHBOARD_PORT`). Overlay URLs remain on port **24050**, preserving their browser storage. On Linux, complete [capability setup](/vosu/guide/linux).
 
 ::: warning Windows installation location
 Do not run the executable inside an archive or from a OneDrive-controlled directory: safe updater replacement and rollback are unavailable there. Published v1.0.0 and v1.0.1 Windows executables are unsigned, so SmartScreen may warn. Verify the download below before deciding whether to launch it; an OpenPGP signature is not Windows Authenticode signing.

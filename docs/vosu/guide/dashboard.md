@@ -5,7 +5,9 @@ description: Use vosu's installed overlays, community catalog, tray controls, an
 
 # Dashboard
 
-Start vosu and open `http://127.0.0.1:24050/` (or your configured listener). The dashboard normally opens automatically; disable **Settings → General → Open dashboard at startup** if you prefer.
+Start vosu and open `http://127.0.0.1:24052/` (or `DASHBOARD_IP:DASHBOARD_PORT`). In vosu 1.1.0 the trusted dashboard has its own origin; overlays stay on port **24050**, preserving their URLs, localStorage, and IndexedDB. Old dashboard links on the overlay origin redirect with path and query preserved. Integrations discover the effective dashboard origin with `GET /api/dashboard` on the overlay origin.
+
+The dashboard normally opens automatically; disable **Settings → General → Open dashboard at startup** if you prefer. Startup, tray, and second-launch links use the effective dashboard listener.
 
 ## Tray and second launch
 
@@ -17,6 +19,10 @@ Launching vosu a second time recognizes an existing vosu listener, opens its das
 
 Each installed overlay has a live preview, name, version, author, size, and URL.
 
+Previews load from the overlay origin and stay at or below their native size; reduced previews show their scale. Installed cards also match against the catalog, so an available update appears without first visiting Available and updates the actual local folder even when renamed. Update actions use a warning colour. Update/delete dialogs identify the folder and show a bounded on-disk size scan; deletion remains available if that scan is incomplete or unavailable.
+
+Per-instance information shows attachment, version, and polling details. Identified live WebSocket connection counts include previews and profile-qualified command sockets, not unique users; unidentified connections are omitted.
+
 | Control                       | Action                                                            |
 | ----------------------------- | ----------------------------------------------------------------- |
 | Preview                       | Open an enlarged live view.                                       |
@@ -26,14 +32,16 @@ Each installed overlay has a live preview, name, version, author, size, and URL.
 | Settings button, when present | Open that counter's settings.                                     |
 | Card's **⋯** menu             | Open folder, delete, or move a pin earlier/later.                 |
 
-Pins retain their order in browser local storage. They belong to the dashboard's origin: `localhost`, `127.0.0.1`, and different ports have separate pin lists.
+Pins retain their order in browser local storage. They belong to the dashboard's origin: `localhost`, `127.0.0.1`, and different ports have separate pin lists. Dashboard storage moves to the new origin in 1.1.0; overlay storage does not.
 
 ## Available
 
 **Available** lists third-party counters from the tosu catalog. Rows show previews, author links, resolution, intended use, compatible clients, and **Install** or **Update**. Preview arrows browse images; clicking a preview enlarges it.
 
+The catalog notice is collapsible, with quieter preview carousel controls and normalized display metadata.
+
 ::: warning Trusted code
-Installed overlays run with the dashboard's authority and can invoke management actions. vosu does not review or endorse catalog overlays. Install only trusted counters; read [overlay installation](/vosu/guide/overlays) and [privacy and security](/vosu/guide/privacy-security).
+Installed overlays can read game data and use their existing settings protocol, but no longer share dashboard management authority. They remain third-party code, not a general-purpose sandbox. vosu does not review or endorse catalog overlays. Install only trusted counters; read [overlay installation](/vosu/guide/overlays) and [privacy and security](/vosu/guide/privacy-security).
 :::
 
 If catalog retrieval fails, Available may show an error while the locally discovered installed count remains available.
@@ -44,7 +52,13 @@ Press `/` outside an editable control to focus search. Installed search filters 
 
 ## Settings
 
-The **Settings** page at `/settings` includes General, Game data, Server, and Advanced options. Fields save when they lose focus; checkboxes save when changed. Blank or out-of-range numeric entries are rejected instead of saved. Changing the listener waits for the new address and reconnects the page.
+The **Settings** page at `/settings` includes General, Game data, Server, and Advanced options. Non-network fields save when they lose focus; checkboxes save when changed. Blank or out-of-range numeric entries are rejected instead of saved. Intervals show their units.
+
+Network fields (`SERVER_IP`, `SERVER_PORT`, `DASHBOARD_IP`, `DASHBOARD_PORT`, `ALLOWED_IPS`) require **Apply network settings**, then **Keep network settings** from the new dashboard origin within **30 seconds**. Only one change can be pending. Without confirmation, the server restores the previous network fields and listeners even if the page closes. Keep succeeds only when both effective listeners match the requested targets. Other settings continue autosaving.
+
+Allowlist entries appear one per line. IPv4/IPv6 CIDRs are supported; use **`100.64.0.0/10`** for Tailscale, not `100.*.*.*`, which also covers public addresses. The UI warns about public-space CIDRs, `0.0.0.0/0`, `::/0`, and broad wildcards.
+
+**Diagnostics report** downloads a local report through an authenticated fetch. Review it before sharing; it can include machine details, configuration, counters, and logs, and is never uploaded automatically.
 
 See the complete [configuration reference](/vosu/guide/configuration). **Automatic updates** is disabled with an explanation for externally managed installations; use [package updates](/vosu/guide/updates) instead.
 
@@ -55,7 +69,7 @@ See the complete [configuration reference](/vosu/guide/configuration). **Automat
 - **`settings:write`**: command-socket writes and overlay value saves, not package schema edits.
 - **`profiles:manage`**: all profile mutations.
 
-Copy the secret immediately: it is **shown only once**. You can rename or revoke a key later, but cannot edit its permissions; revoke and recreate it instead. Revocation immediately closes associated command sockets with code **1008**, even while idle. Key management requires the same-origin dashboard and is not shown in the embedded overlay editor (`embed=1`).
+Copy the secret immediately: it is **shown only once**. You can rename or revoke a key later, but cannot edit its permissions; revoke and recreate it instead. Revocation immediately closes associated command sockets with code **1008**, even while idle. Key management requires dashboard-origin provenance and the per-start `X-Vosu-CSRF` token, and is not shown in the embedded overlay editor (`embed=1`).
 
 Neither permission grants daemon settings, updates, counter installation/deletion, reports, or key management. Keys persist across restarts; the per-start loopback `broker.json` token remains unchanged for zero-config native brokers.
 
@@ -67,7 +81,7 @@ Source: [API key contract](https://github.com/shiruviaa/vosu/blob/09341cc/README
 
 <Badge type="tip" text="vosu only" /> **Added in vosu 1.1.0.** Installed-card settings and `/settings?overlay=<name>&profile=<p>` share named profiles: select, create/copy, rename, delete, or activate a profile globally. This is separate from the daemon's General/Game data/Server/Advanced settings. Existing values remain in reserved `default`; other profiles use schema defaults where values have not been saved.
 
-The overlay editor's search box matches titles, descriptions and IDs while retaining matching section headers. Header navigation jumps to sections; it is hidden for schemas without headers. The inline page is the supported vosulay embedding surface. See [profiles and per-instance pinning](/vosu/guide/overlays#settings-profiles).
+The overlay editor's search box matches titles, descriptions and IDs while retaining matching section headers. Header navigation jumps to sections; it is hidden for schemas without headers. The inline page is the supported vosulay embedding surface on the **dashboard origin**. Normal dashboard pages forbid framing; only `/settings?overlay=<name>&embed=1`, with a nonempty first `overlay` and first `embed=1`, permits it. Embedding does not grant mutation authority. See [profiles and per-instance pinning](/vosu/guide/overlays#settings-profiles) and the [embedding contract](/vosu/dev/http-api#settings-profiles).
 
 ### Start at login
 
@@ -75,4 +89,4 @@ On Linux, **Settings → General → Start at login** records the current execut
 
 This setting is off by default and hidden on Windows. Packages do not enable it automatically. Disable it before [uninstalling](/vosu/guide/uninstall).
 
-Source: [dashboard README](https://github.com/shiruviaa/vosu/blob/main/README.md#dashboard-and-counters) and [settings UI implementation](https://github.com/shiruviaa/vosu/blob/main/src/runtime/render.rs).
+Sources: [vosu 1.1.0 origin decision](https://github.com/shiruviaa/vosu/blob/63cf797/docs/decisions/0016-separate-dashboard-origin.md), [dashboard changes](https://github.com/shiruviaa/vosu/blob/63cf797/CHANGELOG.md#unreleased), and [operations runbook](https://github.com/shiruviaa/vosu/blob/63cf797/docs/operations/runbook.md).

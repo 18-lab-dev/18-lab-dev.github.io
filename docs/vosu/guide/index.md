@@ -22,13 +22,13 @@ Run vosu as the same desktop user as osu!, never as root or Administrator. Linux
 
 1. [Install vosu](/vosu/guide/install) from [GitHub releases](https://github.com/shiruviaa/vosu/releases).
 2. On Linux, follow [process-access setup](/vosu/guide/linux).
-3. Start osu! and vosu, then open `http://127.0.0.1:24050/`.
+3. Start osu! and vosu, then open `http://127.0.0.1:24052/`.
 4. Explore the [dashboard](/vosu/guide/dashboard) and [install an overlay](/vosu/guide/overlays).
 5. Add its URL to OBS or [vosulay](/vosulay/).
 
 ## Keep it local
 
-The default listener is loopback-only. Installed counters are trusted code with the dashboard's authority: install only authors you trust. Read [privacy and security](/vosu/guide/privacy-security) before changing network access.
+Both default listeners are loopback-only. In vosu 1.1.0, the dashboard and management APIs use port **24052**, while overlays and telemetry remain on **24050**, preserving overlay URLs and browser storage. Installed counters no longer share dashboard management authority, but remain third-party code: install only authors you trust. Read [privacy and security](/vosu/guide/privacy-security) before changing network access.
 
 See [configuration](/vosu/guide/configuration), [updates](/vosu/guide/updates), [troubleshooting](/vosu/guide/troubleshooting), and [uninstall](/vosu/guide/uninstall) for ongoing use.
 

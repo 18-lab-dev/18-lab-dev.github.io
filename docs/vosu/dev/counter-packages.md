@@ -17,7 +17,7 @@ static/
     settings.schema.toml
 ```
 
-The page is available at `http://127.0.0.1:24050/my-counter/`. It runs at the **dashboard origin**, with its authority: [read the security boundary](/vosu/dev/security).
+The page is available at `http://127.0.0.1:24050/my-counter/`. In vosu 1.1.0 it stays at the **overlay origin**, preserving its URL and browser storage, while the dashboard moves to port **24052**. It no longer has dashboard management authority: [read the security boundary](/vosu/dev/security).
 
 ## Discovery and metadata
 
@@ -138,7 +138,7 @@ Settings work through aliases, including writes to the mounted package's schema.
 
 ## Catalog installation
 
-The **Available** page reads the upstream catalog at `https://tosu.app/api.json`; vosu does not operate, review, or endorse it. Installing a catalog counter executes third-party JavaScript with the dashboard's access. Install only authors you trust.
+The **Available** page reads the upstream catalog at `https://tosu.app/api.json`; vosu does not operate, review, or endorse it. Installing a catalog counter executes third-party JavaScript on the overlay origin, with game-data reads and the existing settings protocol, not dashboard management authority. Install only authors you trust.
 
 Installation uses `POST /api/counters/download/<encoded-url>?name=<name>` <Badge type="tip" text="vosu only" /> <Badge type="warning" text="management" />. Existing directories require `update=true`. The implementation stages the download and extracts with same-filesystem atomic replacement; it validates archive paths/symlinks rather than unpacking unrestricted paths into the package root.
 
