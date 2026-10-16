@@ -48,6 +48,21 @@ The **Settings** page at `/settings` includes General, Game data, Server, and Ad
 
 See the complete [configuration reference](/vosu/guide/configuration). **Automatic updates** is disabled with an explanation for externally managed installations; use [package updates](/vosu/guide/updates) instead.
 
+### API keys
+
+<Badge type="tip" text="vosu only" /> **Added in vosu 1.1.0.** Open **Settings → API keys** to create a named credential for trusted sandboxed, remote, or web software. Select one or both permissions:
+
+- **`settings:write`**: command-socket writes and overlay value saves, not package schema edits.
+- **`profiles:manage`**: all profile mutations.
+
+Copy the secret immediately: it is **shown only once**. You can rename or revoke a key later, but cannot edit its permissions; revoke and recreate it instead. Revocation immediately closes associated command sockets with code **1008**, even while idle. Key management requires the same-origin dashboard and is not shown in the embedded overlay editor (`embed=1`).
+
+Neither permission grants daemon settings, updates, counter installation/deletion, reports, or key management. Keys persist across restarts; the per-start loopback `broker.json` token remains unchanged for zero-config native brokers.
+
+Treat keys as passwords: never put them in URLs, logs, public pages, or untrusted overlay code. Remote peers still need `ALLOWED_IPS` permission. Plain HTTP/WS on a LAN exposes keys to network observers; keep loopback by default or use a trusted TLS reverse proxy for remote access. See [native HTTP usage](/vosu/dev/http-api#api-keys), [browser WebSocket usage](/vosu/dev/websocket-api#api-key-authentication), and the [security boundary](/vosu/dev/security#api-key-trust-boundary).
+
+Source: [API key contract](https://github.com/shiruviaa/vosu/blob/09341cc/README.md#api-keys).
+
 ### Overlay settings
 
 <Badge type="tip" text="vosu only" /> **Added in vosu 1.1.0.** Installed-card settings and `/settings?overlay=<name>&profile=<p>` share named profiles: select, create/copy, rename, delete, or activate a profile globally. This is separate from the daemon's General/Game data/Server/Advanced settings. Existing values remain in reserved `default`; other profiles use schema defaults where values have not been saved.

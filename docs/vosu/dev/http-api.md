@@ -7,7 +7,44 @@ description: Every vosu HTTP route, method, request parameter, response, and tra
 
 Base URL: `http://127.0.0.1:24050`. Methods and paths are exact and case-sensitive. Unsupported combinations return **404**, not 405; there are no implicit HEAD or OPTIONS handlers. WebSocket upgrades are listed separately in the [WebSocket reference](/vosu/dev/websocket-api).
 
-All requests pass the configured trusted-peer policy; rejection is **403 `Not Found`**. Every POST additionally requires exact same-origin provenance: authoritative `Origin`, or `Referer` only when Origin is absent. Missing, duplicate, malformed, or opaque provenance is rejected with 403. POST bodies are capped at **1 MiB**; larger bodies return **413 `{"error":"payload too large"}`**. CORS response headers do not bypass these checks. See [security](/vosu/dev/security).
+All requests pass the configured trusted-peer policy; rejection is **403 `Not Found`**. POSTs require exact same-origin provenance unless a scoped [API key](#api-keys) authorizes the specific value/profile write: authoritative `Origin`, or `Referer` only when Origin is absent. Missing, duplicate, malformed, or opaque provenance otherwise returns 403. POST bodies are capped at **1 MiB**; larger bodies return **413 `{"error":"payload too large"}`**. CORS response headers do not bypass these checks. See [security](/vosu/dev/security).
+
+## API keys
+
+<Badge type="tip" text="vosu only" /> **Added in vosu 1.1.0.** Create a named key in [Settings → API keys](/vosu/guide/dashboard#api-keys) and copy its secret when shown; it cannot be recovered later. Native HTTP clients send `Authorization: Bearer <key>`.
+
+| Scope             | Authorized writes                                                                                              |
+| ----------------- | -------------------------------------------------------------------------------------------------------------- |
+| `settings:write`  | Command-socket writes and `POST /api/counters/settings/<name>` value saves, **not** `?update=yes` schema saves |
+| `profiles:manage` | All `POST /api/counters/profiles` actions                                                                      |
+
+Neither scope grants updates, counter installation/deletion, reports, daemon settings, or key management; those remain exact same-origin only. Invalid/revoked keys and insufficient scopes return **401**, with JSON for HTTP POSTs. POSTs re-check the granted scope after receiving the body and before dispatch, so revocation during an upload prevents the pending mutation. With no key, existing behavior remains.
+
+For a native value save, set `VOSU_API_KEY` to your saved `settings:write` secret:
+
+```sh
+curl -H "Authorization: Bearer $VOSU_API_KEY" -H 'Content-Type: application/json' \
+  --data '[{"uniqueID":"title","value":"My overlay"}]' \
+  http://127.0.0.1:24050/api/counters/settings/my-overlay
+```
+
+Keys never authenticate through URL query parameters. Cross-origin browser HTTP is not supported: CORS does not allow Authorization. For browsers, use the [command WebSocket subprotocols](/vosu/dev/websocket-api#api-key-authentication). Remote peers must still be allowed by `ALLOWED_IPS`; a key never bypasses that policy. Plain HTTP/WS on a LAN exposes the secret to network observers: keep loopback by default and use a trusted TLS reverse proxy for remote access.
+
+Keys persist across restarts, unlike the unchanged per-start loopback [`broker.json` token](/vosu/dev/websocket-api#native-broker-credential). The file token still provides zero-config native broker integration, authorizes command-socket writes only, and is not an HTTP credential.
+
+### Dashboard-only key management
+
+Exact same-origin provenance is required for both `GET /api/keys` and `POST /api/keys`; an API key cannot manage itself or other keys. GET returns `{keys:[...]}` metadata without secrets or hashes. POST accepts:
+
+| Action | JSON body                       | Result                                                                   |
+| ------ | ------------------------------- | ------------------------------------------------------------------------ |
+| Create | `{action:"create",name,scopes}` | `{key,entry}`; secret returned once                                      |
+| Rename | `{action:"rename",id,name}`     | Changes the name, not scopes                                             |
+| Revoke | `{action:"revoke",id}`          | Immediately closes associated command sockets with 1008, even while idle |
+
+Names are 1–64 printable characters excluding Unicode bidirectional controls. `scopes` contains one or both scope values above. To change permissions, revoke and recreate the key.
+
+Sources: [API key README and examples](https://github.com/shiruviaa/vosu/blob/09341cc/README.md#api-keys), [ADR 0015](https://github.com/shiruviaa/vosu/blob/09341cc/docs/decisions/0015-user-managed-api-keys.md).
 
 ## State and calculation
 
@@ -115,7 +152,7 @@ Daemon saves reject the **whole** request if interval/port values are nonfinite 
 | Activate globally         | `{"action":"activate","name":"stream"}`                                                 |
 | Copy one overlay's values | `{"action":"copyOverlay","name":"counter-folder","source":"default","target":"stream"}` |
 
-POST uses the same exact-origin provenance and body limits as other management writes. Names are case-sensitive references but case-insensitively unique: 1–48 ASCII letters, digits, `_` or `-`. At most 32 profiles including reserved `default` are allowed. `default` cannot be renamed/deleted; deleting the active profile selects `default`.
+POST requires exact-origin provenance or an API key with `profiles:manage`, and uses the same body limits as other management writes. Names are case-sensitive references but case-insensitively unique: 1–48 ASCII letters, digits, `_` or `-`. At most 32 profiles including reserved `default` are allowed. `default` cannot be renamed/deleted; deleting the active profile selects `default`.
 
 `GET /api/counters/settings/<name>?profile=stream` keeps the existing `{"settings":[...],"values":{...}}` response. POST to that URL accepts the usual `[{"uniqueID":"field","value":...}]` and returns `{"result":"success"}`. Omit `profile` to use the global active profile. Explicit unknown profiles return a JSON error, not a write to a fallback profile. `update=yes` still edits the **shared** developer schema for every profile.
 

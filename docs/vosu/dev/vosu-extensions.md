@@ -27,7 +27,7 @@ The selected-field subscription <Badge type="tip" text="vosu only" /> provides *
 
 The path-based calculator `path` parameter is **not new**, but vosu honors the supplied canonical regular `.osu` file. The examined tosu route tests whether `query.path` exists and then reads the **current** beatmap path. Do not assume identical behavior just because the parameter name matches.
 
-vosu's exact same-origin management provenance policy is a behavioral difference: POSTs require exact listener scheme/host/port and `saveSettings` uses provenance captured at upgrade (1008 on forbidden writes). `Origin` and `Referer` themselves are standard browser headers, **not custom vosu headers**. See [security](/vosu/dev/security); the checks are CSRF protection, not authentication.
+vosu's exact same-origin management provenance policy is a behavioral difference: POSTs normally require exact listener scheme/host/port and `saveSettings` uses provenance captured at upgrade (1008 on forbidden writes). Scoped [API keys](/vosu/dev/http-api#api-keys) can authorize value/profile writes; the loopback broker token can authorize command-socket writes only. `Origin` and `Referer` themselves are standard browser headers, **not custom vosu headers**. See [security](/vosu/dev/security); provenance checks are CSRF protection, not authentication.
 
 ## Added document fields
 

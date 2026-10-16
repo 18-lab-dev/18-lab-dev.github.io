@@ -41,13 +41,33 @@ Hosted counters that intentionally implement their own settings UI may use the e
 
 ## What the checks actually protect
 
-Read authorization uses the configured trusted-peer/network and Origin/Referer policy; headerless and opaque/file-origin reads remain possible for trusted peers. Management POSTs additionally require provenance matching the native listener's **exact scheme, host, and port**. `Origin` is authoritative; only if absent may `Referer` authorize a mutation. Missing, malformed, duplicate, or `null` provenance does not authorize writes. Rejections return 403.
+Read authorization uses the configured trusted-peer/network and Origin/Referer policy; headerless and opaque/file-origin reads remain possible for trusted peers. Management POSTs require provenance matching the native listener's **exact scheme, host, and port**, unless an [API key](#api-key-trust-boundary) grants the specific value/profile write. `Origin` is authoritative; only if absent may `Referer` authorize a mutation. Missing, malformed, duplicate, or `null` provenance does not itself authorize writes. Provenance rejections return 403.
 
-`saveSettings` uses provenance captured at WebSocket upgrade, or a valid local broker credential on `/websocket/commands`, and closes 1008 before saving/relaying when neither authorizes the write. Reads (`getSettings`), echo replies (`updateSettings`), and own-socket filters (`applyFilters`) remain available without write provenance.
+`saveSettings` uses provenance captured at WebSocket upgrade, a valid local broker credential on `/websocket/commands`, or an API key with `settings:write`, and closes 1008 before saving/relaying when none authorizes the write. Reads (`getSettings`), echo replies (`updateSettings`), and own-socket filters (`applyFilters`) remain available without write provenance.
 
 This is **CSRF protection, not authentication** against installed counter scripts or malicious local programs. Native clients can forge Origin. Forwarded headers are not trusted; an HTTPS reverse-proxy origin is not automatically a same-origin exception. CORS headers are not a grant of management authority.
 
 Keep loopback binding and normal-user execution. Root-confined file serving, escaped reports, bounded requests, HTTPS download checks, and ZIP safety checks reduce particular risks; they do not sandbox counter JavaScript or provide a global resource budget.
+
+## API key trust boundary
+
+<Badge type="tip" text="vosu only" /> **Added in vosu 1.1.0.** Named, revocable API keys authorize trusted sandboxed, remote, or web clients without giving them full dashboard authority. Create them through [Settings → API keys](/vosu/guide/dashboard#api-keys); the secret is shown once. Names can change; scopes cannot (revoke and recreate).
+
+- `settings:write` grants command-socket writes and HTTP overlay value saves, never `?update=yes` schema saves.
+- `profiles:manage` grants all profile mutations.
+- Neither grants updates, counter installation/deletion, reports, daemon settings, or key management. Key management, including metadata listing, requires exact same-origin dashboard provenance.
+
+Native clients present Bearer headers for [HTTP](/vosu/dev/http-api#api-keys) or command WebSocket upgrades. Browser WebSockets offer `vosu.key` and `vosu.key.<key>`; only `vosu.key` is echoed. **Never put keys in query strings**: no URL parameter authenticates them. Cross-origin browser HTTP is not supported; CORS does not allow Authorization. Invalid/revoked keys and insufficient scopes return 401.
+
+Remote peers still need `ALLOWED_IPS` permission. A key never bypasses the peer gate, and forwarded headers do not change that policy. **Plain HTTP/WS on a LAN exposes credentials to network observers**: keep loopback by default and use a trusted TLS reverse proxy for remote access. Treat keys as passwords; keep them out of logs, public pages, and untrusted overlay code.
+
+Revocation immediately closes associated command sockets with **1008**, even while idle, preventing further settings relays. HTTP POSTs re-check scope after body receipt and before dispatch, preventing mutations whose uploads finish after revocation.
+
+Keys persist across restarts. Config-root `api-keys.toml` stores SHA-256 hashes and metadata, not recoverable secrets. Unix files are created 0600 and atomically replaced; unsafe ownership or group/world access warns without disabling otherwise valid keys. Windows inherits directory ACLs: protect the directory and its parents. Malformed/unreadable registries disable keys with a warning without stopping vosu or overwriting the file; back it up before an explicit key-management change replaces it.
+
+The per-start loopback `broker.json` token below is **unchanged**, keeping zero-config native broker integration; it does not authorize HTTP writes. API keys also do **not** isolate installed same-origin overlays: those still share dashboard authority.
+
+Sources: [API key contract](https://github.com/shiruviaa/vosu/blob/09341cc/README.md#api-keys), [ADR 0015](https://github.com/shiruviaa/vosu/blob/09341cc/docs/decisions/0015-user-managed-api-keys.md), [network exposure](https://github.com/shiruviaa/vosu/blob/09341cc/docs/security.md#network-exposure), [operations runbook](https://github.com/shiruviaa/vosu/blob/09341cc/docs/operations/runbook.md).
 
 ## Local broker trust boundary
 

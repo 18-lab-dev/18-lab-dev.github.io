@@ -5,7 +5,7 @@ description: State streams, selected-field subscriptions, compatibility filters,
 
 # WebSocket API
 
-Default origin: `ws://127.0.0.1:24050`. All upgrades require GET and the configured trusted-peer policy. Unknown/near-miss paths return 404 without upgrading; unauthorized requests return 403 (invalid broker credentials return 401, as described below). Inbound frames and assembled messages are capped at **1 MiB** (close 1009 on overflow). Protocol errors close 1002; shutdown uses 1001. State delivery is latest-only under backpressure, not an event log.
+Default origin: `ws://127.0.0.1:24050`. All upgrades require GET and the configured trusted-peer policy. Unknown/near-miss paths return 404 without upgrading; unauthorized requests return 403 (invalid broker credentials or invalid/revoked/insufficient-scope API keys return 401, as described below). Inbound frames and assembled messages are capped at **1 MiB** (close 1009 on overflow). Protocol errors close 1002; shutdown uses 1001. State delivery is latest-only under backpressure, not an event log.
 
 | Upgrade path                                                    | Published data                                     |
 | --------------------------------------------------------------- | -------------------------------------------------- |
@@ -109,7 +109,7 @@ Malformed commands without a colon, invalid URI encoding, invalid JSON, or inval
 
 ### Settings provenance and target
 
-`saveSettings` requires same-origin provenance captured **at upgrade**, or a valid native broker credential on a loopback `/websocket/commands` upgrade; otherwise the socket closes **1008 `Same-origin required` before saving or relaying**. Headerless/file-origin clients can use `getSettings`, `updateSettings`, and `applyFilters`. Counters in OBS or browsers still save via the hosted `/settings?overlay=<name>` page; vosulay uses the broker credential so counters running in game can save their own settings. Unauthorized unknown commands also close 1008.
+`saveSettings` requires same-origin provenance captured **at upgrade**, a valid native broker credential on a loopback `/websocket/commands` upgrade, or an [API key with `settings:write`](#api-key-authentication); otherwise the socket closes **1008 `Same-origin required` before saving or relaying**. Headerless/file-origin clients without credentials can use `getSettings`, `updateSettings`, and `applyFilters`. Counters in OBS or browsers can save via the hosted `/settings?overlay=<name>` page; vosulay uses the broker credential so counters running in game can save their own settings. Unauthorized unknown commands also close 1008.
 
 Persistence targets the connection's decoded `l`, **not** the envelope's overlay name. The latter controls relay targeting. Always keep them equal; a reply is not evidence of a durable save. The shared debounce coordinator retains only the latest pending save, and save errors are not acknowledged. HTTP/settings changes relay `getSettings` refreshes to clients with matching `l`.
 
@@ -127,6 +127,26 @@ socket.onmessage = ({ data }) => {
 };
 ```
 
+### API key authentication <Badge type="tip" text="vosu only" />
+
+**Added in vosu 1.1.0.** Create a key with **`settings:write`** in [Settings → API keys](/vosu/guide/dashboard#api-keys) to authorize existing `/websocket/commands` writes. Native WebSocket clients set `Authorization: Bearer <key>` on the upgrade. `profiles:manage` instead authorizes [HTTP profile mutations](/vosu/dev/http-api#settings-profiles); neither scope grants general dashboard management.
+
+Browser WebSockets cannot set Authorization. With your saved secret in `key`, offer **both** subprotocols:
+
+```js
+const socket = new WebSocket("ws://127.0.0.1:24050/websocket/commands?l=my-overlay", [
+  "vosu.key",
+  "vosu.key." + key,
+]);
+// socket.protocol === "vosu.key": vosu never echoes the secret subprotocol.
+```
+
+The `l` query parameter still identifies the counter; **no query parameter authenticates a key**. Never put the secret in a URL. Invalid/revoked keys and insufficient scopes return **401**. Revoking a key immediately closes all associated command sockets with **1008**, even while idle, so they cannot keep receiving settings relays. With no key, existing behavior remains.
+
+Remote peers must still pass `ALLOWED_IPS`; keys never bypass that policy. Plain HTTP/WS on a LAN exposes secrets to network observers: keep loopback by default and use a trusted TLS reverse proxy (`wss://` for WebSockets) for remote access. Cross-origin browser HTTP Authorization is not supported by CORS.
+
+Persistent API keys are separate from the unchanged per-start, loopback-only `broker.json` token below, which keeps zero-config native broker integration and grants no HTTP write authority. See the [API key trust boundary](/vosu/dev/security#api-key-trust-boundary) and [README example](https://github.com/shiruviaa/vosu/blob/09341cc/README.md#api-keys).
+
 ### Native broker credential <Badge type="tip" text="vosu only" />
 
 Each vosu start rotates a private `broker.json` containing `version`, the bound listener's `origin`, and a 64-character hex `token` generated from 32 OS-random bytes:
@@ -140,7 +160,7 @@ Linux paths must be absolute; invalid paths disable broker support with a warnin
 
 A native broker sends **`Authorization: Bearer <token>` only on `/websocket/commands` upgrades**, only to loopback, matching the file's origin scheme, host, and port (`localhost` and `127.0.0.1` may be treated as equivalent). vosu accepts it only from loopback peers. Never attach it to HTTP requests or other WebSocket routes.
 
-A valid token grants **exactly the same command-socket write permission as same-origin provenance**, not HTTP management authority. The Bearer scheme is case-insensitive; non-Bearer schemes, such as a reverse proxy's Basic authorization, are ignored. A wrong or stale Bearer token returns **HTTP 401**, even if Origin would otherwise authorize the write. Without a token, existing authorization and read-only behavior remain unchanged; HTTP management POSTs still require exact same-origin provenance.
+A valid file token grants **exactly the same command-socket write permission as same-origin provenance**, not HTTP management authority. The Bearer scheme is case-insensitive; non-Bearer schemes, such as a reverse proxy's Basic authorization, are ignored. A wrong or stale file token returns **HTTP 401**, even if Origin would otherwise authorize the write. Without a credential, existing authorization and read-only behavior remain unchanged; HTTP management POSTs still require exact same-origin provenance unless a separate scoped API key authorizes that route.
 
 On 401, reread the file and retry once; if that fails, connect without the token for the existing read-only behavior. vosu never deletes the file: once the daemon stops, its token is stale and authenticates nothing, and the next start atomically replaces it. Publication failures warn and disable broker writes without stopping vosu. Keep the token out of page JavaScript and logs, and authorize the broker's inbound counter-frame Origin/Host and session secret before forwarding: it must not become an open local proxy.
 
