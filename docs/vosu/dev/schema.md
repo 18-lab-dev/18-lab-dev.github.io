@@ -633,7 +633,7 @@ The fields vary with client, ruleset, map readiness, and available process data.
 | catch   | `B1` move left, `B2` move right, `B3` dash                         | Left/right never pressed, counts zero, timestamps null; stable records position instead. Dash is button state exactly `1`. |
 | mania   | `B1` through `BN`, displayed column order                          | X-slot column bitfield, bit 0 first; N is converted-map key count including key mods/dual stages.                          |
 
-Lazer enumerates distinct default-binding triggers, not available-action enums. Single-stage 4K–10K yields B1–B4 through B1–B10; dual-stage N+N yields B1–B(2N), stage one then stage two, up to 20. `ENABLE_KEY_OVERLAY` still gates updates after the opening 150 ms. Stable `all` follows replay frames independently of in-game overlay visibility; native stable's button byte and hidden-overlay behavior still need live-client verification.
+Lazer enumerates distinct default-binding triggers, not available-action enums. Single-stage 4K–10K yields B1–B4 through B1–B10; dual-stage N+N yields B1–B(2N), stage one then stage two, up to 20. `ENABLE_KEY_OVERLAY` still gates updates after the opening 150 ms. Stable `all` follows replay frames independently of in-game overlay visibility; live osu!stable `b20260924.1` confirmed the button byte in all four rulesets and counting with the in-game key overlay hidden.
 
 Stable retry/rewind resets the attempt; rolling-window eviction preserves accumulated counts. Missing more than 8192 frames takes the first available state as a baseline without inventing a press. Lost edges and history evicted before a mid-play attachment cannot be recovered. Catch left/right and unrecoverable history remain parity differences, not physical-input measurements.
 
@@ -643,7 +643,7 @@ Stable retry/rewind resets the attempt; rolling-window eviction preserves accumu
 
 `hitOffsets` contains cursor-minus-stacked-center X/Y in displayed 512×384 playfield pixels and the original matching timing error in ms. Missing spatial evidence omits a triple, not a zero position. `keyHitErrors` indexes displayed mania lanes including Mirror; untouched lanes before the highest observed lane are empty, and outside mania attempts both outer arrays are empty. Its history follows the existing reset/retention rules; enabling mid-attempt starts with subsequent classifications only.
 
-`catcher` is omitted in menus, results and other rulesets. Lazer spatial offsets remain unmeasured zero sentinels, so lazer emits no hit-offset triples until measured offsets are supplied; catch offsets also require measurement before that client's field can be emitted. See [extension semantics and remaining stable/lazer limitations](/vosu/dev/vosu-extensions#gameplay-extensions-added-in-vosu-1-1-0).
+`catcher` is omitted in menus, results and other rulesets. On lazer, `hitOffsets`, `keyHitErrors` and `catcher` use offsets measured for lazer 2026.921.0 (2026.1005.0 has the same layout) or generated at runtime for other versions. See [extension semantics and remaining stable/lazer limitations](/vosu/dev/vosu-extensions#gameplay-extensions-added-in-vosu-1-1-0).
 
 ## v1 and streamCompanion
 

@@ -59,9 +59,9 @@ Together the press and release arrays hold every value of the original array exa
 
 Each triple describes an osu!standard circle or slider-head hit: X/Y are **cursor minus stacked center**, in displayed 512×384 playfield pixels, and `error` is the original matching timing error in milliseconds. The array is empty outside standard gameplay. Missing spatial evidence omits a triple rather than inventing a position.
 
-Stable matches replay down-edges to unjudged map heads using `press time - error` (±1 ms), with calculator stacking and HR reflection. Pending evidence expires after 250 ms without blocking later matched judgements. Mirror and other positional transformations are unsupported on stable; Mirror produces no triples. Stable's replay button byte and HR cursor coordinate frame still need live-client verification.
+Stable matches replay down-edges to unjudged map heads using `press time - error` (±1 ms), with calculator stacking and HR reflection: HR reflects the raw position, and the stack offset is then applied unreflected, as stable's own HR autoplay cursor shows. The replay cursor is in the displayed (HR-flipped) frame. Pending evidence expires after 250 ms without blocking later matched judgements. Mirror and other positional transformations are unsupported on stable; Mirror produces no triples.
 
-Lazer reads the actual judgement cursor and object's position/stack/scale, so applied positional mods need no map reconstruction. **The new lazer spatial offsets are unmeasured zero sentinels in the embedded template: lazer emits no triples until measured offsets are supplied.**
+Lazer reads the actual judgement cursor and object's position/stack/scale, so applied positional mods need no map reconstruction. It needs the measured spatial offsets (shipped for lazer 2026.921.0, or generated at runtime for other versions); without them it emits no triples rather than reading unverified memory. Autoplay on a stacked test map gives (0, 0) for every hit on both clients, with and without HR.
 
 JSON delivers a number array, not a binary typed-array buffer. Convert it when needed:
 
@@ -113,7 +113,7 @@ Stable now publishes replay-frame logical actions with lazer-compatible `B1`-onw
 
 `ENABLE_KEY_OVERLAY` still gates updates after the opening 150 ms, and legacy `k1`, `k2`, `m1`, `m2` sources are unchanged. Edge timestamps are nullable gameplay milliseconds. Stable counts every retained down-edge with exact frame timestamps, including complete taps between polls, stopping at the play clock even for preloaded replays/spectating. Retry/rewind resets the attempt. Rolling eviction preserves accumulated counts, but missing more than 8192 frames establishes a new baseline without inventing a press; evicted history is not recoverable when attaching midway either.
 
-Lazer records sampled-edge timestamps; count jumps may reveal missed complete taps without fabricating timestamps. Stable catch left/right remain unpressed with zero counts and null timestamps because stable records position instead; dash is available. These and unrecoverable history remain parity differences, not physical-input measurements. Native stable's in-memory button byte and hidden-overlay behavior still require live-client verification.
+Lazer records sampled-edge timestamps; count jumps may reveal missed complete taps without fabricating timestamps. Stable catch left/right remain unpressed with zero counts and null timestamps because stable records position instead; dash is available. These and unrecoverable history remain parity differences, not physical-input measurements. Live osu!stable `b20260924.1` confirmed the in-memory button byte in all four rulesets and counting with the in-game key overlay hidden.
 
 ## Package-level differences
 
