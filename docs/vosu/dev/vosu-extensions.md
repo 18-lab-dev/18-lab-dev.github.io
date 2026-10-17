@@ -51,13 +51,17 @@ Together the press and release arrays hold every value of the original array exa
 
 | Regular v2          | Precise v2     | Shape                                                 |
 | ------------------- | -------------- | ----------------------------------------------------- |
-| `play.hitOffsets`   | `hitOffsets`   | `number[]`, flat stride-3 `[x, y, error, …]`          |
+| `play.hitOffsets`   | `hitOffsets`   | Optional `number[]`, flat stride-3 `[x, y, error, …]` |
 | `play.keyHitErrors` | `keyHitErrors` | Optional `{ press: number[][], release: number[][] }` |
 | `play.catcher`      | `catcher`      | Optional `{ x: number, dashing: boolean }`            |
 
 ### Standard hit offsets
 
+Enable `ENABLE_HIT_OFFSETS = true` (**Game data → Standard hit offsets** in the dashboard) to expose `play.hitOffsets` in regular v2 and top-level `hitOffsets` in precise v2; the field is **omitted entirely by default** (`false`) and whenever the setting is off.
+
 Each triple describes an osu!standard circle or slider-head hit: X/Y are **cursor minus stacked center**, in displayed 512×384 playfield pixels, and `error` is the original matching timing error in milliseconds. The array is empty outside standard gameplay. Missing spatial evidence omits a triple rather than inventing a position.
+
+While disabled, stable skips spatial replay/map matching and lazer skips judgement-position and object-property reads. Enabling mid-attempt records subsequent hits only; it does not backfill history. `keys.all` and `catcher` are independent of this setting.
 
 Stable matches replay down-edges to unjudged map heads using `press time - error` (±1 ms), with calculator stacking and HR reflection: HR reflects the raw position, and the stack offset is then applied unreflected, as stable's own HR autoplay cursor shows. The replay cursor is in the displayed (HR-flipped) frame. Pending evidence expires after 250 ms without blocking later matched judgements. Mirror and other positional transformations are unsupported on stable; Mirror produces no triples.
 
@@ -80,7 +84,7 @@ if (offsets) {
 }
 ```
 
-A 3D hit-offsets demo overlay will be published separately.
+A 3D hit-offsets demo overlay will be published separately. It will require `ENABLE_HIT_OFFSETS = true`; regular v2 and precise v2 omit the field when the setting is off.
 
 ### Mania per-key errors
 
