@@ -19,26 +19,33 @@ Click a counter to select it; the first press on an unselected counter selects a
 
 The band under the pointer is highlighted in the color of the edit it would make: purple for resize, blue for scale, amber for crop. The mode is fixed when you press, so pressing or releasing a modifier mid-drag does not change the edit. The bands remain usable when external handles fall off-screen.
 
-Right-click a counter to open its **Counter properties** inspector; when counters overlap, repeated right-clicks cycle through them. The inspector provides:
+Right-click a counter to open its compact inspector; when counters overlap, repeated right-clicks cycle through them. Its header has refresh and close controls, followed by two-column position and size fields, a **Scale / Layer** row and a **Settings / Advanced** row. Hover or focus an icon for its label.
 
-| Control        | Behavior                                                                                  |
-| -------------- | ----------------------------------------------------------------------------------------- |
-| Title          | Name the placement.                                                                       |
-| URL            | Change a custom overlay's URL.                                                            |
-| Enabled        | Hide this placement without discarding its geometry; re-enable it here.                   |
-| X / Y          | Position of the visible (cropped) area's top-left corner.                                 |
-| Width / Height | Counter frame dimensions before cropping; minimum 10 px.                                  |
-| Scale          | Scale the content; minimum 0.1.                                                           |
-| Layer          | Stacking order from 0 to 999.                                                             |
-| Opacity %      | 0–100%; stored as 0–1.                                                                    |
-| Rotation       | −180° to 180°.                                                                            |
-| Crop sides     | Counter pixels hidden from the left, right, top and bottom; at least 10 px stays visible. |
-| Reset size     | Restore the catalog dimensions (500×300 fallback), scale 1 and no crop.                   |
-| Refresh        | Reload the selected counter.                                                              |
-| Settings       | Open an installed counter's backend-hosted settings when available.                       |
-| Remove counter | Delete the placement rather than disable it.                                              |
+**Advanced** opens the full placement editor with these controls:
+
+| Control          | Behavior                                                                                  |
+| ---------------- | ----------------------------------------------------------------------------------------- |
+| Title            | Name the placement.                                                                       |
+| URL              | Change a custom overlay's URL.                                                            |
+| Enabled          | Hide this placement without discarding its geometry; re-enable it here.                   |
+| X / Y            | Position of the visible (cropped) area's top-left corner.                                 |
+| Width / Height   | Counter frame dimensions before cropping; minimum 10 px.                                  |
+| Scale            | Scale the content; minimum 0.1.                                                           |
+| Layer            | Stacking order from 0 to 999.                                                             |
+| Opacity %        | 0–100%; stored as 0–1.                                                                    |
+| Rotation         | −180° to 180°.                                                                            |
+| Crop sides       | Counter pixels hidden from the left, right, top and bottom; at least 10 px stays visible. |
+| Reset size       | Restore the catalog dimensions (500×300 fallback), scale 1 and no crop.                   |
+| Refresh          | Reload the selected counter.                                                              |
+| vosu profile pin | Keep this placement on one vosu settings profile rather than following the default.       |
+| Remove counter   | Delete the placement with inline confirmation; undo restores it.                          |
 
 The mouse wheel changes the inspector field under the pointer by its step, without clicking into it; hold **Shift** for ten steps. Scrolling one field is one undo step. The wheel over a counter itself does nothing. The right-click menu also offers **Refresh**.
+
+The compact inspector's **Settings** button opens vosulay's native settings editor when vosu
+provides settings profiles. It supports search, section navigation, saving values and profile
+management; see [Counter settings](/vosulay/overlays#counter-settings). Other compatible backends
+open the counter's settings in your browser.
 
 **Settings → General → Keep overlays in view** constrains only the selected overlay during editing. It does not clamp unselected counters or silently save new coordinates when the game window resizes in normal mode.
 

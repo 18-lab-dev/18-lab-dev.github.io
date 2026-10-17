@@ -21,6 +21,10 @@ Use **Position** in the same menu to reorder the active profile. This changes bo
 
 The **−** (**Delete profile**) button opens a confirmation; choose **Delete** or **Cancel**. Placement edits and profile changes save automatically: watch for **Saved** in the toolbar.
 
+Copy selected overlays with **Ctrl+C**, switch profile, then paste with **Ctrl+V**. Copies keep
+all placement properties, including [vosu settings-profile pins](/vosulay/overlays#counter-settings).
+These backend settings profiles are separate from vosulay's layout profiles.
+
 ## Import and export
 
 **More profile actions → Export…** exports the active profile to JSON. **Import…** imports a profile JSON. Keep exported files if you want a separate backup before changing or removing your [configuration](/vosulay/settings#configuration-files).
@@ -29,8 +33,7 @@ For a tosu layout, use **Settings → tosu layout → Import tosu layout** and s
 
 Automatic tosu import occurs only with an untouched/default configuration and exactly one detected source. It preserves profile names/identities, selected profile, repeated counters, geometry, scale, stacking, safe HTTP(S) custom URLs and enabled state. New opacity/rotation values start at 1/0. Existing custom profiles or settings are not automatically overwritten.
 
-::: info Local remote editing is placement-only
-An editable loopback profile page saves placements for the profile it displays. Profile management, app settings and adding local HTML files remain in the in-game editor.
-:::
+The [local editor](/vosulay/remote#edit-from-obs-or-a-local-browser) provides full profile
+management, app settings and local HTML file picking on this computer, not just placement edits.
 
 Sources: [profile controls](https://github.com/shiruviaa/vosulay/blob/main/assets/manager.html), [profile shortcuts and rename](https://github.com/shiruviaa/vosulay/blob/main/assets/manager.js), [tosu import](https://github.com/shiruviaa/vosulay/blob/main/README.md#importing-tosu-layouts).

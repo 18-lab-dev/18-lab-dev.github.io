@@ -9,13 +9,17 @@ Enter edit mode, open **Settings**, change the controls, then click **Save**. **
 
 ## General
 
-| UI setting                                | JSON key under `settings`      | Default         | Effect                                                                                      |
-| ----------------------------------------- | ------------------------------ | --------------- | ------------------------------------------------------------------------------------------- |
-| Keep overlays in view                     | `always_keep_overlays_in_view` | `false` (off)   | Constrain only the selected counter during editing, not normal-mode resizing.               |
-| Leave edit mode when the game loses focus | `exit_edit_mode_on_focus_loss` | `true` (on)     | Turn off to retain the editor on screen; capture still requires game focus.                 |
-| FPS limit                                 | `fps_limit`                    | `0` (Automatic) | Follow the attached display's refresh rate; Fixed accepts 1–1,000,000. Applies immediately. |
+| UI setting                                | JSON key under `settings`      | Default         | Effect                                                                                                                                               |
+| ----------------------------------------- | ------------------------------ | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Keep overlays in view                     | `always_keep_overlays_in_view` | `false` (off)   | Constrain only the selected counter during editing, not normal-mode resizing.                                                                        |
+| Leave edit mode when the game loses focus | `exit_edit_mode_on_focus_loss` | `true` (on)     | Turn off to retain the editor on screen; capture still requires game focus.                                                                          |
+| FPS limit                                 | `fps_limit`                    | `0` (Automatic) | Divide the attached display's refresh rate by the smallest whole number that yields 120 fps or less; Fixed accepts 1–1,000,000. Applies immediately. |
 
-Automatic updates when the game moves between displays or display refresh changes. Fixed stays fixed. This limits overlay scheduling, not the game's FPS, and complex overlays can render more slowly than the limit.
+Automatic gives 360 Hz → 120 fps, 240 → 120, 165 → 82.5 (CEF rounds to 83), 144 → 72,
+and leaves 120 Hz or slower displays unchanged. It updates when the game moves between displays
+or display refresh changes. CEF's damage-driven off-screen clock is not display-locked, so
+spacing is only approximate. Fixed stays fixed. This limits overlay scheduling, not the game's
+FPS; complex overlays can render more slowly. See the [1.4.0 frame-rate guide](https://github.com/shiruviaa/vosulay/blob/d2e472a/README.md#frame-rate).
 
 `--fps-limit auto`, `--fps-limit 0` or `--fps-limit 120` (`-f`) overrides the saved choice for one run. An explicit automatic value overrides a saved fixed cap.
 

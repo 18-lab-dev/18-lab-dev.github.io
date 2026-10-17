@@ -1,7 +1,7 @@
 {
   "source": {
     "repo": "shiruviaa/vosu",
-    "commit": "a89f467",
+    "commit": "a2e3358",
     "path": "docs/testing/benchmarks.md",
     "section": "Released tosu comparison"
   },
@@ -466,60 +466,60 @@
         {
           "label": "Windows lazer",
           "values": {
-            "tosu": {
-              "v": 793.7,
-              "s": "793.7 µs",
-              "range": "788.1–799.4"
-            },
             "vosu": {
-              "v": 572.4,
-              "s": "572.4 µs",
-              "range": "566.4–574.8"
+              "v": 148.0,
+              "s": "148.0 µs",
+              "range": "145.1–149.8"
+            },
+            "tosu": {
+              "v": 737.0,
+              "s": "737.0 µs",
+              "range": "729.2–741.5"
             }
           }
         },
         {
           "label": "Windows stable",
           "values": {
-            "tosu": {
-              "v": 492.0,
-              "s": "492.0 µs",
-              "range": "477.6–512.6"
-            },
             "vosu": {
-              "v": 190.6,
-              "s": "190.6 µs",
-              "range": "184.9–208.2"
+              "v": 132.7,
+              "s": "132.7 µs",
+              "range": "131.7–135.3"
+            },
+            "tosu": {
+              "v": 456.2,
+              "s": "456.2 µs",
+              "range": "448.6–472.9"
             }
           }
         },
         {
           "label": "Linux lazer",
           "values": {
-            "tosu": {
-              "v": 165.3,
-              "s": "165.3 µs",
-              "range": "153.6–182.4"
-            },
             "vosu": {
-              "v": 203.6,
-              "s": "203.6 µs",
-              "range": "188.5–210.3"
+              "v": 20.2,
+              "s": "20.2 µs",
+              "range": "17.8–21.3"
+            },
+            "tosu": {
+              "v": 147.1,
+              "s": "147.1 µs",
+              "range": "138.1–183.1"
             }
           }
         },
         {
           "label": "Linux stable (Wine)",
           "values": {
-            "tosu": {
-              "v": 156.8,
-              "s": "156.8 µs",
-              "range": "142.1–187.2"
-            },
             "vosu": {
-              "v": 104.8,
-              "s": "104.8 µs",
-              "range": "85.1–130.5"
+              "v": 33.7,
+              "s": "33.7 µs",
+              "range": "31.8–36.3"
+            },
+            "tosu": {
+              "v": 189.6,
+              "s": "189.6 µs",
+              "range": "182.2–232.7"
             }
           }
         }
@@ -533,60 +533,60 @@
         {
           "label": "Windows lazer",
           "values": {
-            "tosu": {
-              "v": 167.7,
-              "s": "167.7 µs",
-              "range": "163.3–172.7"
-            },
             "vosu": {
-              "v": 32.7,
-              "s": "32.7 µs",
-              "range": "32.0–33.1"
+              "v": 30.0,
+              "s": "30.0 µs",
+              "range": "29.8–31.0"
+            },
+            "tosu": {
+              "v": 151.2,
+              "s": "151.2 µs",
+              "range": "150.2–152.5"
             }
           }
         },
         {
           "label": "Windows stable",
           "values": {
-            "tosu": {
-              "v": 42.1,
-              "s": "42.1 µs",
-              "range": "40.8–48.9"
-            },
             "vosu": {
-              "v": 20.5,
-              "s": "20.5 µs",
-              "range": "20.2–22.6"
+              "v": 23.9,
+              "s": "23.9 µs",
+              "range": "23.8–24.3"
+            },
+            "tosu": {
+              "v": 40.7,
+              "s": "40.7 µs",
+              "range": "40.6–42.0"
             }
           }
         },
         {
           "label": "Linux lazer",
           "values": {
-            "tosu": {
-              "v": 36.3,
-              "s": "36.3 µs",
-              "range": "33.4–48.2"
-            },
             "vosu": {
-              "v": 11.0,
-              "s": "11.0 µs",
-              "range": "10.6–11.9"
+              "v": 9.1,
+              "s": "9.1 µs",
+              "range": "8.5–10.2"
+            },
+            "tosu": {
+              "v": 32.8,
+              "s": "32.8 µs",
+              "range": "31.8–39.8"
             }
           }
         },
         {
           "label": "Linux stable (Wine)",
           "values": {
-            "tosu": {
-              "v": 11.7,
-              "s": "11.7 µs",
-              "range": "10.6–18.6"
-            },
             "vosu": {
-              "v": 7.4,
-              "s": "7.4 µs",
-              "range": "6.6–10.6"
+              "v": 8.5,
+              "s": "8.5 µs",
+              "range": "7.6–9.4"
+            },
+            "tosu": {
+              "v": 13.9,
+              "s": "13.9 µs",
+              "range": "11.8–16.9"
             }
           }
         }
@@ -600,52 +600,52 @@
         {
           "label": "Windows lazer",
           "values": {
-            "tosu": {
-              "v": 1559000.0,
-              "s": "1559 ms"
-            },
             "vosu": {
-              "v": 74000.0,
-              "s": "74 ms"
+              "v": 71000.0,
+              "s": "71 ms"
+            },
+            "tosu": {
+              "v": 1521000.0,
+              "s": "1521 ms"
             }
           }
         },
         {
           "label": "Windows stable",
           "values": {
-            "tosu": {
-              "v": 735000.0,
-              "s": "735 ms"
-            },
             "vosu": {
-              "v": 88000.0,
-              "s": "88 ms"
+              "v": 85000.0,
+              "s": "85 ms"
+            },
+            "tosu": {
+              "v": 589000.0,
+              "s": "589 ms"
             }
           }
         },
         {
           "label": "Linux lazer",
           "values": {
-            "tosu": {
-              "v": 3984000.0,
-              "s": "3984 ms"
-            },
             "vosu": {
-              "v": 72000.0,
-              "s": "72 ms"
+              "v": 61000.0,
+              "s": "61 ms"
+            },
+            "tosu": {
+              "v": 3972000.0,
+              "s": "3972 ms"
             }
           }
         },
         {
           "label": "Linux stable (Wine)",
           "values": {
-            "tosu": {
-              "v": 235000.0,
-              "s": "235 ms"
-            },
             "vosu": {
-              "v": 20000.0,
-              "s": "20 ms"
+              "v": 22000.0,
+              "s": "22 ms"
+            },
+            "tosu": {
+              "v": 286000.0,
+              "s": "286 ms"
             }
           }
         }
@@ -661,136 +661,136 @@
         {
           "label": "Windows lazer · background",
           "values": {
+            "vosuAlone": {
+              "v": 1.67,
+              "s": "1.67%"
+            },
+            "vosu": {
+              "v": 1.67,
+              "s": "1.67%"
+            },
             "tosu": {
               "v": 2.78,
               "s": "2.78%"
-            },
-            "vosu": {
-              "v": 2.15,
-              "s": "2.15%"
-            },
-            "vosuAlone": {
-              "v": 1.98,
-              "s": "1.98%"
             }
           }
         },
         {
           "label": "Windows lazer · consumer",
           "values": {
-            "tosu": {
-              "v": 2.85,
-              "s": "2.85%"
+            "vosuAlone": {
+              "v": 1.49,
+              "s": "1.49%"
             },
             "vosu": {
-              "v": 1.67,
-              "s": "1.67%"
+              "v": 1.7,
+              "s": "1.70%"
             },
-            "vosuAlone": {
-              "v": 2.29,
-              "s": "2.29%"
+            "tosu": {
+              "v": 2.64,
+              "s": "2.64%"
             }
           }
         },
         {
           "label": "Windows stable · background",
           "values": {
-            "tosu": {
-              "v": 2.01,
-              "s": "2.01%"
+            "vosuAlone": {
+              "v": 1.49,
+              "s": "1.49%"
             },
             "vosu": {
-              "v": 1.77,
-              "s": "1.77%"
+              "v": 1.53,
+              "s": "1.53%"
             },
-            "vosuAlone": {
-              "v": 1.46,
-              "s": "1.46%"
-            }
-          }
-        },
-        {
-          "label": "Windows stable · consumer",
-          "values": {
             "tosu": {
-              "v": 3.75,
-              "s": "3.75%"
-            },
-            "vosu": {
-              "v": 1.74,
-              "s": "1.74%"
-            },
-            "vosuAlone": {
               "v": 1.63,
               "s": "1.63%"
             }
           }
         },
         {
+          "label": "Windows stable · consumer",
+          "values": {
+            "vosuAlone": {
+              "v": 1.7,
+              "s": "1.70%"
+            },
+            "vosu": {
+              "v": 1.81,
+              "s": "1.81%"
+            },
+            "tosu": {
+              "v": 3.19,
+              "s": "3.19%"
+            }
+          }
+        },
+        {
           "label": "Linux lazer · background",
           "values": {
+            "vosuAlone": {
+              "v": 0.89,
+              "s": "0.89%"
+            },
+            "vosu": {
+              "v": 0.84,
+              "s": "0.84%"
+            },
             "tosu": {
               "v": 1.42,
               "s": "1.42%"
-            },
-            "vosu": {
-              "v": 1.0,
-              "s": "1.00%"
-            },
-            "vosuAlone": {
-              "v": 1.02,
-              "s": "1.02%"
             }
           }
         },
         {
           "label": "Linux lazer · consumer",
           "values": {
-            "tosu": {
-              "v": 2.51,
-              "s": "2.51%"
+            "vosuAlone": {
+              "v": 0.96,
+              "s": "0.96%"
             },
             "vosu": {
-              "v": 1.13,
-              "s": "1.13%"
+              "v": 0.96,
+              "s": "0.96%"
             },
-            "vosuAlone": {
-              "v": 1.07,
-              "s": "1.07%"
+            "tosu": {
+              "v": 2.53,
+              "s": "2.53%"
             }
           }
         },
         {
           "label": "Linux stable (Wine) · background",
           "values": {
-            "tosu": {
-              "v": 0.93,
-              "s": "0.93%"
+            "vosuAlone": {
+              "v": 1.0,
+              "s": "1.00%"
             },
             "vosu": {
-              "v": 0.84,
-              "s": "0.84%"
+              "v": 0.96,
+              "s": "0.96%"
             },
-            "vosuAlone": {
-              "v": 0.84,
-              "s": "0.84%"
+            "tosu": {
+              "v": 1.04,
+              "s": "1.04%"
             }
           }
         },
         {
           "label": "Linux stable (Wine) · consumer",
           "values": {
-            "tosu": {
-              "v": 2.04,
-              "s": "2.04%"
+            "vosuAlone": {
+              "v": 1.11,
+              "s": "1.11%"
             },
             "vosu": {
-              "v": 0.93,
-              "s": "0.93%"
+              "v": 1.07,
+              "s": "1.07%"
             },
-            "vosuAlone": {
-              "v": 0.96,
-              "s": "0.96%"
+            "tosu": {
+              "v": 2.27,
+              "s": "2.27%"
             }
           }
         }
@@ -804,104 +804,104 @@
         {
           "label": "Windows lazer · background",
           "values": {
-            "tosu": {
-              "v": 91.1,
-              "s": "91.1 MB"
-            },
             "vosu": {
-              "v": 44.1,
-              "s": "44.1 MB"
+              "v": 41.7,
+              "s": "41.7 MB"
+            },
+            "tosu": {
+              "v": 88.8,
+              "s": "88.8 MB"
             }
           }
         },
         {
           "label": "Windows lazer · consumer",
           "values": {
-            "tosu": {
-              "v": 93.9,
-              "s": "93.9 MB"
-            },
             "vosu": {
-              "v": 44.4,
-              "s": "44.4 MB"
+              "v": 42.2,
+              "s": "42.2 MB"
+            },
+            "tosu": {
+              "v": 91.2,
+              "s": "91.2 MB"
             }
           }
         },
         {
           "label": "Windows stable · background",
           "values": {
-            "tosu": {
-              "v": 154.0,
-              "s": "154.0 MB"
-            },
             "vosu": {
-              "v": 50.3,
-              "s": "50.3 MB"
+              "v": 49.7,
+              "s": "49.7 MB"
+            },
+            "tosu": {
+              "v": 148.9,
+              "s": "148.9 MB"
             }
           }
         },
         {
           "label": "Windows stable · consumer",
           "values": {
-            "tosu": {
-              "v": 162.6,
-              "s": "162.6 MB"
-            },
             "vosu": {
-              "v": 51.5,
-              "s": "51.5 MB"
+              "v": 50.9,
+              "s": "50.9 MB"
+            },
+            "tosu": {
+              "v": 152.7,
+              "s": "152.7 MB"
             }
           }
         },
         {
           "label": "Linux lazer · background",
           "values": {
-            "tosu": {
-              "v": 265.4,
-              "s": "265.4 MB"
-            },
             "vosu": {
-              "v": 35.8,
-              "s": "35.8 MB"
+              "v": 29.8,
+              "s": "29.8 MB"
+            },
+            "tosu": {
+              "v": 266.2,
+              "s": "266.2 MB"
             }
           }
         },
         {
           "label": "Linux lazer · consumer",
           "values": {
-            "tosu": {
-              "v": 273.6,
-              "s": "273.6 MB"
-            },
             "vosu": {
-              "v": 37.5,
-              "s": "37.5 MB"
+              "v": 31.0,
+              "s": "31.0 MB"
+            },
+            "tosu": {
+              "v": 276.1,
+              "s": "276.1 MB"
             }
           }
         },
         {
           "label": "Linux stable (Wine) · background",
           "values": {
-            "tosu": {
-              "v": 241.8,
-              "s": "241.8 MB"
-            },
             "vosu": {
-              "v": 36.0,
-              "s": "36.0 MB"
+              "v": 39.7,
+              "s": "39.7 MB"
+            },
+            "tosu": {
+              "v": 266.6,
+              "s": "266.6 MB"
             }
           }
         },
         {
           "label": "Linux stable (Wine) · consumer",
           "values": {
-            "tosu": {
-              "v": 246.6,
-              "s": "246.6 MB"
-            },
             "vosu": {
-              "v": 37.6,
-              "s": "37.6 MB"
+              "v": 40.5,
+              "s": "40.5 MB"
+            },
+            "tosu": {
+              "v": 274.7,
+              "s": "274.7 MB"
             }
           }
         }
@@ -915,104 +915,104 @@
         {
           "label": "Windows lazer · background",
           "values": {
-            "tosu": {
-              "v": 80.0,
-              "s": "80.0 MB"
-            },
             "vosu": {
-              "v": 7.0,
-              "s": "7.0 MB"
+              "v": 7.1,
+              "s": "7.1 MB"
+            },
+            "tosu": {
+              "v": 78.6,
+              "s": "78.6 MB"
             }
           }
         },
         {
           "label": "Windows lazer · consumer",
           "values": {
-            "tosu": {
-              "v": 83.3,
-              "s": "83.3 MB"
-            },
             "vosu": {
-              "v": 7.4,
-              "s": "7.4 MB"
+              "v": 7.9,
+              "s": "7.9 MB"
+            },
+            "tosu": {
+              "v": 82.7,
+              "s": "82.7 MB"
             }
           }
         },
         {
           "label": "Windows stable · background",
           "values": {
-            "tosu": {
-              "v": 136.2,
-              "s": "136.2 MB"
-            },
             "vosu": {
-              "v": 13.4,
-              "s": "13.4 MB"
+              "v": 14.7,
+              "s": "14.7 MB"
+            },
+            "tosu": {
+              "v": 131.5,
+              "s": "131.5 MB"
             }
           }
         },
         {
           "label": "Windows stable · consumer",
           "values": {
-            "tosu": {
-              "v": 157.8,
-              "s": "157.8 MB"
-            },
             "vosu": {
-              "v": 14.7,
-              "s": "14.7 MB"
+              "v": 16.0,
+              "s": "16.0 MB"
+            },
+            "tosu": {
+              "v": 135.7,
+              "s": "135.7 MB"
             }
           }
         },
         {
           "label": "Linux lazer · background",
           "values": {
-            "tosu": {
-              "v": 255.2,
-              "s": "255.2 MB"
-            },
             "vosu": {
-              "v": 31.9,
-              "s": "31.9 MB"
+              "v": 25.9,
+              "s": "25.9 MB"
+            },
+            "tosu": {
+              "v": 256.1,
+              "s": "256.1 MB"
             }
           }
         },
         {
           "label": "Linux lazer · consumer",
           "values": {
-            "tosu": {
-              "v": 263.4,
-              "s": "263.4 MB"
-            },
             "vosu": {
-              "v": 33.6,
-              "s": "33.6 MB"
+              "v": 27.2,
+              "s": "27.2 MB"
+            },
+            "tosu": {
+              "v": 266.1,
+              "s": "266.1 MB"
             }
           }
         },
         {
           "label": "Linux stable (Wine) · background",
           "values": {
-            "tosu": {
-              "v": 234.9,
-              "s": "234.9 MB"
-            },
             "vosu": {
-              "v": 32.0,
-              "s": "32.0 MB"
+              "v": 35.8,
+              "s": "35.8 MB"
+            },
+            "tosu": {
+              "v": 257.7,
+              "s": "257.7 MB"
             }
           }
         },
         {
           "label": "Linux stable (Wine) · consumer",
           "values": {
-            "tosu": {
-              "v": 239.8,
-              "s": "239.8 MB"
-            },
             "vosu": {
-              "v": 33.6,
-              "s": "33.6 MB"
+              "v": 36.6,
+              "s": "36.6 MB"
+            },
+            "tosu": {
+              "v": 265.8,
+              "s": "265.8 MB"
             }
           }
         }
@@ -1026,104 +1026,104 @@
         {
           "label": "Windows lazer · background",
           "values": {
-            "tosu": {
-              "v": 4.55,
-              "s": "4.55 ms"
-            },
             "vosu": {
-              "v": 6.86,
-              "s": "6.86 ms"
+              "v": 9.9,
+              "s": "9.90 ms"
+            },
+            "tosu": {
+              "v": 10.45,
+              "s": "10.45 ms"
             }
           }
         },
         {
           "label": "Windows lazer · consumer",
           "values": {
-            "tosu": {
-              "v": 0.87,
-              "s": "0.87 ms"
-            },
             "vosu": {
-              "v": 0.37,
-              "s": "0.37 ms"
+              "v": 0.3,
+              "s": "0.30 ms"
+            },
+            "tosu": {
+              "v": 0.68,
+              "s": "0.68 ms"
             }
           }
         },
         {
           "label": "Windows stable · background",
           "values": {
-            "tosu": {
-              "v": 13.78,
-              "s": "13.78 ms"
-            },
             "vosu": {
-              "v": 17.34,
-              "s": "17.34 ms"
+              "v": 4.83,
+              "s": "4.83 ms"
+            },
+            "tosu": {
+              "v": 8.0,
+              "s": "8.00 ms"
             }
           }
         },
         {
           "label": "Windows stable · consumer",
           "values": {
-            "tosu": {
-              "v": 3.71,
-              "s": "3.71 ms"
-            },
             "vosu": {
-              "v": 0.44,
-              "s": "0.44 ms"
+              "v": 0.36,
+              "s": "0.36 ms"
+            },
+            "tosu": {
+              "v": 3.43,
+              "s": "3.43 ms"
             }
           }
         },
         {
           "label": "Linux lazer · background",
           "values": {
-            "tosu": {
-              "v": 3.67,
-              "s": "3.67 ms"
-            },
             "vosu": {
-              "v": 0.73,
-              "s": "0.73 ms"
+              "v": 0.77,
+              "s": "0.77 ms"
+            },
+            "tosu": {
+              "v": 3.25,
+              "s": "3.25 ms"
             }
           }
         },
         {
           "label": "Linux lazer · consumer",
           "values": {
-            "tosu": {
-              "v": 2.7,
-              "s": "2.70 ms"
-            },
             "vosu": {
-              "v": 0.27,
-              "s": "0.27 ms"
+              "v": 0.25,
+              "s": "0.25 ms"
+            },
+            "tosu": {
+              "v": 2.61,
+              "s": "2.61 ms"
             }
           }
         },
         {
           "label": "Linux stable (Wine) · background",
           "values": {
-            "tosu": {
-              "v": 4.24,
-              "s": "4.24 ms"
-            },
             "vosu": {
-              "v": 0.95,
-              "s": "0.95 ms"
+              "v": 0.8,
+              "s": "0.80 ms"
+            },
+            "tosu": {
+              "v": 4.42,
+              "s": "4.42 ms"
             }
           }
         },
         {
           "label": "Linux stable (Wine) · consumer",
           "values": {
-            "tosu": {
-              "v": 2.86,
-              "s": "2.86 ms"
-            },
             "vosu": {
-              "v": 0.27,
-              "s": "0.27 ms"
+              "v": 0.29,
+              "s": "0.29 ms"
+            },
+            "tosu": {
+              "v": 3.06,
+              "s": "3.06 ms"
             }
           }
         }

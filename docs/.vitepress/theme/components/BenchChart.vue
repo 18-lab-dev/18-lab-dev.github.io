@@ -26,16 +26,13 @@ const LABELS: Record<string, string> = {
   tosu: "tosu 4.26.2",
   vosu: "vosu",
   vosuAlone: "vosu alone",
-  before: "before",
   v102: "1.0.2 code",
-  r1: "after round 1",
-  after: "1.1.0 so far",
+  after: "1.1.0",
 };
 
 // The chip compares the reference series with vosu's: tosu vs vosu, or vosu before vs after.
 const RATIO_PAIRS: [string, string, string][] = [
   ["tosu", "vosu", "tosu / vosu"],
-  ["before", "after", "before / after"],
   ["v102", "after", "speedup since 1.0.2"],
 ];
 
@@ -229,16 +226,9 @@ code.title {
   background: linear-gradient(90deg, #e2559c, #ff8cc4);
 }
 
-.swatch.before,
-.bar.before,
 .swatch.v102,
 .bar.v102 {
   background: linear-gradient(90deg, #6b6385, #9a91b8);
-}
-
-.swatch.r1,
-.bar.r1 {
-  background: linear-gradient(90deg, #8b6cff, #b3a0ff);
 }
 
 .swatch.after,

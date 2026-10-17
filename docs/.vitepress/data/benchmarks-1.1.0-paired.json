@@ -1,301 +1,503 @@
 {
   "source": {
     "repo": "shiruviaa/vosu",
-    "commit": "2c977bf",
+    "commit": "a2e3358",
     "path": "docs/testing/benchmarks.md",
     "section": "Performance changes for 1.1.0 (paired)"
   },
   "charts": [
     {
-      "id": "reader",
-      "title": "Linux native reader (regular capture cycle)",
-      "series": ["v102", "r1", "after"],
+      "id": "linux-regular_reader",
+      "title": "Linux · regular_reader",
+      "series": ["v102", "after"],
       "rows": [
         {
-          "label": "lazer gameplay",
+          "label": "regular_reader/lazer_gameplay",
           "values": {
             "v102": {
-              "v": 90.99,
-              "s": "90.99 µs",
-              "range": "90.16–91.61"
-            },
-            "r1": {
-              "v": 16.67,
-              "s": "16.67 µs",
-              "range": "16.56–16.68"
+              "v": 92.27,
+              "s": "92.27 µs",
+              "range": "91.63–126.40"
             },
             "after": {
-              "v": 15.61,
-              "s": "15.61 µs",
-              "range": "15.56–16.32"
+              "v": 16.66,
+              "s": "16.66 µs",
+              "range": "16.43–16.68"
             }
           }
         },
         {
-          "label": "lazer menu",
+          "label": "regular_reader/lazer_menu",
           "values": {
             "v102": {
-              "v": 107.18,
-              "s": "107.18 µs",
-              "range": "106.49–111.46"
-            },
-            "r1": {
-              "v": 42.51,
-              "s": "42.51 µs",
-              "range": "42.24–42.55"
+              "v": 108.19,
+              "s": "108.19 µs",
+              "range": "107.58–123.73"
             },
             "after": {
-              "v": 28.15,
-              "s": "28.15 µs",
-              "range": "28.03–28.70"
+              "v": 29.79,
+              "s": "29.79 µs",
+              "range": "29.42–29.86"
             }
           }
         },
         {
-          "label": "stable gameplay",
+          "label": "regular_reader/stable_gameplay",
           "values": {
             "v102": {
-              "v": 46.55,
-              "s": "46.55 µs",
-              "range": "46.40–47.12"
-            },
-            "r1": {
-              "v": 36.32,
-              "s": "36.32 µs",
-              "range": "36.12–36.67"
+              "v": 45.71,
+              "s": "45.71 µs",
+              "range": "45.27–45.71"
             },
             "after": {
-              "v": 12.14,
-              "s": "12.14 µs",
-              "range": "12.01–12.16"
+              "v": 12.7,
+              "s": "12.70 µs",
+              "range": "12.42–12.73"
             }
           }
         },
         {
-          "label": "stable menu",
+          "label": "regular_reader/stable_menu",
           "values": {
             "v102": {
-              "v": 50.37,
-              "s": "50.37 µs",
-              "range": "50.07–50.80"
-            },
-            "r1": {
-              "v": 39.14,
-              "s": "39.14 µs",
-              "range": "38.95–39.17"
+              "v": 49.11,
+              "s": "49.11 µs",
+              "range": "48.74–49.35"
             },
             "after": {
-              "v": 10.05,
-              "s": "10.05 µs",
-              "range": "9.86–10.31"
+              "v": 10.58,
+              "s": "10.58 µs",
+              "range": "10.31–10.63"
             }
           }
         }
       ]
     },
     {
-      "id": "filtered",
-      "title": "Filtered WebSocket fan-out, v2, 100 clients",
-      "series": ["v102", "r1", "after"],
+      "id": "linux-memory_reader_bench",
+      "title": "Linux · memory_reader_bench",
+      "series": ["v102", "after"],
       "rows": [
         {
-          "label": "identical filters",
-          "values": {
-            "v102": {
-              "v": 5262.0,
-              "s": "5.262 ms",
-              "range": "5.242–5.854 ms"
-            },
-            "r1": {
-              "v": 23.65,
-              "s": "23.65 µs",
-              "range": "23.42–23.77"
-            },
-            "after": {
-              "v": 18.99,
-              "s": "18.99 µs",
-              "range": "18.93–19.85"
-            }
-          }
-        },
-        {
-          "label": "unique filters",
-          "values": {
-            "v102": {
-              "v": 5867.0,
-              "s": "5.867 ms",
-              "range": "5.836–6.337 ms"
-            },
-            "r1": {
-              "v": 558.9,
-              "s": "558.90 µs",
-              "range": "552.8–563.3"
-            },
-            "after": {
-              "v": 30.41,
-              "s": "30.41 µs",
-              "range": "29.37–31.11"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "subscribe",
-      "title": "Selected-field subscription, 1000 clients",
-      "series": ["v102", "r1", "after"],
-      "rows": [
-        {
-          "label": "distinct plans",
-          "values": {
-            "v102": {
-              "v": 425.8,
-              "s": "425.80 µs",
-              "range": "420.8–426.8"
-            },
-            "r1": {
-              "v": 161.0,
-              "s": "161.00 µs",
-              "range": "159.7–161.4"
-            },
-            "after": {
-              "v": 83.05,
-              "s": "83.05 µs",
-              "range": "81.63–84.85"
-            }
-          }
-        },
-        {
-          "label": "shared plan",
-          "values": {
-            "v102": {
-              "v": 220.0,
-              "s": "220.00 µs",
-              "range": "217.8–221.0"
-            },
-            "r1": {
-              "v": 102.9,
-              "s": "102.90 µs",
-              "range": "102.5–104.4"
-            },
-            "after": {
-              "v": 59.12,
-              "s": "59.12 µs",
-              "range": "58.63–59.76"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "serializers",
-      "title": "Cold serializers",
-      "series": ["v102", "r1", "after"],
-      "rows": [
-        {
-          "label": "v1",
-          "values": {
-            "v102": {
-              "v": 7.377,
-              "s": "7.38 µs",
-              "range": "5.917–7.476"
-            },
-            "r1": {
-              "v": 6.898,
-              "s": "6.90 µs",
-              "range": "5.662–6.952"
-            },
-            "after": {
-              "v": 4.851,
-              "s": "4.85 µs",
-              "range": "3.752–4.976"
-            }
-          }
-        },
-        {
-          "label": "v2",
-          "values": {
-            "v102": {
-              "v": 16.3,
-              "s": "16.30 µs",
-              "range": "13.58–17.68"
-            },
-            "r1": {
-              "v": 14.25,
-              "s": "14.25 µs",
-              "range": "12.56–15.18"
-            },
-            "after": {
-              "v": 6.808,
-              "s": "6.81 µs",
-              "range": "5.805–7.509"
-            }
-          }
-        },
-        {
-          "label": "v2 precise",
-          "values": {
-            "v102": {
-              "v": 5.946,
-              "s": "5.95 µs",
-              "range": "5.115–6.208"
-            },
-            "r1": {
-              "v": 4.246,
-              "s": "4.25 µs",
-              "range": "3.659–5.193"
-            },
-            "after": {
-              "v": 5.231,
-              "s": "5.23 µs",
-              "range": "4.045–5.417"
-            }
-          }
-        },
-        {
-          "label": "streamCompanion",
-          "values": {
-            "v102": {
-              "v": 8.142,
-              "s": "8.14 µs",
-              "range": "7.815–9.402"
-            },
-            "r1": {
-              "v": 9.396,
-              "s": "9.40 µs",
-              "range": "8.282–10.12"
-            },
-            "after": {
-              "v": 4.955,
-              "s": "4.96 µs",
-              "range": "4.716–6.259"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "precise",
-      "title": "Linux lazer precise capture (memory_reader_bench)",
-      "series": ["v102", "r1", "after"],
-      "rows": [
-        {
-          "label": "lazer precise",
+          "label": "memory_reader_bench (lazer precise capture)",
           "values": {
             "v102": {
               "v": 10.64,
               "s": "10.64 µs",
-              "range": "10.43–11.36"
-            },
-            "r1": {
-              "v": 8.9,
-              "s": "8.90 µs",
-              "range": "8.74–9.13"
+              "range": "10.44–10.97"
             },
             "after": {
-              "v": 9.75,
-              "s": "9.75 µs",
-              "range": "8.74–11.32"
+              "v": 8.789,
+              "s": "8.789 µs",
+              "range": "8.687–8.959"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "linux-filtered_projection",
+      "title": "Linux · filtered_projection",
+      "series": ["v102", "after"],
+      "rows": [
+        {
+          "label": "filtered_projection/v2_identical/100",
+          "values": {
+            "v102": {
+              "v": 6179.0,
+              "s": "6.179 ms",
+              "range": "6.151–6.434 ms"
+            },
+            "after": {
+              "v": 19.9,
+              "s": "19.90 µs",
+              "range": "19.84–19.96 µs"
+            }
+          }
+        },
+        {
+          "label": "filtered_projection/v2_unique/100",
+          "values": {
+            "v102": {
+              "v": 6950.0,
+              "s": "6.950 ms",
+              "range": "6.796–7.194 ms"
+            },
+            "after": {
+              "v": 31.71,
+              "s": "31.71 µs",
+              "range": "31.61–31.72 µs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "linux-v2_subscription",
+      "title": "Linux · v2_subscription",
+      "series": ["v102", "after"],
+      "rows": [
+        {
+          "label": "v2_subscription/distinct_plans/1000",
+          "values": {
+            "v102": {
+              "v": 409.1,
+              "s": "409.1 µs",
+              "range": "409.0–435.8"
+            },
+            "after": {
+              "v": 85.58,
+              "s": "85.58 µs",
+              "range": "85.27–86.55"
+            }
+          }
+        },
+        {
+          "label": "v2_subscription/shared_plan/1000",
+          "values": {
+            "v102": {
+              "v": 209.2,
+              "s": "209.2 µs",
+              "range": "208.4–209.2"
+            },
+            "after": {
+              "v": 61.28,
+              "s": "61.28 µs",
+              "range": "59.84–61.41"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "linux-serializers_cold",
+      "title": "Linux · serializers_cold",
+      "series": ["v102", "after"],
+      "rows": [
+        {
+          "label": "serializers_cold/v1",
+          "values": {
+            "v102": {
+              "v": 4.45,
+              "s": "4.450 µs",
+              "range": "4.437–5.939"
+            },
+            "after": {
+              "v": 2.647,
+              "s": "2.647 µs",
+              "range": "2.639–2.818"
+            }
+          }
+        },
+        {
+          "label": "serializers_cold/v2",
+          "values": {
+            "v102": {
+              "v": 10.54,
+              "s": "10.54 µs",
+              "range": "10.41–10.69"
+            },
+            "after": {
+              "v": 3.953,
+              "s": "3.953 µs",
+              "range": "3.907–4.158"
+            }
+          }
+        },
+        {
+          "label": "serializers_cold/v2_precise",
+          "values": {
+            "v102": {
+              "v": 3.914,
+              "s": "3.914 µs",
+              "range": "3.881–3.990"
+            },
+            "after": {
+              "v": 2.718,
+              "s": "2.718 µs",
+              "range": "2.690–2.954"
+            }
+          }
+        },
+        {
+          "label": "serializers_cold/stream_companion",
+          "values": {
+            "v102": {
+              "v": 6.527,
+              "s": "6.527 µs",
+              "range": "6.501–6.539"
+            },
+            "after": {
+              "v": 3.23,
+              "s": "3.230 µs",
+              "range": "3.162–3.250"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "linux-http_v2",
+      "title": "Linux · http_v2",
+      "series": ["v102", "after"],
+      "rows": [
+        {
+          "label": "http_v2/cold_connection",
+          "values": {
+            "v102": {
+              "v": 45.38,
+              "s": "45.38 µs",
+              "range": "43.85–46.49"
+            },
+            "after": {
+              "v": 48.2,
+              "s": "48.20 µs",
+              "range": "45.24–54.50"
+            }
+          }
+        },
+        {
+          "label": "http_v2/keep_alive",
+          "values": {
+            "v102": {
+              "v": 5.575,
+              "s": "5.575 µs",
+              "range": "5.540–5.618"
+            },
+            "after": {
+              "v": 5.71,
+              "s": "5.710 µs",
+              "range": "5.634–5.735"
+            }
+          }
+        },
+        {
+          "label": "http_v2/dispatch_only",
+          "values": {
+            "v102": {
+              "v": 0.3643,
+              "s": "364.3 ns",
+              "range": "354.9–374.4"
+            },
+            "after": {
+              "v": 0.38139999999999996,
+              "s": "381.4 ns",
+              "range": "380.3–382.1"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "windows-memory_reader_bench",
+      "title": "Windows · memory_reader_bench",
+      "series": ["v102", "after"],
+      "rows": [
+        {
+          "label": "memory_reader_bench (lazer precise capture)",
+          "values": {
+            "v102": {
+              "v": 19.1,
+              "s": "19.10 µs",
+              "range": "18.97–24.02"
+            },
+            "after": {
+              "v": 19.14,
+              "s": "19.14 µs",
+              "range": "18.97–19.46"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "windows-filtered_projection",
+      "title": "Windows · filtered_projection",
+      "series": ["v102", "after"],
+      "rows": [
+        {
+          "label": "filtered_projection/v2_identical/100",
+          "values": {
+            "v102": {
+              "v": 7679.0,
+              "s": "7.679 ms",
+              "range": "7.656–7.713 ms"
+            },
+            "after": {
+              "v": 25.32,
+              "s": "25.32 µs",
+              "range": "24.96–25.42 µs"
+            }
+          }
+        },
+        {
+          "label": "filtered_projection/v2_unique/100",
+          "values": {
+            "v102": {
+              "v": 7688.0,
+              "s": "7.688 ms",
+              "range": "7.646–7.900 ms"
+            },
+            "after": {
+              "v": 38.64,
+              "s": "38.64 µs",
+              "range": "37.95–38.70 µs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "windows-v2_subscription",
+      "title": "Windows · v2_subscription",
+      "series": ["v102", "after"],
+      "rows": [
+        {
+          "label": "v2_subscription/distinct_plans/1000",
+          "values": {
+            "v102": {
+              "v": 558.3,
+              "s": "558.3 µs",
+              "range": "553.0–567.1"
+            },
+            "after": {
+              "v": 103.5,
+              "s": "103.5 µs",
+              "range": "101.1–111.8"
+            }
+          }
+        },
+        {
+          "label": "v2_subscription/shared_plan/1000",
+          "values": {
+            "v102": {
+              "v": 237.2,
+              "s": "237.2 µs",
+              "range": "236.9–239.7"
+            },
+            "after": {
+              "v": 66.29,
+              "s": "66.29 µs",
+              "range": "66.12–71.04"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "windows-serializers_cold",
+      "title": "Windows · serializers_cold",
+      "series": ["v102", "after"],
+      "rows": [
+        {
+          "label": "serializers_cold/v1",
+          "values": {
+            "v102": {
+              "v": 6.49,
+              "s": "6.490 µs",
+              "range": "6.234–6.543"
+            },
+            "after": {
+              "v": 2.845,
+              "s": "2.845 µs",
+              "range": "2.724–2.853"
+            }
+          }
+        },
+        {
+          "label": "serializers_cold/v2",
+          "values": {
+            "v102": {
+              "v": 12.79,
+              "s": "12.79 µs",
+              "range": "12.75–13.09"
+            },
+            "after": {
+              "v": 4.248,
+              "s": "4.248 µs",
+              "range": "3.859–4.610"
+            }
+          }
+        },
+        {
+          "label": "serializers_cold/v2_precise",
+          "values": {
+            "v102": {
+              "v": 3.855,
+              "s": "3.855 µs",
+              "range": "3.847–3.886"
+            },
+            "after": {
+              "v": 2.642,
+              "s": "2.642 µs",
+              "range": "2.411–2.667"
+            }
+          }
+        },
+        {
+          "label": "serializers_cold/stream_companion",
+          "values": {
+            "v102": {
+              "v": 9.41,
+              "s": "9.410 µs",
+              "range": "9.316–9.505"
+            },
+            "after": {
+              "v": 3.751,
+              "s": "3.751 µs",
+              "range": "3.044–4.777"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "windows-http_v2",
+      "title": "Windows · http_v2",
+      "series": ["v102", "after"],
+      "rows": [
+        {
+          "label": "http_v2/cold_connection",
+          "values": {
+            "v102": {
+              "v": 359.5,
+              "s": "359.5 µs",
+              "range": "358.1–363.5"
+            },
+            "after": {
+              "v": 370.1,
+              "s": "370.1 µs",
+              "range": "359.7–387.8"
+            }
+          }
+        },
+        {
+          "label": "http_v2/keep_alive",
+          "values": {
+            "v102": {
+              "v": 67.29,
+              "s": "67.29 µs",
+              "range": "67.23–73.41"
+            },
+            "after": {
+              "v": 69.7,
+              "s": "69.70 µs",
+              "range": "67.84–70.14"
+            }
+          }
+        },
+        {
+          "label": "http_v2/dispatch_only",
+          "values": {
+            "v102": {
+              "v": 0.6218,
+              "s": "621.8 ns",
+              "range": "613.9–924.2"
+            },
+            "after": {
+              "v": 0.6357999999999999,
+              "s": "635.8 ns",
+              "range": "625.6–636.0"
             }
           }
         }
@@ -304,23 +506,19 @@
   ],
   "calls": {
     "id": "calls",
-    "title": "Native read calls per capture cycle",
-    "series": ["v102", "r1", "after"],
+    "title": "Linux native backend calls per regular capture",
+    "series": ["v102", "after"],
     "rows": [
       {
         "label": "lazer gameplay",
         "values": {
           "v102": {
             "v": 268,
-            "s": "268"
-          },
-          "r1": {
-            "v": 32,
-            "s": "32"
+            "s": "268 calls"
           },
           "after": {
             "v": 28,
-            "s": "28"
+            "s": "28 calls"
           }
         }
       },
@@ -329,15 +527,11 @@
         "values": {
           "v102": {
             "v": 314,
-            "s": "314"
-          },
-          "r1": {
-            "v": 136,
-            "s": "136"
+            "s": "314 calls"
           },
           "after": {
             "v": 72,
-            "s": "72"
+            "s": "72 calls"
           }
         }
       },
@@ -346,15 +540,11 @@
         "values": {
           "v102": {
             "v": 135,
-            "s": "135"
-          },
-          "r1": {
-            "v": 135,
-            "s": "135"
+            "s": "135 calls"
           },
           "after": {
             "v": 29,
-            "s": "29"
+            "s": "29 calls"
           }
         }
       },
@@ -363,15 +553,11 @@
         "values": {
           "v102": {
             "v": 148,
-            "s": "148"
-          },
-          "r1": {
-            "v": 148,
-            "s": "148"
+            "s": "148 calls"
           },
           "after": {
             "v": 21,
-            "s": "21"
+            "s": "21 calls"
           }
         }
       }

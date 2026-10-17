@@ -84,7 +84,7 @@ if (offsets) {
 }
 ```
 
-A 3D hit-offsets demo overlay will be published separately. It will require `ENABLE_HIT_OFFSETS = true`; regular v2 and precise v2 omit the field when the setting is off.
+The [3D hit-offsets demo overlay](https://github.com/qt715/vosu-hit-offsets-3d) requires `ENABLE_HIT_OFFSETS = true`; regular v2 and precise v2 omit the field when the setting is off.
 
 ### Mania per-key errors
 
