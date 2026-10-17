@@ -5,9 +5,9 @@ description: Every vosu HTTP route, method, request parameter, response, and tra
 
 # HTTP API
 
-Overlay/data base URL: **`http://127.0.0.1:24050`** (`SERVER_IP:SERVER_PORT`). Dashboard/management base URL: **`http://127.0.0.1:24052`** (`DASHBOARD_IP:DASHBOARD_PORT`), separate in vosu 1.1.0. Methods and paths are exact and case-sensitive. Unsupported combinations return **404**, not 405; there are no implicit HEAD or OPTIONS handlers. WebSocket upgrades remain on the overlay origin; the dashboard refuses all upgrades. See the [WebSocket reference](/vosu/dev/websocket-api).
+Overlay/data base URL: **`http://127.0.0.1:24050`** (`SERVER_IP:SERVER_PORT`). Dashboard/management base URL: **`http://127.0.0.1:24051`** (`DASHBOARD_IP:DASHBOARD_PORT`), separate in vosu 1.1.0. Methods and paths are exact and case-sensitive. Unsupported combinations return **404**, not 405; there are no implicit HEAD or OPTIONS handlers. WebSocket upgrades remain on the overlay origin; the dashboard refuses all upgrades. See the [WebSocket reference](/vosu/dev/websocket-api).
 
-All requests pass the configured trusted-peer policy; rejection is **403 `Not Found`**. Dashboard mutations additionally require exact dashboard-origin provenance and a per-start **`X-Vosu-CSRF`** token injected only into dashboard pages. `Origin` is authoritative, or `Referer` only when Origin is absent; missing, duplicate, malformed, or opaque provenance otherwise returns 403. Overlay-origin browser management writes fail with 403; explicitly scoped [API keys](#api-keys) still authorize value/profile writes there. POST bodies are capped at **1 MiB**; larger bodies return **413 `{"error":"payload too large"}`**. CORS response headers do not bypass these checks. See [security](/vosu/dev/security).
+All requests pass the configured trusted-peer policy; rejection is **403 `Not Found`**. Dashboard mutations additionally require exact dashboard-origin provenance and a per-start **`X-Vosu-CSRF`** token injected only into dashboard pages. `Origin` is authoritative, or `Referer` only when Origin is absent; missing, duplicate, malformed, or opaque provenance otherwise returns 403. Overlay-origin browser management writes fail with 403; explicitly scoped [API keys](#api-keys) and the loopback native broker credential still authorize value/profile writes there. POST bodies are capped at **1 MiB**; larger bodies return **413 `{"error":"payload too large"}`**. CORS response headers do not bypass these checks. See [security](/vosu/dev/security).
 
 `GET /api/dashboard` on the **overlay origin** discovers the effective dashboard origin. Old overlay-origin GET links to `/`, `/settings`, and `/available` return **302**, preserving path and query. Redirect authorities come from the effective listener, not arbitrary Host values; wildcard dashboard binds map to loopback for local discovery. Overlay URLs and their browser storage stay unchanged; no overlay files are served by the dashboard.
 
@@ -32,7 +32,7 @@ curl -H "Authorization: Bearer $VOSU_API_KEY" -H 'Content-Type: application/json
 
 Keys never authenticate through URL query parameters. Cross-origin browser HTTP is not supported: CORS does not allow Authorization. For browsers, use the [command WebSocket subprotocols](/vosu/dev/websocket-api#api-key-authentication). Remote peers must still be allowed by `ALLOWED_IPS`; a key never bypasses that policy. Plain HTTP/WS on a LAN exposes the secret to network observers: keep loopback by default and use a trusted TLS reverse proxy for remote access.
 
-Keys persist across restarts, unlike the unchanged per-start loopback [`broker.json` token](/vosu/dev/websocket-api#native-broker-credential). The file token still provides zero-config native broker integration, authorizes command-socket writes only, and is not an HTTP credential.
+Keys persist across restarts, unlike the per-start loopback [`broker.json` token](/vosu/dev/websocket-api#native-broker-credential). The file token provides zero-config native broker integration and authorizes command-socket writes, HTTP settings value saves, and profile actions from loopback. It never authorizes schema saves or management.
 
 ### Dashboard-only key management
 
@@ -46,7 +46,7 @@ Both `GET /api/keys` and `POST /api/keys` live on the dashboard origin and requi
 
 Names are 1–64 printable characters excluding Unicode bidirectional controls. `scopes` contains one or both scope values above. To change permissions, revoke and recreate the key.
 
-Sources: [API key README and examples](https://github.com/shiruviaa/vosu/blob/09341cc/README.md#api-keys), [ADR 0015](https://github.com/shiruviaa/vosu/blob/09341cc/docs/decisions/0015-user-managed-api-keys.md).
+Sources: [API key README and examples](https://github.com/shiruviaa/vosu/blob/d0851c8/README.md#api-keys), [ADR 0015](https://github.com/shiruviaa/vosu/blob/d0851c8/docs/decisions/0015-user-managed-api-keys.md).
 
 ## State and calculation
 
@@ -101,7 +101,7 @@ File serving accepts a validated **single** `Range: bytes=...` request: 206 with
 
 ## Pages and static content
 
-`/`, `/settings`, `/available`, and embedded `/assets/{path}` belong to the **dashboard origin**. Counter-static fallback belongs only to the **overlay origin**. Dashboard read APIs serve its pages, while read-only state, calculation, game files, settings/profiles/catalog APIs remain on the overlay origin as documented by [ADR 0016](https://github.com/shiruviaa/vosu/blob/63cf797/docs/decisions/0016-separate-dashboard-origin.md).
+`/`, `/settings`, `/available`, and embedded `/assets/{path}` belong to the **dashboard origin**. Counter-static fallback belongs only to the **overlay origin**. Dashboard read APIs serve its pages, while read-only state, calculation, game files, settings/profiles/catalog APIs remain on the overlay origin as documented by [ADR 0016](https://github.com/shiruviaa/vosu/blob/d0851c8/docs/decisions/0016-separate-dashboard-origin.md).
 
 | Method + path                      | Parameters / response                                                                       |
 | ---------------------------------- | ------------------------------------------------------------------------------------------- |
@@ -120,7 +120,7 @@ Dynamic page rendering can return 500 JSON errors. Counter fallback uses 200 byt
 
 ## Counters and settings
 
-The write routes below live on the **dashboard origin** and require dashboard provenance plus `X-Vosu-CSRF` <Badge type="warning" text="management" />. The overlay origin retains read-only settings/profile/catalog APIs and explicitly scoped API-key value/profile writes, not schema edits or general management. They are **not an overlay's general-purpose API**. Most domain errors deliberately use HTTP 200 with an `error` field: check the body, not just `response.ok`.
+The management write routes below live on the **dashboard origin** and require dashboard provenance plus `X-Vosu-CSRF` <Badge type="warning" text="management" />. The overlay origin retains read-only settings/profile/catalog APIs and explicitly scoped API-key or loopback native broker value/profile writes, not schema edits or general management. They are **not an overlay's general-purpose API**. Most domain errors deliberately use HTTP 200 with an `error` field: check the body, not just `response.ok`.
 
 | Method + path                                                                                                        | Input                                                                                                                 | Response / status                                                                              |
 | -------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
@@ -153,18 +153,18 @@ Daemon saves reject the **whole** request if interval/port values are nonfinite 
 | Create by copying         | `{"action":"create","name":"stream","copyFrom":"default"}`                              |
 | Rename                    | `{"action":"rename","name":"stream","target":"live"}`                                   |
 | Delete                    | `{"action":"delete","name":"live"}`                                                     |
-| Activate globally         | `{"action":"activate","name":"stream"}`                                                 |
+| Set as default            | `{"action":"activate","name":"stream"}`                                                 |
 | Copy one overlay's values | `{"action":"copyOverlay","name":"counter-folder","source":"default","target":"stream"}` |
 
-POST requires dashboard-origin provenance plus CSRF, or an API key with `profiles:manage` on the overlay origin, and uses the same body limits as other management writes. Names are case-sensitive references but case-insensitively unique: 1–48 ASCII letters, digits, `_` or `-`. At most 32 profiles including reserved `default` are allowed. `default` cannot be renamed/deleted; deleting the active profile selects `default`.
+POST requires dashboard-origin provenance plus CSRF, an API key with `profiles:manage` on the overlay origin, or the loopback native broker credential on that origin, and uses the same body limits as other management writes. Credential authorization is rechecked after reading the body. Names are case-sensitive references but case-insensitively unique: 1–48 ASCII letters, digits, `_` or `-`. At most 32 profiles including reserved `default` are allowed. `default` cannot be renamed/deleted; deleting the default profile selects `default`.
 
 `GET /api/counters/settings/<name>?profile=stream` keeps the existing `{"settings":[...],"values":{...}}` response. POST to that URL accepts the usual `[{"uniqueID":"field","value":...}]` and returns `{"result":"success"}`. Omit `profile` to use the global active profile. Explicit unknown profiles return a JSON error, not a write to a fallback profile. `update=yes` still edits the **shared** developer schema for every profile.
 
 `default` keeps `<config>/settings/<counter>.settings.values.toml`; other profiles use `<config>/settings/profiles/<profile>/<counter>.settings.values.toml`. `<config>/settings/profiles.json` stores the names and active selection; files are atomically replaced within their own directory. Missing overlay values use schema defaults, never another profile's saved values.
 
-`/settings?overlay=<name>&profile=<p>` on the **dashboard origin** opens the inline overlay editor for a profile; without `profile`, it uses the active profile. It and the dashboard card editor share profile selection, creation/copying, rename, deletion, global activation, title/description/ID search, and header navigation (absent for schemas with no headers). Matching sections retain their headers.
+`/settings?overlay=<name>&profile=<p>` on the **dashboard origin** opens the inline overlay editor for a profile; without `profile`, it uses the default profile (API field `active`). It and the dashboard card editor share a profile dropdown and **⋯** menu with Create, Copy, Rename, Delete, and **Set as default** (API action `activate`), plus title/description/ID search and header navigation (absent for schemas with no headers). The dropdown adds `(default)` to the profile used by unpinned overlays, except the reserved `default` profile. Matching sections retain their headers.
 
-Normal dashboard pages forbid framing with `frame-ancestors 'none'`. The supported vosulay embedding surface is `/settings?overlay=<name>&embed=1`, permitted only when the first `overlay` is nonempty and the first `embed` is `1`. Embed mode removes dashboard navigation, updates, diagnostics, and external settings links; it does not grant mutation authority. Its profile postMessage payload and behavior stay unchanged, but messages now come from the **dashboard origin**: validate `event.origin`, `event.source`, and message shape against that origin, not the overlay origin.
+All dashboard pages forbid framing with `frame-ancestors 'none'`; no query parameter enables it. Native editors such as vosulay use the settings and profiles HTTP API through their Rust host. Dashboard pages send no parent-window notifications.
 
 For an individual overlay page, use [`?vosuProfile=<name>`](/vosu/dev/counter-packages#per-instance-settings-profiles), not the editor's `profile` query. The injected qualified `COUNTER_PATH` selects the profile in [commands sockets](/vosu/dev/websocket-api#profile-aware-commands). Activating profiles refreshes unpinned clients; saving/copying values refreshes clients pinned to that profile and unpinned clients when it is active.
 

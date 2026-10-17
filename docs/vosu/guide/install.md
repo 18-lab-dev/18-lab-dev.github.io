@@ -5,11 +5,11 @@ description: Portable archives, Linux packages, per-user installation, and relea
 
 # Install vosu
 
-Download from [shiruviaa/vosu releases](https://github.com/shiruviaa/vosu/releases). The published README documents v1.0.1; the commands below use that version. For a newer release, substitute its actual asset filename.
+The current release is **1.1.0**. Download from the [v1.1.0 release](https://github.com/shiruviaa/vosu/releases/tag/v1.1.0).
 
 ## Portable archive
 
-Download `vosu-linux-v1.0.1.zip` or `vosu-windows-v1.0.1.zip` and extract the **whole archive** into a writable directory. The release archive contains the executable and `LICENSE`.
+Download `vosu-linux-v1.1.0.zip` or `vosu-windows-v1.1.0.zip` and extract the **whole archive** into a writable directory. The release archive contains the executable and `LICENSE`.
 
 ::: code-group
 ```sh [Linux]
@@ -22,10 +22,10 @@ chmod +x vosu
 ```
 :::
 
-vosu opens the dashboard by default. You can also open `http://127.0.0.1:24052/` yourself (`DASHBOARD_IP:DASHBOARD_PORT`). Overlay URLs remain on port **24050**, preserving their browser storage. On Linux, complete [capability setup](/vosu/guide/linux).
+vosu opens the dashboard by default. You can also open <http://127.0.0.1:24051/> yourself (`DASHBOARD_IP:DASHBOARD_PORT`). Overlay URLs remain on port **24050**, preserving their browser storage. On Linux, complete [capability setup](/vosu/guide/linux).
 
 ::: warning Windows installation location
-Do not run the executable inside an archive or from a OneDrive-controlled directory: safe updater replacement and rollback are unavailable there. Published v1.0.0 and v1.0.1 Windows executables are unsigned, so SmartScreen may warn. Verify the download below before deciding whether to launch it; an OpenPGP signature is not Windows Authenticode signing.
+Do not run the executable inside an archive or from a OneDrive-controlled directory: safe updater replacement and rollback are unavailable there. Windows executables are unsigned, so SmartScreen may warn. Verify the download below before deciding whether to launch it; an OpenPGP signature is not Windows Authenticode signing.
 :::
 
 ## Linux packages
@@ -34,15 +34,15 @@ Requirements: glibc **2.35 or newer** (Debian 12+, Ubuntu 22.04+, current Fedora
 
 ::: code-group
 ```sh [Debian / Ubuntu]
-sudo apt install ./vosu_1.0.1_amd64.deb
+sudo apt install ./vosu_1.1.0_amd64.deb
 ```
 
 ```sh [Fedora]
-sudo dnf install ./vosu-1.0.1-1.x86_64.rpm
+sudo dnf install ./vosu-1.1.0-1.x86_64.rpm
 ```
 
 ```sh [Arch Linux]
-sudo pacman -U ./vosu-1.0.1-1-x86_64.pkg.tar.zst
+sudo pacman -U ./vosu-1.1.0-1-x86_64.pkg.tar.zst
 ```
 :::
 
@@ -95,7 +95,7 @@ With GnuPG installed, and the key saved as `release-signing-key.asc`:
 ```sh
 gpg --show-keys --fingerprint release-signing-key.asc
 gpg --import release-signing-key.asc
-gpg --verify vosu-linux-v1.0.1.zip.sig vosu-linux-v1.0.1.zip
+gpg --verify vosu-linux-v1.1.0.zip.sig vosu-linux-v1.1.0.zip
 ```
 
 Use the Windows ZIP or Linux package filename when verifying those assets. Require a good signature from the fingerprint above, not just a matching display name.

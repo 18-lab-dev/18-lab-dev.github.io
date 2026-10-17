@@ -8,7 +8,7 @@ description: Install trusted counters, configure them, and use their hosted URLs
 vosu calls browser overlays **counters**. It serves their HTML, JavaScript, and assets from its static folder and supplies live game data through compatible APIs.
 
 ::: warning Install only trusted counters
-Counters are third-party web pages, not isolated plugins. Their scripts can read game data and use the existing settings protocol, and their authors may make external network requests. In vosu 1.1.0 they remain on the overlay origin (port 24050) but no longer share the dashboard's management authority (port 24052). vosu does not review or endorse them.
+Counters are third-party web pages, not isolated plugins. Their scripts can read game data and use the existing settings protocol, and their authors may make external network requests. In vosu 1.1.0 they remain on the overlay origin (port 24050) but no longer share the dashboard's management authority (port 24051). vosu does not review or endorse them.
 :::
 
 ## Install from Available
@@ -61,13 +61,13 @@ Use an installed card's **Settings** button when present. The package owns `sett
 | Linux   | `${XDG_CONFIG_HOME:-$HOME/.config}/vosu/settings/<counter>.settings.values.toml` |
 | Windows | `settings/<counter>.settings.values.toml` next to `vosu.exe`                     |
 
-Controls can include text, colors, numbers, checkboxes, buttons, choices, commands, textareas, passwords, and headers. File-loaded or other non-hosted overlays may read settings, but must use the **hosted settings page** to write them because writes require same-origin browser provenance.
+Controls can include text, colors, numbers, checkboxes, buttons, choices, commands, textareas, passwords, and headers. File-loaded or other non-hosted overlays may read settings, but need the **hosted settings page** or an authorized API key/native broker to write them; file-origin provenance alone does not authorize saves.
 
 ### Settings profiles
 
-<Badge type="tip" text="vosu only" /> **Added in vosu 1.1.0.** The card settings editor and hosted `/settings?overlay=<name>&profile=<p>` page share profile selection, creation/copying, rename, deletion and global activation. Use profiles to switch a complete streaming setup while keeping the same overlay packages and schemas.
+<Badge type="tip" text="vosu only" /> **Added in vosu 1.1.0.** The card settings editor and hosted `/settings?overlay=<name>&profile=<p>` page share a profile dropdown and **⋯** menu: **Create**, **Copy**, **Rename**, **Delete**, and **Set as default** (API action `activate`). The dropdown marks the profile for unpinned overlays with `(default)`, except the reserved `default` profile. Use profiles to switch a complete streaming setup while keeping the same overlay packages and schemas.
 
-The search box matches setting titles, descriptions and IDs; matching sections keep their headers. Header navigation jumps between sections and is absent when the schema has no headers. This hosted inline page is also the supported settings editor embedded by vosulay.
+The search box matches setting titles, descriptions and IDs; matching sections keep their headers. Header navigation jumps between sections and is absent when the schema has no headers. Dashboard pages forbid framing and send no parent-window notifications; vosulay uses a native settings editor backed by the HTTP API through its Rust host.
 
 `default` preserves the values paths above. Other profiles use `<config>/settings/profiles/<profile>/<counter>.settings.values.toml`. Unsaved overlays use their schema defaults, not another profile's saved values. Names are 1–48 ASCII letters, digits, `_` or `-`, case-insensitively unique; references are case-sensitive. You can have up to 32 profiles including `default`, which cannot be renamed/deleted. Deleting the active profile selects `default`.
 

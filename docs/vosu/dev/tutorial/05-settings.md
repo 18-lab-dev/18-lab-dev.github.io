@@ -48,7 +48,7 @@ not keep a retry queue. `pagehide` closes it along with the telemetry sockets.
 
 Users open the counter's settings from the daemon dashboard. Both servers expose a
 hosted `/settings?overlay=starter-overlay` page. In vosu 1.1.0 that page lives on
-the separate dashboard origin (default `http://127.0.0.1:24052`); old overlay-origin
+the separate dashboard origin (default `http://127.0.0.1:24051`); old overlay-origin
 links redirect. Saving there sends updates back to the overlay; your UI does not
 need its own settings editor.
 

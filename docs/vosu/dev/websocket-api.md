@@ -145,11 +145,11 @@ The `l` query parameter still identifies the counter; **no query parameter authe
 
 Remote peers must still pass `ALLOWED_IPS`; keys never bypass that policy. Plain HTTP/WS on a LAN exposes secrets to network observers: keep loopback by default and use a trusted TLS reverse proxy (`wss://` for WebSockets) for remote access. Cross-origin browser HTTP Authorization is not supported by CORS.
 
-Persistent API keys are separate from the unchanged per-start, loopback-only `broker.json` token below, which keeps zero-config native broker integration and grants no HTTP write authority. See the [API key trust boundary](/vosu/dev/security#api-key-trust-boundary) and [README example](https://github.com/shiruviaa/vosu/blob/09341cc/README.md#api-keys).
+Persistent API keys are separate from the per-start, loopback-only `broker.json` token below, which keeps zero-config native broker integration and also authorizes HTTP value saves/profile actions, never schemas or management. See the [API key trust boundary](/vosu/dev/security#api-key-trust-boundary) and [README example](https://github.com/shiruviaa/vosu/blob/d0851c8/README.md#api-keys).
 
 ### Native broker credential <Badge type="tip" text="vosu only" />
 
-Each vosu start rotates a private `broker.json` containing `version`, the bound listener's `origin`, and a 64-character hex `token` generated from 32 OS-random bytes:
+Each vosu start rotates a private `broker.json` containing `version`, the overlay listener's connectable `origin`, and a 64-character hex `token` generated from 32 OS-random bytes. The origin uses the actual port; wildcard `0.0.0.0` maps to `127.0.0.1`, and `::` maps to `[::1]`. Specific binds remain unchanged, with IPv6 brackets as needed. Successful rebinds update it:
 
 | Platform | Credential path                                                                                                                   |
 | -------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -158,9 +158,9 @@ Each vosu start rotates a private `broker.json` containing `version`, the bound 
 
 Linux paths must be absolute; invalid paths disable broker support with a warning. The directory/file modes are 0700/0600. Windows inherits directory ACLs; see the [security boundary](/vosu/dev/security#local-broker-trust-boundary) before relying on that location.
 
-A native broker sends **`Authorization: Bearer <token>` only on `/websocket/commands` upgrades**, only to loopback, matching the file's origin scheme, host, and port (`localhost` and `127.0.0.1` may be treated as equivalent). vosu accepts it only from loopback peers. Never attach it to HTTP requests or other WebSocket routes.
+A native broker sends **`Authorization: Bearer <token>`** to the file's loopback origin, matching its scheme, host, and port (`localhost` and `127.0.0.1` may be treated as equivalent). Supported routes are `/websocket/commands` upgrades, `POST /api/counters/settings/<name>[?profile=<name>]` value saves, and `POST /api/counters/profiles` actions. vosu accepts the credential only from loopback peers; never attach it to other routes.
 
-A valid file token grants **exactly the same command-socket write permission as same-origin provenance**, not HTTP management authority. The Bearer scheme is case-insensitive; non-Bearer schemes, such as a reverse proxy's Basic authorization, are ignored. A wrong or stale file token returns **HTTP 401**, even if Origin would otherwise authorize the write. Without a credential, existing authorization and read-only behavior remain unchanged; HTTP management POSTs still require exact same-origin provenance unless a separate scoped API key authorizes that route.
+A valid file token grants **exactly the same command-socket write permission as same-origin provenance**. Its HTTP permissions are exactly `settings:write` and `profiles:manage`, never schema saves (`?update=yes`) or general management. Authorization is rechecked after each POST body is read. The Bearer scheme is case-insensitive; non-Bearer schemes, such as a reverse proxy's Basic authorization, are ignored. Invalid, stale, wrong-scope or non-loopback credentials return **HTTP 401**, even if browser provenance would otherwise authorize the write. Without a credential, existing authorization and read-only behavior remain unchanged; dashboard management still requires dashboard provenance and CSRF.
 
 On 401, reread the file and retry once; if that fails, connect without the token for the existing read-only behavior. vosu never deletes the file: once the daemon stops, its token is stale and authenticates nothing, and the next start atomically replaces it. Publication failures warn and disable broker writes without stopping vosu. Keep the token out of page JavaScript and logs, and authorize the broker's inbound counter-frame Origin/Host and session secret before forwarding: it must not become an open local proxy.
 
@@ -174,7 +174,7 @@ Without a page override, the existing counter identity and injected metadata rem
 
 Renaming/deleting a profile does not rewrite already-open socket identities: reload pinned instances with a valid override. An unknown page override resolves to the active profile at page load, whereas explicit unknown HTTP API profiles fail. The qualified `COUNTER_PATH` is a **settings identity, not an asset URL**; construct assets from the page URL.
 
-Management uses [`GET/POST /api/counters/profiles` and `?profile=` on `/api/counters/settings/<name>`](/vosu/dev/http-api#settings-profiles). For user editing/embedding, use `/settings?overlay=<name>&profile=<p>`; its `profile` parameter is separate from the overlay page's `vosuProfile`.
+Management uses [`GET/POST /api/counters/profiles` and `?profile=` on `/api/counters/settings/<name>`](/vosu/dev/http-api#settings-profiles). For user editing, use `/settings?overlay=<name>&profile=<p>`; its `profile` parameter is separate from the overlay page's `vosuProfile`. Dashboard pages cannot be framed; native editors use the HTTP API through their host.
 
 ### Filter syntax and bounds
 

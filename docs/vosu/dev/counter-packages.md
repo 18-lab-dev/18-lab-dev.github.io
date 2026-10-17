@@ -17,7 +17,7 @@ static/
     settings.schema.toml
 ```
 
-The page is available at `http://127.0.0.1:24050/my-counter/`. In vosu 1.1.0 it stays at the **overlay origin**, preserving its URL and browser storage, while the dashboard moves to port **24052**. It no longer has dashboard management authority: [read the security boundary](/vosu/dev/security).
+The page is available at `http://127.0.0.1:24050/my-counter/`. In vosu 1.1.0 it stays at the **overlay origin**, preserving its URL and browser storage, while the dashboard moves to port **24051**. It no longer has dashboard management authority: [read the security boundary](/vosu/dev/security).
 
 ## Discovery and metadata
 

@@ -41,7 +41,7 @@ These are all 16 bindings in the [configuration schema](https://github.com/shiru
 | `SERVER_IP`                   | `"127.0.0.1"`                    | String: listener hostname or address                                    | Overlay/data HTTP and WebSocket listener; existing overlay origin stays unchanged.                                                                                                                      |
 | `SERVER_PORT`                 | `24050`                          | Whole number `1`–`65535` in Settings; file/listener accepts `0`–`65535` | Overlay/data port; file value `0` requests an OS-assigned port. Prefer a fixed nonzero overlay port.                                                                                                    |
 | `DASHBOARD_IP`                | `"127.0.0.1"`                    | String: listener hostname or address                                    | Independent trusted dashboard listener; remains loopback-only even when overlays are shared on a LAN.                                                                                                   |
-| `DASHBOARD_PORT`              | `24052`                          | Whole number `1`–`65535` in Settings; file/listener accepts `0`–`65535` | Trusted dashboard and management port.                                                                                                                                                                  |
+| `DASHBOARD_PORT`              | `24051`                          | Whole number `1`–`65535` in Settings; file/listener accepts `0`–`65535` | Trusted dashboard and management port.                                                                                                                                                                  |
 | `STATIC_FOLDER_PATH`          | `"./static"`                     | String: directory path                                                  | Root scanned and served for counters.                                                                                                                                                                   |
 | `ALLOWED_IPS`                 | `"127.0.0.1,localhost,absolute"` | String: comma-separated policy tokens                                   | Peer IPs/IPv4 or IPv6 CIDRs, legacy IPv4 wildcard octets, and Origin/Referer hostname tokens. Loopback peers are always allowed. `absolute` is a literal legacy hostname, never a universal peer grant. |
 
@@ -59,7 +59,7 @@ V2_SUBSCRIPTION_DEBOUNCE = 1.0
 SERVER_IP = "127.0.0.1"
 SERVER_PORT = 24050.0
 DASHBOARD_IP = "127.0.0.1"
-DASHBOARD_PORT = 24052.0
+DASHBOARD_PORT = 24051.0
 STATIC_FOLDER_PATH = "./static"
 ALLOWED_IPS = "127.0.0.1,localhost,absolute"
 ```
@@ -104,7 +104,7 @@ Use `ALLOWED_IPS` CIDRs for precise networks: Tailscale is **`100.64.0.0/10`**, 
 The API uses plain HTTP/WebSocket, has no login, and exposes game state, files, counters, and the dashboard. Never expose it to the internet. Other local programs can read the default listener.
 :::
 
-Management mutations live on the dashboard origin (default `http://127.0.0.1:24052`) and require trusted peers, exact dashboard-origin provenance, and the per-start **`X-Vosu-CSRF`** token injected only into dashboard pages. Installed overlays stay on `http://127.0.0.1:24050` and cannot use their origin to authorize management writes (403). Explicit scoped API-key value/profile grants and the existing command-socket settings protocol remain on the overlay origin. Forwarded headers do not authorize HTTPS reverse-proxy origins. Native same-account programs can read dashboard pages and forge headers: this separates browser origins, not hostile local programs.
+Management mutations live on the dashboard origin (default `http://127.0.0.1:24051`) and require trusted peers, exact dashboard-origin provenance, and the per-start **`X-Vosu-CSRF`** token injected only into dashboard pages. Installed overlays stay on `http://127.0.0.1:24050` and cannot use their origin to authorize management writes (403). Explicit scoped API-key and loopback native broker value/profile grants and the existing command-socket settings protocol remain on the overlay origin. Forwarded headers do not authorize HTTPS reverse-proxy writes.
 
 See [privacy and security](/vosu/guide/privacy-security), [developer security](/vosu/dev/security), and [troubleshooting](/vosu/guide/troubleshooting). Release installation and update choices are covered in [install](/vosu/guide/install) and [updates](/vosu/guide/updates).
 

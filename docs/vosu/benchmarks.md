@@ -21,10 +21,10 @@ These numbers come from the "Released tosu comparison" section of vosu's maintai
 Linux live-reader rows and the Linux osu!stable daemon rows used vosu `v1.0.2` on 2026-10-13. That
 guide holds the full tables, method, and caveats; this page charts every measured value from it.
 
-## Coming in 1.1.0: before and after
+## Performance changes in 1.1.0: before and after
 
-The performance work for the next release is on vosu's `main` branch and not released yet. These
-charts run the same synthetic Linux benchmarks on three builds: the 1.0.2 code, after the first
+The performance work is included in vosu **1.1.0**. These charts run the same
+synthetic Linux benchmarks on three builds: the 1.0.2 code, after the first
 round of optimization, and after the second (vosu commit `2c977bf`,
 [paired section](https://github.com/shiruviaa/vosu/blob/2c977bf/docs/testing/benchmarks.md#performance-changes-for-110-paired)
 of the benchmark guide). The builds ran alternately three times, pinned to one CPU with no other
@@ -87,7 +87,7 @@ separately.
   user reads, 504 reads per cycle.
 - Linux lazer is the one live row where tosu is faster. vosu's guide breaks the cycle down by field
   group: the whole gap is in reading osu!lazer's settings, which vosu reads one value at a time.
-  Batching those reads is part of the work for vosu 1.1.0.
+  Batching those reads is included in vosu 1.1.0; these historical live-reader rows predate it.
 - For Linux osu!stable, the tosu harness's own 32-bit process check was relaxed: Wine runs the
   32-bit `osu!.exe` inside a 64-bit process, and tosu's instance manager doesn't make that check.
 :::
