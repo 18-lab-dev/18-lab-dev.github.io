@@ -11,6 +11,8 @@ export interface Stage {
   y: number;
   /** Grid reference shown next to the node, matching the map's lettered columns and numbered rows. */
   grid: string;
+  /** Side of the node its map label sits on. */
+  side: "above" | "below" | "left" | "right";
   summary: string;
   specs: [string, string][];
   actions: { label: string; href: string; primary?: boolean }[];
@@ -26,13 +28,14 @@ export const STAGES: Stage[] = [
     x: 300,
     y: 290,
     grid: "D3",
+    side: "below",
     summary:
-      "Reads live osu!stable and osu!lazer state and serves the dashboard, counters, and tosu-compatible HTTP and WebSocket APIs from one native Rust daemon. No Node.js, no Electron, no separate .NET runtime.",
+      "Discovers running osu!stable and osu!lazer clients, reads their memory without modifying them, and publishes each state as one atomic snapshot to every API. One native Rust daemon: no Node.js, no Electron, no separate .NET runtime.",
     specs: [
       ["Language", "Rust"],
       ["Reads", "osu!stable · osu!lazer"],
       ["Platforms", "Linux · Windows"],
-      ["APIs", "gosuMemory v1 · streamCompanion · v2 · precise"],
+      ["APIs", "v1 · stream companion · v2 · v2 precise"],
       ["Licence", "MIT OR Apache-2.0"],
     ],
     actions: [
@@ -47,15 +50,16 @@ export const STAGES: Stage[] = [
     name: "vosulay",
     kind: "In-game overlay manager",
     status: "Active · v1.5.0",
-    x: 560,
+    x: 840,
     y: 150,
-    grid: "F2",
+    grid: "I2",
+    side: "below",
     summary:
-      "Your tosu-compatible counters, rendered inside osu! itself. Move, scale, crop, and profile overlays in game with a native Rust host and one Chromium Embedded Framework runtime.",
+      "Renders your counters inside osu! itself. Install it as an optional official vosu tool, supervised by vosu and opened from its dashboard, or run it standalone with vosu or another tosu-compatible backend.",
     specs: [
       ["Host", "Rust · CEF"],
+      ["Runs as", "vosu tool · standalone"],
       ["Rendering", "Vulkan · OpenGL (EGL / GLX)"],
-      ["Display", "Wayland · X11 · Wine"],
       ["Platforms", "Linux · Windows"],
       ["Licence", "MIT"],
     ],
@@ -66,72 +70,76 @@ export const STAGES: Stage[] = [
     ],
   },
   {
-    id: "starter",
+    id: "overlays",
     code: "18-03",
-    name: "Starter overlay",
-    kind: "Overlay tutorial",
-    status: "Guide · 6 steps",
-    x: 560,
+    name: "Overlays",
+    kind: "Browser counters",
+    status: "Overlay listener · :24050",
+    x: 460,
     y: 430,
-    grid: "F4",
+    grid: "E4",
+    side: "right",
     summary:
-      "From an empty folder to an overlay that uses vosu features first and falls back to tosu: connect, render a play HUD, use richer fields, declare settings, package.",
+      "Counters load from the overlay listener and read live state over HTTP and WebSocket, in OBS or any browser. Existing tosu overlays run unchanged; the tutorial builds one that uses vosu features first and falls back to tosu.",
     specs: [
-      ["Steps", "06"],
-      ["Stack", "Vite · TypeScript"],
-      ["Backend", "vosu, tosu fallback"],
-      ["Transport", "WebSocket v2"],
-      ["Licence", "MIT"],
+      ["Address", "127.0.0.1:24050"],
+      ["URL", "/&lt;overlay&gt;/"],
+      ["Data", "HTTP · WebSocket v2"],
+      ["Sources", "Installed · tosu community catalog"],
+      ["Tutorial", "6 steps · Vite · TypeScript"],
     ],
     actions: [
-      { label: "Start step 0", href: "/vosu/dev/tutorial/00-prerequisites.html", primary: true },
-      { label: "API reference", href: "/vosu/dev/" },
-    ],
-  },
-  {
-    id: "bench",
-    code: "18-04",
-    name: "Field measurements",
-    kind: "Benchmarks vs tosu 4.26.2",
-    status: "Published · 2026-10-17",
-    x: 840,
-    y: 290,
-    grid: "I3",
-    summary:
-      "vosu 1.1.0 measured against the tosu 4.26.2 baseline in live osu!stable and osu!lazer clients on Windows and Linux: readers, daemon CPU, memory, and latency, with their limits stated.",
-    specs: [
-      ["Baseline", "tosu 4.26.2"],
-      ["Build", "vosu 1.1.0 · c791512"],
-      ["Clients", "live stable + lazer"],
-      ["Host", "Ryzen 9 9950X3D"],
-      ["Method", "median of five invocations"],
-    ],
-    actions: [
-      { label: "Read results", href: "/vosu/benchmarks.html", primary: true },
-      { label: "Method", href: `${GITHUB}/vosu/blob/main/docs/testing/benchmarks.md` },
+      { label: "Build an overlay", href: "/vosu/dev/tutorial/", primary: true },
+      { label: "Overlays guide", href: "/vosu/guide/overlays.html" },
+      { label: "API", href: "/vosu/dev/" },
     ],
   },
   {
     id: "tools",
-    code: "18-05",
-    name: "vosu-tools",
-    kind: "Official tools",
-    status: "Active · v0.1.0",
-    x: 840,
-    y: 440,
-    grid: "I4",
+    code: "18-04",
+    name: "Tools",
+    kind: "Out-of-process applications",
+    status: "Hosted under /tools/",
+    x: 620,
+    y: 150,
+    grid: "G2",
+    side: "below",
     summary:
-      "The official tools vosu installs and runs from its catalog: practice, mania ratings, map preview, replay renderer, skin studio, beatmap downloader, server pp calculator and lazer library.",
+      "Applications in any language that vosu installs from catalogs, supervises and serves next to overlays: a browser UI, a background service, a terminal command through vosux, or any mix. Tools can call the tools they depend on, so shared work runs once.",
     specs: [
-      ["Tools", "08 official"],
+      ["Manifest", "tool.toml"],
       ["Interfaces", "UI · service · CLI"],
-      ["Install", "vosu dashboard · vosux"],
-      ["Requires", "vosu 1.2.0"],
-      ["Licence", "MIT OR Apache-2.0"],
+      ["Served at", "/tools/&lt;id&gt;/"],
+      ["Official", "18-lab-dev/vosu-tools"],
+      ["Sandbox", "None · your OS account"],
     ],
     actions: [
       { label: "Tools guide", href: "/vosu/guide/tools.html", primary: true },
-      { label: "Source", href: `${GITHUB}/vosu-tools` },
+      { label: "Create a tool", href: `${GITHUB}/vosu/blob/main/docs/tools/create-a-tool.md` },
+      { label: "vosu-tools", href: `${GITHUB}/vosu-tools` },
+    ],
+  },
+  {
+    id: "dashboard",
+    code: "18-05",
+    name: "Dashboard",
+    kind: "Trusted management origin",
+    status: "Dashboard listener · :24051",
+    x: 300,
+    y: 470,
+    grid: "D5",
+    side: "left",
+    summary:
+      "Management lives on its own listener, where overlay scripts never run. Its Tools page installs, updates and removes tools, approves user tools, starts and stops services, and opens tool UIs with write access.",
+    specs: [
+      ["Address", "127.0.0.1:24051"],
+      ["Writes", "Dashboard origin · CSRF"],
+      ["Tools page", "Install · trust · lifecycle · logs"],
+      ["Catalogs", "Ordered sources, editable"],
+    ],
+    actions: [
+      { label: "Dashboard guide", href: "/vosu/guide/dashboard.html", primary: true },
+      { label: "Tools guide", href: "/vosu/guide/tools.html" },
     ],
   },
 ];

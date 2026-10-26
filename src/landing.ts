@@ -49,32 +49,59 @@ const MAP_H = 560;
 const COLS = "ABCDEFGHIJ";
 const ROWS = 5;
 
-/** Wire paths between stages; `packet` routes carry an animated data marker. */
+/**
+ * Wire paths between stages. `stages` lists the stages whose dossier lights the wire;
+ * `packet` routes carry an animated data marker.
+ */
 const ROUTES: {
   d: string;
   cls: string;
-  label?: { text: string; x: number; y: number; anchor?: "start" | "end" };
+  stages: string[];
+  label?: { text: string; x: number; y: number; anchor?: "start" | "middle" | "end" };
   packet?: boolean;
 }[] = [
-  { d: "M112 290 H300", cls: "route-line", label: { text: "Process memory", x: 206, y: 278 }, packet: true },
+  { d: "M112 290 H300", cls: "route-line", stages: ["vosu"], label: { text: "Process memory", x: 196, y: 278 }, packet: true },
   {
-    d: "M300 290 H380 L500 170 Q510 150 530 150 H560",
+    d: "M300 290 H620",
     cls: "route-line",
-    label: { text: "Counters · :24050", x: 432, y: 214, anchor: "end" },
+    stages: ["vosu", "overlays", "tools"],
+    label: { text: "Overlay listener · :24050", x: 336, y: 278 },
     packet: true,
   },
   {
-    d: "M300 290 H380 L500 410 Q510 430 530 430 H560",
+    d: "M620 290 H820 Q840 290 840 270 V150",
     cls: "route-line",
-    label: { text: "Overlay API", x: 432, y: 380, anchor: "end" },
+    stages: ["vosulay"],
+    label: { text: "Counter API", x: 852, y: 250 },
     packet: true,
   },
-  { d: "M300 290 H840", cls: "route-line route-line--measure", label: { text: "Measurement line", x: 690, y: 278 } },
-  { d: "M840 290 V440", cls: "route-line route-line--tools" },
+  { d: "M460 290 V430", cls: "route-line", stages: ["overlays"], label: { text: "/&lt;overlay&gt;/", x: 472, y: 370 }, packet: true },
+  { d: "M620 290 V150", cls: "route-line", stages: ["tools"], label: { text: "/tools/&lt;id&gt;/", x: 632, y: 262 }, packet: true },
   {
-    d: "M560 150 V64 H100 V194",
+    d: "M620 150 H840",
+    cls: "route-line route-line--tools",
+    stages: ["tools", "vosulay"],
+    label: { text: "Official tool", x: 730, y: 140, anchor: "middle" },
+  },
+  {
+    d: "M840 150 V64 H100 V194",
     cls: "route-line route-line--return",
+    stages: ["vosulay"],
     label: { text: "In-game render · back into the client", x: 330, y: 52 },
+    packet: true,
+  },
+  { d: "M300 290 V470", cls: "route-line", stages: ["vosu", "dashboard"], label: { text: "Dashboard · :24051", x: 312, y: 400 } },
+  {
+    d: "M300 470 V510 H730 V232",
+    cls: "route-line route-line--manage",
+    stages: ["dashboard", "tools"],
+    label: { text: "Install · trust · lifecycle", x: 500, y: 500 },
+  },
+  {
+    d: "M950 52 V120 Q950 140 930 140 H900",
+    cls: "route-line route-line--tools",
+    stages: ["tools"],
+    label: { text: "Catalogs · HTTPS", x: 936, y: 44, anchor: "end" },
     packet: true,
   },
 ];
@@ -95,7 +122,7 @@ function routeMapSvg(): string {
     <mask id="route-mask-${i}" maskUnits="userSpaceOnUse" x="0" y="0" width="${MAP_W}" height="${MAP_H}">
       <path d="${r.d}" class="mask-line draw" pathLength="1" style="--d:${300 + i * 160}" />
     </mask>
-    <path id="route-${i}" d="${r.d}" class="${r.cls}" mask="url(#route-mask-${i})" />
+    <path id="route-${i}" d="${r.d}" class="${r.cls}" data-stages="${r.stages.join(" ")}" mask="url(#route-mask-${i})" />
     ${r.label ? `<text x="${r.label.x}" y="${r.label.y}" text-anchor="${r.label.anchor ?? "start"}" class="map-label fade-in" style="--d:${900 + i * 160}">${r.label.text}</text>` : ""}
     ${
       r.packet && !reducedMotion
@@ -137,17 +164,15 @@ function routeMapSvg(): string {
     <path d="M94 186 L100 196 L106 186" class="route-arrow fade-in" style="--d:1400" />
   </g>
 
+  <g class="zone">
+    <rect x="560" y="92" width="340" height="140" fill="url(#map-hatch)" class="zone-box" />
+    <text x="568" y="108" class="map-label">Zone 01 · out-of-process tools</text>
+    <rect x="944" y="40" width="12" height="12" class="terminal" />
+  </g>
+
   ${routes}
 </svg>`;
 }
-
-const LABEL_SIDE: Record<string, string> = {
-  vosu: "below",
-  vosulay: "right",
-  starter: "right",
-  bench: "above",
-  tools: "below",
-};
 
 const routeMap = document.querySelector<HTMLElement>("[data-route-map]")!;
 routeMap.innerHTML =
@@ -155,7 +180,7 @@ routeMap.innerHTML =
   STAGES.map(
     (s) => `
   <button class="node" type="button" data-stage="${s.id}"
-    data-side="${LABEL_SIDE[s.id]}" style="left:${(s.x / MAP_W) * 100}%;top:${(s.y / MAP_H) * 100}%"
+    data-side="${s.side}" style="left:${(s.x / MAP_W) * 100}%;top:${(s.y / MAP_H) * 100}%"
     aria-pressed="false" aria-label="${s.code} ${s.name}, ${s.kind}">
     <span class="node-pin" aria-hidden="true"><span class="node-ring"></span><span class="node-core"></span></span>
     <span class="node-tag" aria-hidden="true">
@@ -211,6 +236,9 @@ function selectStage(id: string): void {
     node.setAttribute("aria-pressed", String(node.dataset.stage === id));
   }
   routeMap.dataset.selected = id;
+  for (const wire of routeMap.querySelectorAll<SVGPathElement>("[data-stages]")) {
+    wire.classList.toggle("is-lit", wire.dataset.stages!.split(" ").includes(id));
+  }
   renderDossier(stage);
 }
 

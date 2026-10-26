@@ -344,13 +344,15 @@
     stroke-width 0.3s;
 }
 
-.route-line--measure {
+/* Management: the dashboard acting on tools, not data flowing. */
+.route-line--manage {
   stroke: var(--signal);
   stroke-dasharray: 6 5;
 }
 
+/* Relations without a data path: catalog installs and vosulay's official-tool role. */
 .route-line--tools {
-  stroke: var(--rule-strong);
+  stroke: var(--muted);
   stroke-dasharray: 2 4;
 }
 
@@ -376,10 +378,7 @@
   fill: var(--accent);
 }
 
-.route-map[data-selected="vosu"] :is(#route-0, #route-5),
-.route-map[data-selected="vosulay"] #route-1,
-.route-map[data-selected="starter"] #route-2,
-.route-map[data-selected="bench"] #route-3 {
+.route-line.is-lit {
   stroke: var(--accent);
   stroke-width: 2.5;
   opacity: 1;
