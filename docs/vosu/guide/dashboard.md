@@ -5,7 +5,9 @@ description: Use vosu's installed overlays, community catalog, tray controls, an
 
 # Dashboard
 
-Start vosu and open <http://127.0.0.1:24051/> (or `DASHBOARD_IP:DASHBOARD_PORT`). In vosu 1.1.0 the trusted dashboard has its own origin; overlays stay on port **24050**, preserving their URLs, localStorage, and IndexedDB. Old dashboard links on the overlay origin redirect with path and query preserved. Integrations discover the effective dashboard origin with `GET /api/dashboard` on the overlay origin.
+Start vosu and open <http://127.0.0.1:24051/> (or `DASHBOARD_IP:DASHBOARD_PORT`). Since vosu 1.1.0 the trusted dashboard has its own origin; overlays stay on port **24050**, preserving their URLs, localStorage, and IndexedDB. Old dashboard links on the overlay origin redirect with path and query preserved. Integrations discover the effective dashboard origin with `GET /api/dashboard` on the overlay origin.
+
+The **Installed** and **Available** sections below manage overlays. The **Tools** page installs, opens and manages [tools](/vosu/guide/tools) such as the practice tool and map preview.
 
 The dashboard normally opens automatically; disable **Settings → General → Open dashboard at startup** if you prefer. Startup, tray, and second-launch links use the effective dashboard listener. Startup and successful rebind logs print full clickable `http://` URLs for both the overlay/API and dashboard listeners, mapping wildcard binds to loopback.
 

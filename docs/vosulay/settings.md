@@ -19,7 +19,9 @@ Automatic gives 360 Hz → 120 fps, 240 → 120, 165 → 82.5 (CEF rounds to 83)
 and leaves 120 Hz or slower displays unchanged. It updates when the game moves between displays
 or display refresh changes. CEF's damage-driven off-screen clock is not display-locked, so
 spacing is only approximate. Fixed stays fixed. This limits overlay scheduling, not the game's
-FPS; complex overlays can render more slowly. See the [1.4.0 frame-rate guide](https://github.com/18-lab-dev/vosulay/blob/d2e472a/README.md#frame-rate).
+FPS; complex overlays can render more slowly. See the [1.5.0 frame-rate guide](https://github.com/18-lab-dev/vosulay/blob/v1.5.0/README.md#frame-rate).
+
+The in-game editor has its own 30 fps maximum while visible (a lower configured limit still wins). Closing the editor restores the overlay's normal limit immediately without changing your setting.
 
 `--fps-limit auto`, `--fps-limit 0` or `--fps-limit 120` (`-f`) overrides the saved choice for one run. An explicit automatic value overrides a saved fixed cap.
 

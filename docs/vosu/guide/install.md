@@ -5,11 +5,11 @@ description: Portable archives, Linux packages, per-user installation, and relea
 
 # Install vosu
 
-The current release is **1.1.0**. Download from the [v1.1.0 release](https://github.com/18-lab-dev/vosu/releases/tag/v1.1.0).
+The current release is **1.2.0**. Download from the [v1.2.0 release](https://github.com/18-lab-dev/vosu/releases/tag/v1.2.0).
 
 ## Portable archive
 
-Download `vosu-linux-v1.1.0.zip` or `vosu-windows-v1.1.0.zip` and extract the **whole archive** into a writable directory. The release archive contains the executable and `LICENSE`.
+Download `vosu-linux-v1.2.0.zip` or `vosu-windows-v1.2.0.zip` and extract the **whole archive** into a writable directory. The release archive contains the executable and `LICENSE`.
 
 ::: code-group
 ```sh [Linux]
@@ -34,19 +34,19 @@ Requirements: glibc **2.35 or newer** (Debian 12+, Ubuntu 22.04+, current Fedora
 
 ::: code-group
 ```sh [Debian / Ubuntu]
-sudo apt install ./vosu_1.1.0_amd64.deb
+sudo apt install ./vosu_1.2.0_amd64.deb
 ```
 
 ```sh [Fedora]
-sudo dnf install ./vosu-1.1.0-1.x86_64.rpm
+sudo dnf install ./vosu-1.2.0-1.x86_64.rpm
 ```
 
 ```sh [Arch Linux]
-sudo pacman -U ./vosu-1.1.0-1-x86_64.pkg.tar.zst
+sudo pacman -U vosu-1.2.0-1-x86_64.pkg.tar.zst
 ```
 :::
 
-Packages install the launcher, icons, executable, and license, and attempt capability setup on install and upgrade. If that fails, installation still succeeds and prints guidance to run `/usr/bin/vosu --setup` as your desktop user. Launch **vosu** from the application menu or run `vosu`; do not run the daemon with `sudo`.
+Packages install the launcher, icons, executable, and license, plus a `vosux` command for [running tools](/vosu/guide/tools#run-tools-from-a-terminal), and attempt capability setup on install and upgrade. If that fails, installation still succeeds and prints guidance to run `/usr/bin/vosu --setup` as your desktop user. Launch **vosu** from the application menu or run `vosu`; do not run the daemon with `sudo`.
 
 No apt, dnf, or pacman repository or system service is installed. [Update packages manually](/vosu/guide/updates); start at login is opt-in.
 
@@ -84,7 +84,7 @@ Add `$HOME/.local/bin` to `PATH` if needed. On Linux, run setup against the **in
 
 ## Verify release signatures
 
-From v1.0.1, every release file has a detached `<file>.sig` signature. Download both the asset and its signature. Obtain [the release public key](https://github.com/18-lab-dev/vosu/blob/main/packaging/release-signing-key.asc) and check its fingerprint:
+From v1.0.1, every release file has a detached `<file>.sig` signature, except v1.0.2 (see below). Download both the asset and its signature. Obtain [the release public key](https://github.com/18-lab-dev/vosu/blob/main/packaging/release-signing-key.asc) and check its fingerprint:
 
 ```text
 6F0F 0D30 C09D 3A03 6246  A810 2CB6 524B B54B 2CDA
@@ -95,11 +95,17 @@ With GnuPG installed, and the key saved as `release-signing-key.asc`:
 ```sh
 gpg --show-keys --fingerprint release-signing-key.asc
 gpg --import release-signing-key.asc
-gpg --verify vosu-linux-v1.1.0.zip.sig vosu-linux-v1.1.0.zip
+gpg --verify vosu-linux-v1.2.0.zip.sig vosu-linux-v1.2.0.zip
 ```
 
 Use the Windows ZIP or Linux package filename when verifying those assets. Require a good signature from the fingerprint above, not just a matching display name.
 
-Next: [dashboard](/vosu/guide/dashboard), [overlays](/vosu/guide/overlays), or [troubleshooting](/vosu/guide/troubleshooting).
+v1.0.2 was published before it could be signed. Verify its downloads with GitHub's release attestation instead:
+
+```sh
+gh release verify-asset v1.0.2 vosu-linux-v1.0.2.zip --repo 18-lab-dev/vosu
+```
+
+Next: [dashboard](/vosu/guide/dashboard), [tools](/vosu/guide/tools), [overlays](/vosu/guide/overlays), or [troubleshooting](/vosu/guide/troubleshooting).
 
 Source: [installation and verification README](https://github.com/18-lab-dev/vosu/blob/main/README.md#install).

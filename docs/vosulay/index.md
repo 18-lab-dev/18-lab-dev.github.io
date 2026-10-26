@@ -7,8 +7,9 @@ description: Render and arrange tosu-compatible counters inside osu! on Linux an
 
 vosulay renders tosu-compatible counters inside osu! using a native Rust host and one Chromium Embedded Framework (CEF) browser runtime. It manages the layout; a **separately running vosu or tosu-compatible backend** supplies installed counters and game data.
 
-These docs cover **vosulay 1.4.0**, including the compact inspector, full placement editor,
-native vosu settings editor and per-placement settings-profile pins.
+These docs cover **vosulay 1.5.0**, including the compact inspector, full placement editor,
+native vosu settings editor, per-placement settings-profile pins, ruleset-bound profiles and
+installation as an official [vosu tool](/vosu/guide/tools).
 
 The default backend is `http://127.0.0.1:24050/`. Change it in **Settings → Advanced → vosu URL**, then restart vosulay. Compatibility comes from the public counter API, not the backend's product name. vosu remains independent of vosulay.
 
@@ -18,7 +19,7 @@ The default backend is `http://127.0.0.1:24050/`. Change it in **Settings → Ad
 
 - Move, resize, scale, crop, rotate, reorder and change overlay opacity; Ctrl+drag scales and Shift+drag crops.
 - Disable a placement without deleting it.
-- Keep multiple named profiles and switch layouts.
+- Keep multiple named profiles and switch layouts, or bind profiles to osu!, taiko, catch or mania so they follow vosu's ruleset changes.
 - Search installed counters by name, author or folder.
 - Edit vosu counter settings and settings profiles natively; pin each placement to a profile.
 - Add custom remote URLs or local HTML files.
@@ -37,7 +38,7 @@ The default backend is `http://127.0.0.1:24050/`. Change it in **Settings → Ad
 Release downloads target x86_64. Linux binaries require glibc 2.35 or newer. See the [Linux](/vosulay/linux) and [Windows](/vosulay/windows) guides before configuring game capture or attachment.
 
 ::: warning Know what is running
-vosulay loads overlay code into the game and executes the web content you choose. Use trusted counters. Hiding vosulay does not stop attachment or network listeners; **tray → Exit vosulay** quits the host. Read the upstream [security disclosure](https://github.com/18-lab-dev/vosulay/blob/main/docs/security.md).
+vosulay loads overlay code into the game and executes the web content you choose. Use trusted counters. Hiding vosulay does not stop attachment or network listeners; **tray → Exit vosulay** quits a standalone host, and a vosu-managed host stops from vosu's dashboard. Read the upstream [security disclosure](https://github.com/18-lab-dev/vosulay/blob/main/docs/security.md).
 :::
 
 ## Next steps
@@ -51,4 +52,4 @@ vosulay loads overlay code into the game and executes the web content you choose
 | Change defaults             | [Settings](/vosulay/settings)               |
 | Fix missing overlays        | [Troubleshooting](/vosulay/troubleshooting) |
 
-Source: [vosulay 1.4.0 README](https://github.com/18-lab-dev/vosulay/blob/d2e472a/README.md).
+Source: [vosulay 1.5.0 README](https://github.com/18-lab-dev/vosulay/blob/v1.5.0/README.md).

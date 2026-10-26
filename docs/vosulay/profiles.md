@@ -25,6 +25,14 @@ Copy selected overlays with **Ctrl+C**, switch profile, then paste with **Ctrl+V
 all placement properties, including [vosu settings-profile pins](/vosulay/overlays#counter-settings).
 These backend settings profiles are separate from vosulay's layout profiles.
 
+## Ruleset-bound profiles
+
+In the active profile's **☰** menu, choose **Ruleset binding** → osu!, osu!taiko, osu!catch or osu!mania. **Unbound** removes the association. This section appears only while the backend supplies a valid selected ruleset; tosu backends without that field keep the existing manual profile controls.
+
+The first available ruleset on startup, and each subsequent change to a different ruleset, select the matching profile. A manual profile switch wins until the next different ruleset; reconnecting or receiving the same ruleset never cancels it. An unbound ruleset leaves the current profile alone. Binding a ruleset moves it from any previously bound profile; hand-edited duplicate bindings use the first matching profile in profile order. Bindings are saved with profiles.
+
+View-only pages without `?profile=` follow the host's active profile. An explicit `?profile=N` stays pinned and never follows automatic or manual host switches. This works both standalone with vosu and as a supervised vosu tool.
+
 ## Import and export
 
 **More profile actions → Export…** exports the active profile to JSON. **Import…** imports a profile JSON. Keep exported files if you want a separate backup before changing or removing your [configuration](/vosulay/settings#configuration-files).

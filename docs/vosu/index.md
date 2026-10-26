@@ -40,6 +40,7 @@ tosu overlays run unchanged. vosu is not affiliated with the tosu project.
 | **Platforms**   | Linux (osu!lazer verified; osu!stable through Wine is experimental) and Windows                                |
 | **APIs**        | gosuMemory v1, streamCompanion, v2, precise v2, plus vosu's selected-field stream                              |
 | **Overlays**    | Installed counters, the tosu community catalog, OBS browser sources, and [vosulay](/vosulay/) in game          |
+| **Tools**       | Official [tools](/vosu/guide/tools) from [vosu-tools](https://github.com/18-lab-dev/vosu-tools), installed and run by vosu |
 | **Performance** | [Measured against tosu 4.26.2](/vosu/benchmarks) in live clients: readers, CPU, memory, latency, and hot paths |
 | **License**     | MIT OR Apache-2.0                                                                                              |
 

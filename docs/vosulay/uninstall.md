@@ -7,7 +7,7 @@ description: Remove the application, clean up game integration and optionally de
 
 ## Before removal
 
-Choose **tray → Exit vosulay**. **Hide vosulay** is not Exit: it leaves attachment and listeners running. Close games that loaded the overlay before deleting or replacing its libraries. Restarting a game without integration ensures previously injected code is no longer loaded.
+Choose **tray → Exit vosulay**, or stop the tool in vosu's dashboard if vosu manages it (then uninstall it from vosu's **Tools** page if you installed it there). **Hide vosulay** is not Exit: it leaves attachment and listeners running. Close games that loaded the overlay before deleting or replacing its libraries. Restarting a game without integration ensures previously injected code is no longer loaded.
 
 Save a copy of any profiles/configuration you want to retain. Normal uninstall keeps user settings, profiles and browser cache/logs.
 
