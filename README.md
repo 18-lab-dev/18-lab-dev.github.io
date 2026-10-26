@@ -26,9 +26,20 @@ is local and needs no service. Benchmark data remains in `data/`; the complete
 series and ranges render as accessible tables. The runnable overlay tutorial is
 in `examples/starter-overlay/` and keeps its own pnpm-based toolchain.
 
+The Markdown keeps the VitePress-style syntax it was written in, and
+`scripts/generate-docs.mjs` converts it to the design's markup: `::: code-group`
+becomes tabbed code (labelled blocks without JavaScript); `::: tip`, `info`,
+`warning`, `danger`, `details` and custom containers become callouts; `<Badge>`
+becomes a badge; `[[toc]]`, `{#id}` heading ids, fence titles and `{1,3}` line
+highlights are supported; frontmatter supplies only `title` and `description`.
+Unsupported frontmatter keys, fence info or components fail the generator.
+`node scripts/check-links.mjs [dir]` (default `dist`) checks internal links and
+anchors and fails on any leftover `:::`, `[[`, `{#`, component tag or Vue binding
+in the built HTML.
+
 `.github/workflows/deploy.yml` runs on pushes to `main`, pull requests and manual
 workflow dispatch. It installs the frozen Bun lockfile, lints, generates docs,
-typechecks, builds and checks internal output links/anchors. Non-PR runs upload
+typechecks, builds and checks internal output links/anchors and leftover syntax. Non-PR runs upload
 `dist/` with `actions/upload-pages-artifact` and deploy it with
 `actions/deploy-pages` to the `github-pages` environment using Pages/OIDC write
 permissions. PRs build/check without publishing. Pages must use **GitHub Actions**
