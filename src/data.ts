@@ -46,7 +46,7 @@ export const STAGES: Stage[] = [
     code: "18-02",
     name: "vosulay",
     kind: "In-game overlay manager",
-    status: "Active · v1.4.0",
+    status: "Active · v1.5.0",
     x: 560,
     y: 150,
     grid: "F2",
@@ -115,14 +115,24 @@ export const STAGES: Stage[] = [
     id: "tools",
     code: "18-05",
     name: "vosu-tools",
-    kind: "Official developer tools",
-    status: "Open source",
+    kind: "Official tools",
+    status: "Active · v0.1.0",
     x: 840,
     y: 440,
     grid: "I4",
-    summary: "Official tools for developing and inspecting vosu overlays. Browse the maintained README and tool catalog.",
-    specs: [["Catalog", "Official tools"], ["Source", "18-lab-dev/vosu-tools"]],
-    actions: [{ label: "Tool catalog", href: `${GITHUB}/vosu-tools#readme`, primary: true }],
+    summary:
+      "The official tools vosu installs and runs from its catalog: practice, mania ratings, map preview, replay renderer, skin studio, beatmap downloader, server pp calculator and lazer library.",
+    specs: [
+      ["Tools", "08 official"],
+      ["Interfaces", "UI · service · CLI"],
+      ["Install", "vosu dashboard · vosux"],
+      ["Requires", "vosu 1.2.0"],
+      ["Licence", "MIT OR Apache-2.0"],
+    ],
+    actions: [
+      { label: "Tools guide", href: "/vosu/guide/tools.html", primary: true },
+      { label: "Source", href: `${GITHUB}/vosu-tools` },
+    ],
   },
 ];
 

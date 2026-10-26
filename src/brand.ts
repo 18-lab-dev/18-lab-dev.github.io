@@ -232,7 +232,7 @@ function banner(mode: Mode): string {
     <text x="512" y="202" fill="${p.accent}">LINUX · WINDOWS</text>
   </g>
   <line x1="64" y1="240" x2="820" y2="240" stroke="${p.rule}" />
-  <text x="64" y="268" ${mono} font-size="12" fill="${p.muted}">VOSU 1.2.0 · VOSULAY 1.4.0 · OSU!STABLE + OSU!LAZER</text>
+  <text x="64" y="268" ${mono} font-size="12" fill="${p.muted}">VOSU 1.2.0 · VOSULAY 1.5.0 · OSU!STABLE + OSU!LAZER</text>
 
   <g transform="translate(860 0)" ${mono} font-size="11">
     <circle cx="150" cy="166" r="58" fill="none" stroke="${p.ruleStrong}" stroke-dasharray="3 4" />
