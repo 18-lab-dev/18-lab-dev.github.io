@@ -154,12 +154,15 @@ export interface BenchRow {
   vosu: number;
 }
 
-/** Regular read cycle (µs), median of five live invocations; vosu 1.1.0 vs tosu 4.26.2. */
+/**
+ * Live regular read cycle (µs): medians of five invocation medians against tosu 4.26.2, from vosu's
+ * benchmark guide (released tosu comparison). Windows stable is vosu 1.2.0 (2026-10-25); the Linux
+ * rows are vosu 1.1.0 (2026-10-17), which the guide retains for 1.2.0. Windows lazer was not measured.
+ */
 export const REGULAR_CYCLE: BenchRow[] = [
-  { label: "Windows · lazer", tosu: 737.0, vosu: 148.0 },
-  { label: "Windows · stable", tosu: 456.2, vosu: 132.7 },
-  { label: "Linux · lazer", tosu: 147.1, vosu: 20.2 },
-  { label: "Linux · stable (Wine)", tosu: 189.6, vosu: 33.7 },
+  { label: "Windows stable · 1.2.0", tosu: 566.976, vosu: 157.412 },
+  { label: "Linux lazer · 1.1.0", tosu: 147.1, vosu: 20.2 },
+  { label: "Linux stable (Wine) · 1.1.0", tosu: 189.6, vosu: 33.7 },
 ];
 
 export interface Readout {
@@ -170,33 +173,34 @@ export interface Readout {
   raw: string;
 }
 
+/** Daemon memory and CPU from the same comparison, vosu and tosu running together; ratio is tosu ÷ vosu. */
 export const READOUTS: Readout[] = [
   {
     id: "M-01",
-    ratio: 3972 / 61,
-    label: "Faster attach",
-    context: "Reader setup · Linux lazer",
-    raw: "3972 → 61 ms",
-  },
-  {
-    id: "M-02",
     ratio: 266.2 / 29.8,
-    label: "Less resident memory",
-    context: "Daemon RSS · Linux lazer",
+    label: "Less memory",
+    context: "RSS · Linux lazer · 1.1.0",
     raw: "266.2 → 29.8 MB",
   },
   {
+    id: "M-02",
+    ratio: 143.16 / 48.03,
+    label: "Less memory",
+    context: "RSS · Windows stable · 1.2.0",
+    raw: "143.16 → 48.03 MiB",
+  },
+  {
     id: "M-03",
-    ratio: 78.6 / 7.1,
-    label: "Less private memory",
-    context: "Daemon · Windows lazer",
-    raw: "78.6 → 7.1 MB",
+    ratio: 2.53 / 0.96,
+    label: "Less CPU, overlay polling",
+    context: "CPU · 10 Hz API · Linux lazer · 1.1.0",
+    raw: "2.53 → 0.96 % of one core",
   },
   {
     id: "M-04",
-    ratio: 40.7 / 23.9,
+    ratio: 1.84 / 1.46,
     label: "Narrowest margin",
-    context: "Precise cycle · Windows stable",
-    raw: "40.7 → 23.9 µs",
+    context: "CPU · background · Windows stable · 1.2.0",
+    raw: "1.84 → 1.46 % of one core",
   },
 ];

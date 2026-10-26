@@ -46,7 +46,7 @@
             <div class="hero-actions">
               <a class="btn btn--primary mono" href="/vosu/guide/install.html"><span class="idx">01</span>Get vosu<span class="arrow">→</span></a>
               <a class="btn mono" href="/vosulay/install.html"><span class="idx">02</span>Get vosulay<span class="arrow">→</span></a>
-              <a class="btn mono" href="#interface"><span class="idx">03</span>Build an overlay<span class="arrow">→</span></a>
+              <a class="btn mono" href="/vosu/guide/tools.html"><span class="idx">03</span>Get tools<span class="arrow">→</span></a>
             </div>
           </div>
 
@@ -99,13 +99,14 @@
         <div class="wrap">
           <header class="sheet-head mono">
             <span class="sheet-no">Sheet 02</span><span class="sheet-rule"></span><span class="sheet-title">Measure</span
-            ><span>vosu 1.1.0 / tosu 4.26.2</span>
+            ><span>vosu 1.2.0 · 1.1.0 / tosu 4.26.2</span>
           </header>
           <div class="section-intro">
             <h2 id="measure-title">Measured,<br />not claimed.</h2>
             <p>
-              Live osu!stable and osu!lazer clients on Windows and Linux, alternating builds, medians of five. The ratio
-              is tosu’s value over vosu’s. The narrowest margin is listed alongside the widest.
+              Less of your PC goes to reading the game and more to playing it. On live osu! clients, vosu used about a
+              third of tosu’s memory on Windows, under a sixth on Linux, and less CPU in every run. The narrowest margin is
+              listed alongside the widest.
             </p>
           </div>
 
@@ -113,78 +114,272 @@
 
           <figure class="chart reg" data-chart>
             <figcaption class="chart-head">
-              <span class="mono"><span class="accent">FIG.02</span> Regular read cycle · <span class="unit">µs</span> · lower is better</span>
+              <span class="mono"><span class="accent">FIG.02</span> Reading one game update · <span class="unit">µs</span> · lower is better</span>
               <span class="chart-legend mono">
-                <span><i class="sw sw--tosu"></i>tosu 4.26.2</span><span><i class="sw sw--vosu"></i>vosu 1.1.0</span>
+                <span><i class="sw sw--tosu"></i>tosu 4.26.2</span><span><i class="sw sw--vosu"></i>vosu</span>
               </span>
             </figcaption>
             <div class="chart-body" data-chart-body></div>
           </figure>
           <p class="footnote mono">
-            Source: vosu benchmark guide, released tosu comparison, rerun 2026-10-17. Hot paths, CPU, and latency tables
-            with ranges on the <a href="/vosu/benchmarks.html">benchmarks page</a>.
+            Source: vosu benchmark guide, released tosu comparison. Windows stable: vosu 1.2.0, 2026-10-25. Linux: vosu
+            1.1.0, 2026-10-17, retained for 1.2.0. One 25-minute map in Autoplay, matched settings; memory and CPU with
+            both programs running. Windows lazer was not measured for 1.2.0.
+            <a href="https://github.com/18-lab-dev/vosu/blob/main/docs/testing/benchmarks.md#released-tosu-comparison">Conditions and full tables</a>.
           </p>
         </div>
       </section>
 
-      <!-- SHEET 03 · INTERFACE -->
-      <section id="interface" class="sheet" data-draw aria-labelledby="interface-title">
+      <!-- SHEET 03 · CAPABILITY -->
+      <section id="capability" class="sheet" data-draw aria-labelledby="capability-title">
         <div class="wrap">
           <header class="sheet-head mono">
-            <span class="sheet-no">Sheet 03</span><span class="sheet-rule"></span><span class="sheet-title">Interface</span
-            ><span>ws://127.0.0.1:24050</span>
+            <span class="sheet-no">Sheet 03</span><span class="sheet-rule"></span><span class="sheet-title">Capability</span
+            ><span>What you can do</span>
           </header>
           <div class="section-intro">
-            <h2 id="interface-title">Stream only<br />what you draw.</h2>
+            <h2 id="capability-title">Your overlays,<br />and then some.</h2>
+            <p>Switching from tosu keeps the overlays you already use. Here is what else vosu does with your game.</p>
+          </div>
+
+          <ol class="caps">
+            <li>
+              <span class="caps-no mono">C-01</span>
+              <h3>Your overlays, unchanged</h3>
+              <div>
+                <p>
+                  Overlays made for tosu, gosumemory or StreamCompanion keep working at the same address, and the dashboard
+                  installs more from the tosu community catalog.
+                </p>
+                <p class="caps-tags mono"><span>Compatibility</span></p>
+              </div>
+            </li>
+            <li>
+              <span class="caps-no mono">C-02</span>
+              <h3>stable and lazer</h3>
+              <div>
+                <p>
+                  Reads osu!stable and osu!lazer on Windows, and osu!lazer natively on Linux. osu!stable through Wine is
+                  supported experimentally.
+                </p>
+                <p class="caps-tags mono"><span>Windows</span><span>Linux</span></p>
+              </div>
+            </li>
+            <li>
+              <span class="caps-no mono">C-03</span>
+              <h3>In game, on Linux too</h3>
+              <div>
+                <p>
+                  vosulay draws your overlays inside osu! on Windows and Linux: Vulkan or OpenGL, Wayland or X11, and
+                  osu!stable under Wine. Move, resize and rotate them, and let layouts switch with the ruleset.
+                </p>
+                <p class="caps-tags mono"><span>vosulay</span><span>Windows</span><span>Linux</span></p>
+              </div>
+            </li>
+            <li>
+              <span class="caps-no mono">C-04</span>
+              <h3>Tools on the live game</h3>
+              <div>
+                <p>
+                  One click each from the dashboard: practice maps at new rates, a live map preview with your skin, server
+                  pp for the selected map, mania ratings, replay rendering, a skin studio, a beatmap downloader and your
+                  lazer library.
+                </p>
+                <p class="caps-tags mono"><span>vosu-tools</span></p>
+              </div>
+            </li>
+            <li>
+              <span class="caps-no mono">C-05</span>
+              <h3>Settings profiles</h3>
+              <div>
+                <p>
+                  Keep different settings for the same overlay, one for stream and one for practice, and pin a browser
+                  source to the profile it needs.
+                </p>
+                <p class="caps-tags mono"><span>Overlays</span></p>
+              </div>
+            </li>
+            <li>
+              <span class="caps-no mono">C-06</span>
+              <h3>Short overlay URLs</h3>
+              <div>
+                <p>Give an overlay a nickname and a short URL such as <code>/acc/</code> to paste into OBS.</p>
+                <p class="caps-tags mono"><span>Overlays</span></p>
+              </div>
+            </li>
+            <li>
+              <span class="caps-no mono">C-07</span>
+              <h3>Across your network</h3>
+              <div>
+                <p>
+                  Share overlays with another PC on your LAN or Tailscale while settings stay on this one. vosulay can serve
+                  view-only layouts to browsers and streaming clients on your network.
+                </p>
+                <p class="caps-tags mono"><span>LAN</span><span>Tailscale</span></p>
+              </div>
+            </li>
+            <li>
+              <span class="caps-no mono">C-08</span>
+              <h3>Updates itself, safely</h3>
+              <div>
+                <p>
+                  Installs new releases at startup, checks each download against its published SHA-256, and can roll back a
+                  failed update. Linux packages update by installing the newer package.
+                </p>
+                <p class="caps-tags mono"><span>Updates</span></p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- SHEET 04 · COMPARE -->
+      <section id="compare" class="sheet" data-draw aria-labelledby="compare-title">
+        <div class="wrap">
+          <header class="sheet-head mono">
+            <span class="sheet-no">Sheet 04</span><span class="sheet-rule"></span><span class="sheet-title">Compare</span
+            ><span>vosu 1.2.0 / tosu 4.26.3</span>
+          </header>
+          <div class="section-intro">
+            <h2 id="compare-title">Side by side,<br />limits included.</h2>
             <p>
-              Existing tosu overlays run unchanged. New ones can subscribe to exactly the fields they render and receive
-              revisioned diffs instead of the whole state.
+              tosu is the project vosu stays compatible with. Every tosu entry is checked against tosu’s own repository at
+              v4.26.3; the memory figures come from 18-LAB’s measured comparison against tosu 4.26.2. Where vosu falls short,
+              it says so.
             </p>
           </div>
 
-          <div class="annotated" data-annotated></div>
+          <div class="versus-wrap reg">
+            <table class="versus">
+              <thead>
+                <tr><th scope="col" class="mono">Capability</th><th scope="col" class="mono">vosu</th><th scope="col" class="mono">tosu</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">In-game overlay</th>
+                  <td data-label="vosu"><strong>Linux and Windows</strong>, with vosulay</td>
+                  <td data-label="tosu"><strong>Windows only</strong><sup><a href="#src-1">1</a></sup></td>
+                </tr>
+                <tr>
+                  <th scope="row">Linux</th>
+                  <td data-label="vosu"><strong>osu!lazer natively</strong>; osu!stable through Wine, experimental</td>
+                  <td data-label="tosu"><strong>Linux build</strong>; stable tested with osu-winello, lazer with AppImage and Flatpak<sup><a href="#src-2">2</a></sup><sup><a href="#src-3">3</a></sup></td>
+                </tr>
+                <tr>
+                  <th scope="row">osu!stable and osu!lazer</th>
+                  <td data-label="vosu"><strong>Both</strong></td>
+                  <td data-label="tosu"><strong>Both</strong><sup><a href="#src-2">2</a></sup></td>
+                </tr>
+                <tr>
+                  <th scope="row">Existing overlays</th>
+                  <td data-label="vosu"><strong>tosu, gosumemory and StreamCompanion</strong> overlays</td>
+                  <td data-label="tosu"><strong>gosumemory and StreamCompanion</strong> compatible, plus its own API<sup><a href="#src-2">2</a></sup></td>
+                </tr>
+                <tr>
+                  <th scope="row">Tools</th>
+                  <td data-label="vosu"><strong>Installs and runs them</strong>: practice, map preview, server pp and more</td>
+                  <td data-label="tosu"><strong>Not among its listed features</strong><sup><a href="#src-2">2</a></sup></td>
+                </tr>
+                <tr>
+                  <th scope="row">Memory while playing</th>
+                  <td data-label="vosu"><strong>48 MiB</strong> Windows stable · <strong>30 MB</strong> Linux lazer</td>
+                  <td data-label="tosu"><strong>143 MiB</strong> · <strong>266 MB</strong><sup><a href="#src-m">M</a></sup></td>
+                </tr>
+                <tr>
+                  <th scope="row">Automatic updates</th>
+                  <td data-label="vosu"><strong>Yes</strong>, SHA-256-checked with rollback</td>
+                  <td data-label="tosu"><strong>Yes</strong><sup><a href="#src-4">4</a></sup></td>
+                </tr>
+                <tr>
+                  <th scope="row">Signed Windows downloads</th>
+                  <td data-label="vosu"><strong>No</strong>: SmartScreen may warn</td>
+                  <td data-label="tosu"><strong>Yes</strong>, through SignPath<sup><a href="#src-2">2</a></sup></td>
+                </tr>
+                <tr>
+                  <th scope="row">macOS</th>
+                  <td data-label="vosu"><strong>No</strong></td>
+                  <td data-label="tosu"><strong>No</strong> macOS build<sup><a href="#src-3">3</a></sup></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ol class="sources mono">
+            <li id="src-1"><span>1</span><a href="https://github.com/tosuapp/tosu/blob/1d811dd90af00c7f0d8551a0735d9ce779a6e773/packages/ingame-overlay-updater/src/index.ts#L25-L29">tosu v4.26.3 · in-game overlay: “only available on the Windows platform”</a></li>
+            <li id="src-2"><span>2</span><a href="https://github.com/tosuapp/tosu/blob/1d811dd90af00c7f0d8551a0735d9ce779a6e773/README.md">tosu v4.26.3 · README: features, Linux notice, code signing</a></li>
+            <li id="src-3"><span>3</span><a href="https://github.com/tosuapp/tosu/releases/tag/v4.26.3">tosu v4.26.3 · release downloads: Linux and Windows</a></li>
+            <li id="src-4"><span>4</span><a href="https://github.com/tosuapp/tosu/blob/1d811dd90af00c7f0d8551a0735d9ce779a6e773/packages/common/utils/config.ts#L20-L21">tosu v4.26.3 · <code>ENABLE_AUTOUPDATE</code> setting</a></li>
+            <li id="src-m"><span>M</span><a href="https://github.com/18-lab-dev/vosu/blob/main/docs/testing/benchmarks.md#daemon-cpu-and-memory">vosu benchmark guide · daemon memory against tosu 4.26.2, both running</a></li>
+          </ol>
 
-          <div class="interface-actions">
-            <a class="btn btn--primary mono" href="/vosu/dev/tutorial/">Build an overlay · 6 steps<span class="arrow">→</span></a>
-            <a class="btn mono" href="/vosu/dev/websocket-api.html">WebSocket reference<span class="arrow">→</span></a>
+          <div class="limits">
+            <h3 class="mono">Where vosu stops</h3>
+            <ul>
+              <li><span class="mono">L-01</span>Windows downloads are not code-signed yet, so SmartScreen may warn before the first launch.</li>
+              <li>
+                <span class="mono">L-02</span>Live osu!lazer on Windows was not tested for 1.2.0: lazer would not start on the
+                test machine. Its support passed tests against recorded game memory; reading a running lazer, lazer skins,
+                the tools’ lazer features and vosulay in lazer were verified on Linux only.
+              </li>
+              <li><span class="mono">L-03</span>osu!stable on Linux runs through Wine and is experimental, not release-verified.</li>
+              <li>
+                <span class="mono">L-04</span>Tools are not sandboxed: they run with your account’s permissions. Official tools
+                are trusted; others wait for your approval on the dashboard.
+              </li>
+              <li><span class="mono">L-05</span>In-game overlays come from vosulay, installed as a tool or on its own; vosu itself draws nothing in game.</li>
+            </ul>
           </div>
         </div>
       </section>
 
-      <!-- SHEET 04 · SPEC -->
-      <section id="spec" class="sheet" data-draw aria-labelledby="spec-title">
+      <!-- SHEET 05 · START -->
+      <section id="start" class="sheet" data-draw aria-labelledby="start-title">
         <div class="wrap">
           <header class="sheet-head mono">
-            <span class="sheet-no">Sheet 04</span><span class="sheet-rule"></span><span class="sheet-title">Specification</span
-            ><span>How we build</span>
+            <span class="sheet-no">Sheet 05</span><span class="sheet-rule"></span><span class="sheet-title">Start</span
+            ><span>Linux · Windows · open source</span>
           </header>
-          <h2 id="spec-title" class="visually-hidden">How we build</h2>
+          <div class="section-intro">
+            <h2 id="start-title">Running in<br />three steps.</h2>
+            <p>Free and open source. Your existing overlays come along.</p>
+          </div>
           <ol class="spec">
             <li>
-              <span class="spec-no mono">P-01</span>
-              <h3>Native &amp; measured</h3>
-              <p>
-                Native Rust with no Node.js or Electron underneath. Hot paths carry Criterion benchmarks, and
-                head-to-head results against tosu are published with their limits stated.
-              </p>
+              <span class="spec-no mono">S-01</span>
+              <h3>Install vosu</h3>
+              <div>
+                <p>A portable ZIP for Windows or Linux, or a .deb, .rpm or Arch package. It opens its dashboard when it starts.</p>
+                <p class="spec-actions">
+                  <a class="btn btn--primary mono" href="/vosu/guide/install.html">Get vosu<span class="arrow">→</span></a>
+                  <a class="btn mono" href="https://github.com/18-lab-dev/vosu/releases/latest">Releases<span class="arrow">→</span></a>
+                </p>
+              </div>
             </li>
             <li>
-              <span class="spec-no mono">P-02</span>
-              <h3>Linux first-class</h3>
-              <p>
-                Native osu!lazer telemetry on Linux, process events over eBPF or CN_PROC, and in-game overlays for
-                Vulkan, OpenGL, Wayland, X11, and Wine. Windows is supported too.
-              </p>
+              <span class="spec-no mono">S-02</span>
+              <h3>Add tools</h3>
+              <div>
+                <p>Open Tools in the dashboard and install the ones you want, one click each.</p>
+                <p class="spec-actions">
+                  <a class="btn btn--primary mono" href="https://github.com/18-lab-dev/vosu-tools">Browse vosu-tools<span class="arrow">→</span></a>
+                  <a class="btn mono" href="/vosu/guide/tools.html">Tools guide<span class="arrow">→</span></a>
+                </p>
+              </div>
             </li>
             <li>
-              <span class="spec-no mono">P-03</span>
-              <h3>Built for power users</h3>
-              <p>
-                tosu-compatible APIs so existing overlays keep working, plus extensions for people who want more:
-                selected-field streams, per-key timing, and release hit errors.
-              </p>
+              <span class="spec-no mono">S-03</span>
+              <h3>Put it in game</h3>
+              <div>
+                <p>Install vosulay from the same Tools page, or download it as a standalone app.</p>
+                <p class="spec-actions">
+                  <a class="btn btn--primary mono" href="/vosulay/install.html">Get vosulay<span class="arrow">→</span></a>
+                </p>
+              </div>
             </li>
           </ol>
+          <p class="dev-line mono">
+            Building overlays or tools? <a href="/vosu/dev/">Developer docs</a> · <a href="/vosu/dev/tutorial/">Overlay tutorial</a> ·
+            <a href="https://github.com/18-lab-dev/vosu/blob/main/docs/tools/create-a-tool.md">Create a tool</a>
+          </p>
         </div>
       </section>
     </main>

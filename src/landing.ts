@@ -4,7 +4,7 @@ import { constructionFigure, logotypeSvg } from "./mark";
 import { mountShell } from "./shell";
 import { READOUTS, REGULAR_CYCLE, STAGES, type Stage } from "./data";
 
-mountShell("home", "00–04 / 04");
+mountShell("home", "00–05 / 05");
 
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const pad4 = (n: number) => String(Math.max(0, Math.round(n))).padStart(4, "0");
@@ -277,8 +277,8 @@ document.querySelector("[data-readouts]")!.innerHTML = READOUTS.map(
   </article>`,
 ).join("");
 
-const SCALE_MAX = 800;
-const ticks = [0, 200, 400, 600, 800];
+const SCALE_MAX = 600;
+const ticks = [0, 150, 300, 450, 600];
 document.querySelector("[data-chart-body]")!.innerHTML = `
   <div class="chart-axis mono" aria-hidden="true">
     ${ticks.map((t) => `<span style="left:${(t / SCALE_MAX) * 100}%">${t}</span>`).join("")}
@@ -295,97 +295,3 @@ document.querySelector("[data-chart-body]")!.innerHTML = `
       <span class="chart-ratio mono">×${(row.tosu / row.vosu).toFixed(2)}</span>
     </div>`,
   ).join("")}`;
-
-/* ------------------------------------------------------------------ annotated interface code */
-
-const CODE = `// vosu: stream only the fields this overlay draws
-const fields = ["/play/pp/current", "/play/accuracy", "/play/combo/current"];
-const url = "ws://127.0.0.1:24050/websocket/v2/subscribe";
-const ws = new WebSocket(url);
-
-ws.onopen = () => ws.send(JSON.stringify(fields));
-ws.onmessage = ({ data }) => {
-  // [0, rev, pairs] once, then [1, rev, pairs, removed]
-  const [kind, , pairs] = JSON.parse(data);
-  if (kind > 1) return; // [2, code, message] is an error
-  for (const [i, value] of pairs) render(fields[i], value);
-};`;
-
-const NOTES = [
-  { line: 2, tag: "A", title: "Select", body: "Subscribe to field paths, not the whole state tree." },
-  { line: 3, tag: "B", title: "Loopback", body: "Port 24050, the same address tosu overlays already use." },
-  { line: 8, tag: "C", title: "Diff frames", body: "One full snapshot, then revisions with removed indices." },
-  { line: 10, tag: "D", title: "Errors", body: "Kind 2 is a typed error frame: code and message." },
-];
-
-const TOKEN = /(\/\/.*$)|("(?:[^"\\]|\\.)*")|\b(const|new|for|of|if|return)\b|\b(\d+)\b/g;
-const escapeHtml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-function highlight(line: string): string {
-  let out = "";
-  let last = 0;
-  for (const m of line.matchAll(TOKEN)) {
-    const cls = m[1] ? "c" : m[2] ? "s" : m[3] ? "k" : "n";
-    out += `${escapeHtml(line.slice(last, m.index))}<span class="tok-${cls}">${escapeHtml(m[0])}</span>`;
-    last = m.index + m[0].length;
-  }
-  return out + escapeHtml(line.slice(last));
-}
-
-const annotated = document.querySelector<HTMLElement>("[data-annotated]")!;
-const noteByLine = new Map(NOTES.map((n) => [n.line, n]));
-annotated.innerHTML = `
-  <div class="code-panel reg">
-    <div class="code-head mono"><span>overlay.ts</span><span class="muted">WebSocket v2 · selected-field stream</span></div>
-    <pre class="code"><code>${CODE.split("\n")
-      .map((line, i) => {
-        const note = noteByLine.get(i + 1);
-        return `<span class="code-line${note ? " is-marked" : ""}" data-line="${i + 1}"><span class="ln">${i + 1}</span>${highlight(line) || " "}${note ? `<span class="code-pin mono">${note.tag}</span>` : ""}</span>`;
-      })
-      .join("")}</code></pre>
-  </div>
-  <svg class="leaders" aria-hidden="true"></svg>
-  <ol class="notes">
-    ${NOTES.map(
-      (n) => `<li class="note" data-note="${n.line}"><span class="note-tag mono">${n.tag}</span><div><h4 class="mono">${n.title} · L${n.line}</h4><p>${n.body}</p></div></li>`,
-    ).join("")}
-  </ol>`;
-
-/**
- * Notes sit beside their lines but never overlap; when two marked lines are adjacent the later
- * note is pushed down and its leader bends, like a drafting callout.
- */
-function layoutNotes(): void {
-  const leaders = annotated.querySelector<SVGSVGElement>(".leaders")!;
-  const stacked = getComputedStyle(annotated).getPropertyValue("--stacked").trim() === "1";
-  const notes = [...annotated.querySelectorAll<HTMLElement>(".note")];
-  if (stacked) {
-    for (const note of notes) note.style.top = "";
-    leaders.innerHTML = "";
-    return;
-  }
-  const origin = annotated.querySelector<HTMLElement>(".notes")!.getBoundingClientRect();
-  const leaderBox = leaders.getBoundingClientRect();
-  let floor = 0;
-  const paths: string[] = [];
-  for (const note of notes) {
-    const line = annotated.querySelector<HTMLElement>(`.code-line[data-line="${note.dataset.note}"]`)!;
-    const lineBox = line.getBoundingClientRect();
-    const lineMid = lineBox.top + lineBox.height / 2 - origin.top;
-    const top = Math.max(lineMid - 14, floor);
-    note.style.top = `${top}px`;
-    floor = top + note.offsetHeight + 12;
-    const noteMid = top + 14;
-    const yA = lineMid - (leaderBox.top - origin.top);
-    const yB = noteMid - (leaderBox.top - origin.top);
-    const w = leaderBox.width;
-    paths.push(
-      `<path d="M0 ${yA} H${w * 0.35} L${w * 0.65} ${yB} H${w}" class="leader" /><circle cx="0" cy="${yA}" r="2.5" class="leader-dot" />`,
-    );
-  }
-  leaders.innerHTML = paths.join("");
-}
-
-layoutNotes();
-addEventListener("resize", layoutNotes);
-document.fonts.ready.then(layoutNotes);
