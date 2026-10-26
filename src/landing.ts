@@ -259,7 +259,7 @@ routeMap.addEventListener("keydown", (event) => {
   routeMap.querySelector<HTMLButtonElement>(`[data-stage="${next.id}"]`)!.focus();
   event.preventDefault();
 });
-selectStage("vosu");
+selectStage("tools");
 
 /* ------------------------------------------------------------------ measurements */
 

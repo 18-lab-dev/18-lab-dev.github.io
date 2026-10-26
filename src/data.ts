@@ -18,6 +18,7 @@ export interface Stage {
   actions: { label: string; href: string; primary?: boolean }[];
 }
 
+/** In story order: the game feeds vosu, vosu feeds tools (vosulay among them) and overlays, the dashboard manages. */
 export const STAGES: Stage[] = [
   {
     id: "vosu",
@@ -30,12 +31,13 @@ export const STAGES: Stage[] = [
     grid: "D3",
     side: "below",
     summary:
-      "Discovers running osu!stable and osu!lazer clients, reads their memory without modifying them, and publishes each state as one atomic snapshot to every API. One native Rust daemon: no Node.js, no Electron, no separate .NET runtime.",
+      "Reads osu!stable and osu!lazer as you play, without modifying the game, and hands one consistent live state to every overlay, tool and API. One native Rust daemon: no Node.js, no Electron, no separate .NET runtime.",
     specs: [
-      ["Language", "Rust"],
       ["Reads", "osu!stable · osu!lazer"],
       ["Platforms", "Linux · Windows"],
       ["APIs", "v1 · stream companion · v2 · v2 precise"],
+      ["Listeners", ":24050 overlays + tools · :24051 dashboard"],
+      ["Language", "Rust"],
       ["Licence", "MIT OR Apache-2.0"],
     ],
     actions: [
@@ -45,8 +47,36 @@ export const STAGES: Stage[] = [
     ],
   },
   {
-    id: "vosulay",
+    id: "tools",
     code: "18-02",
+    name: "Tools",
+    kind: "Official tools · vosu-tools",
+    status: "One click from the dashboard",
+    x: 620,
+    y: 150,
+    grid: "G2",
+    side: "below",
+    summary:
+      "Install official tools from the Tools page of vosu's dashboard, one click each. vosu runs them beside the game and hands them its live state: map preview follows the map you have selected, and the pp calculator scores it as you play. vosulay installs the same way.",
+    specs: [
+      ["Practice", "New rates, trims, transforms"],
+      ["Map preview", "Selected map, live, with your skin"],
+      ["Server pp", "Server pp for the selected map"],
+      ["Mania ratings", "Etterna · Quaver · Interlude · dan"],
+      ["Replays", "Rendered to MP4 or WebM"],
+      ["Skin studio", "Preview, mix and edit skins"],
+      ["Downloader", "Discover and queue beatmaps"],
+      ["Lazer library", "Reads your lazer maps, skins, replays"],
+    ],
+    actions: [
+      { label: "Browse vosu-tools", href: `${GITHUB}/vosu-tools`, primary: true },
+      { label: "Tools guide", href: "/vosu/guide/tools.html" },
+      { label: "Create a tool", href: `${GITHUB}/vosu/blob/main/docs/tools/create-a-tool.md` },
+    ],
+  },
+  {
+    id: "vosulay",
+    code: "18-03",
     name: "vosulay",
     kind: "In-game overlay manager",
     status: "Active · v1.5.0",
@@ -55,10 +85,10 @@ export const STAGES: Stage[] = [
     grid: "I2",
     side: "below",
     summary:
-      "Renders your counters inside osu! itself. Install it as an optional official vosu tool, supervised by vosu and opened from its dashboard, or run it standalone with vosu or another tosu-compatible backend.",
+      "Your counters, drawn inside osu! itself. Install it from the dashboard's Tools page like any official tool, or run it standalone with vosu or another tosu-compatible backend.",
     specs: [
-      ["Host", "Rust · CEF"],
       ["Runs as", "vosu tool · standalone"],
+      ["Host", "Rust · CEF"],
       ["Rendering", "Vulkan · OpenGL (EGL / GLX)"],
       ["Platforms", "Linux · Windows"],
       ["Licence", "MIT"],
@@ -71,19 +101,18 @@ export const STAGES: Stage[] = [
   },
   {
     id: "overlays",
-    code: "18-03",
+    code: "18-04",
     name: "Overlays",
     kind: "Browser counters",
-    status: "Overlay listener · :24050",
+    status: "On stream · in any browser",
     x: 460,
     y: 430,
     grid: "E4",
     side: "right",
     summary:
-      "Counters load from the overlay listener and read live state over HTTP and WebSocket, in OBS or any browser. Existing tosu overlays run unchanged; the tutorial builds one that uses vosu features first and falls back to tosu.",
+      "Counters for your stream load from vosu in OBS or any browser and update with the live game. Existing tosu overlays run unchanged; the tutorial builds your own, using vosu's extra fields first and falling back to tosu.",
     specs: [
-      ["Address", "127.0.0.1:24050"],
-      ["URL", "/&lt;overlay&gt;/"],
+      ["Address", "127.0.0.1:24050/&lt;overlay&gt;/"],
       ["Data", "HTTP · WebSocket v2"],
       ["Sources", "Installed · tosu community catalog"],
       ["Tutorial", "6 steps · Vite · TypeScript"],
@@ -95,45 +124,20 @@ export const STAGES: Stage[] = [
     ],
   },
   {
-    id: "tools",
-    code: "18-04",
-    name: "Tools",
-    kind: "Out-of-process applications",
-    status: "Hosted under /tools/",
-    x: 620,
-    y: 150,
-    grid: "G2",
-    side: "below",
-    summary:
-      "Applications in any language that vosu installs from catalogs, supervises and serves next to overlays: a browser UI, a background service, a terminal command through vosux, or any mix. Tools can call the tools they depend on, so shared work runs once.",
-    specs: [
-      ["Manifest", "tool.toml"],
-      ["Interfaces", "UI · service · CLI"],
-      ["Served at", "/tools/&lt;id&gt;/"],
-      ["Official", "18-lab-dev/vosu-tools"],
-      ["Sandbox", "None · your OS account"],
-    ],
-    actions: [
-      { label: "Tools guide", href: "/vosu/guide/tools.html", primary: true },
-      { label: "Create a tool", href: `${GITHUB}/vosu/blob/main/docs/tools/create-a-tool.md` },
-      { label: "vosu-tools", href: `${GITHUB}/vosu-tools` },
-    ],
-  },
-  {
     id: "dashboard",
     code: "18-05",
     name: "Dashboard",
-    kind: "Trusted management origin",
-    status: "Dashboard listener · :24051",
+    kind: "Settings and management",
+    status: "Separate page · :24051",
     x: 300,
     y: 470,
     grid: "D5",
     side: "left",
     summary:
-      "Management lives on its own listener, where overlay scripts never run. Its Tools page installs, updates and removes tools, approves user tools, starts and stops services, and opens tool UIs with write access.",
+      "Overlays and tools can use your live data, but installing, approving and changing vosu's settings stay on the dashboard: a separate page their code never runs on. Its Tools page installs, updates and removes tools, starts and stops services, and opens each tool with permission to make changes.",
     specs: [
       ["Address", "127.0.0.1:24051"],
-      ["Writes", "Dashboard origin · CSRF"],
+      ["Management", "Dashboard origin · CSRF"],
       ["Tools page", "Install · trust · lifecycle · logs"],
       ["Catalogs", "Ordered sources, editable"],
     ],
