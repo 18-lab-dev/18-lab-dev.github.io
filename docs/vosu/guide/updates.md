@@ -5,7 +5,7 @@ description: Automatic updates, one-launch update flags, manual replacement, and
 
 # Updates
 
-Use stable releases from [shiruviaa/vosu](https://github.com/shiruviaa/vosu/releases). The [security policy](https://github.com/shiruviaa/vosu/blob/main/SECURITY.md) supports only the latest release.
+Use stable releases from [18-lab-dev/vosu](https://github.com/18-lab-dev/vosu/releases). The [security policy](https://github.com/18-lab-dev/vosu/blob/main/SECURITY.md) supports only the latest release.
 
 ## Portable and user-writable installs
 
@@ -45,7 +45,7 @@ Do not run the Windows executable from an archive or OneDrive-controlled directo
 
 When the current user cannot write the executable's directory, vosu treats the installation as externally managed on Linux and Windows. Startup skips update checking and recovery, and **Automatic updates** is disabled with an explanation. The update action reports that the install is managed by a package manager rather than attempting replacement.
 
-Linux release packages configure no software repository. A normal system upgrade therefore does not fetch a newer vosu release. Download the newer package from [GitHub releases](https://github.com/shiruviaa/vosu/releases) and install it with the same `apt install ./…`, `dnf install ./…`, or `pacman -U …` command used in [installation](/vosu/guide/install#linux-packages). The package manager replaces the installed version.
+Linux release packages configure no software repository. A normal system upgrade therefore does not fetch a newer vosu release. Download the newer package from [GitHub releases](https://github.com/18-lab-dev/vosu/releases) and install it with the same `apt install ./…`, `dnf install ./…`, or `pacman -U …` command used in [installation](/vosu/guide/install#linux-packages). The package manager replaces the installed version.
 
 For `vosu-git`, update with your AUR helper if available, or rebuild the source recipe from current `main`. This is a development-branch package, not a stable-release channel.
 
@@ -59,4 +59,4 @@ For `vosu-git`, update with your AUR helper if available, or rebuild the source 
 
 Keep configuration and counter data if you want to retain settings. Their paths are in [configuration](/vosu/guide/configuration#file-locations). For failure diagnosis, see [troubleshooting](/vosu/guide/troubleshooting).
 
-Source: [automatic updates README](https://github.com/shiruviaa/vosu/blob/main/README.md#automatic-updates) and [operations runbook](https://github.com/shiruviaa/vosu/blob/main/docs/operations/runbook.md).
+Source: [automatic updates README](https://github.com/18-lab-dev/vosu/blob/main/README.md#automatic-updates) and [operations runbook](https://github.com/18-lab-dev/vosu/blob/main/docs/operations/runbook.md).

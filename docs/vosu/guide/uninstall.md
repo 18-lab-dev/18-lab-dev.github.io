@@ -66,6 +66,6 @@ On Windows, remove `vosu.toml`, `static/`, `settings/`, `logs/`, and `.cache/` n
 
 Pins and remembered counts also live in browser local storage. Clear the dashboard origin's site data in your browser if you want those removed.
 
-To reinstall later, use [installation](/vosu/guide/install) and [GitHub releases](https://github.com/shiruviaa/vosu/releases).
+To reinstall later, use [installation](/vosu/guide/install) and [GitHub releases](https://github.com/18-lab-dev/vosu/releases).
 
-Sources: [uninstall README](https://github.com/shiruviaa/vosu/blob/main/README.md#uninstall), [privacy policy](https://github.com/shiruviaa/vosu/blob/main/PRIVACY.md#data-stored-on-your-computer), and [security disclosure](https://github.com/shiruviaa/vosu/blob/main/docs/security.md#installation-files-and-removal).
+Sources: [uninstall README](https://github.com/18-lab-dev/vosu/blob/main/README.md#uninstall), [privacy policy](https://github.com/18-lab-dev/vosu/blob/main/PRIVACY.md#data-stored-on-your-computer), and [security disclosure](https://github.com/18-lab-dev/vosu/blob/main/docs/security.md#installation-files-and-removal).

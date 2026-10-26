@@ -54,8 +54,8 @@ See [Remote profiles](/vosulay/remote) before widening listener access.
 
 ## Get help
 
-For setup questions, use [Discussions → Q&A](https://github.com/shiruviaa/vosulay/discussions/categories/q-a). Report reproducible bugs with the [bug form](https://github.com/shiruviaa/vosulay/issues/new?template=bug_report.yml), including vosulay version, OS, game/backend versions and logs.
+For setup questions, use [Discussions → Q&A](https://github.com/18-lab-dev/vosulay/discussions/categories/q-a). Report reproducible bugs with the [bug form](https://github.com/18-lab-dev/vosulay/issues/new?template=bug_report.yml), including vosulay version, OS, game/backend versions and logs.
 
-If a counter works standalone but not in vosulay, use the [counter compatibility form](https://github.com/shiruviaa/vosulay/issues/new?template=counter_compatibility.yml). `cef.log` is in `cef-cache` beside the selected configuration. Review logs and redact private URLs/paths before posting. Report security problems [privately](https://github.com/shiruviaa/vosulay/blob/main/SECURITY.md).
+If a counter works standalone but not in vosulay, use the [counter compatibility form](https://github.com/18-lab-dev/vosulay/issues/new?template=counter_compatibility.yml). `cef.log` is in `cef-cache` beside the selected configuration. Review logs and redact private URLs/paths before posting. Report security problems [privately](https://github.com/18-lab-dev/vosulay/blob/main/SECURITY.md).
 
-Sources: [troubleshooting](https://github.com/shiruviaa/vosulay/blob/main/README.md#troubleshooting), [operations](https://github.com/shiruviaa/vosulay/blob/main/docs/operations.md#attachment-and-troubleshooting), [support](https://github.com/shiruviaa/vosulay/blob/main/SUPPORT.md), [save-error behavior](https://github.com/shiruviaa/vosulay/blob/main/assets/manager.js).
+Sources: [troubleshooting](https://github.com/18-lab-dev/vosulay/blob/main/README.md#troubleshooting), [operations](https://github.com/18-lab-dev/vosulay/blob/main/docs/operations.md#attachment-and-troubleshooting), [support](https://github.com/18-lab-dev/vosulay/blob/main/SUPPORT.md), [save-error behavior](https://github.com/18-lab-dev/vosulay/blob/main/assets/manager.js).

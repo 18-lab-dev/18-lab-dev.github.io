@@ -88,4 +88,4 @@ Use [vosulay](/vosulay/) to render counters inside the game. vosu supplies telem
 
 Want to make a counter? See the [overlay tutorial](/vosu/dev/tutorial/). For failures, see [troubleshooting](/vosu/guide/troubleshooting).
 
-Source: [dashboard and counters README](https://github.com/shiruviaa/vosu/blob/main/README.md#dashboard-and-counters).
+Source: [dashboard and counters README](https://github.com/18-lab-dev/vosu/blob/main/README.md#dashboard-and-counters).

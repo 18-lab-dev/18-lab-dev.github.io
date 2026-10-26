@@ -45,7 +45,7 @@ tosu overlays run unchanged. vosu is not affiliated with the tosu project.
 
 ## Get it
 
-- [Latest release](https://github.com/shiruviaa/vosu/releases/latest): portable ZIPs for Linux and
+- [Latest release](https://github.com/18-lab-dev/vosu/releases/latest): portable ZIPs for Linux and
   Windows, plus `.deb`, `.rpm`, and Arch packages.
 - [Install guide](/vosu/guide/install): which download to pick and how to verify it.
-- [Source on GitHub](https://github.com/shiruviaa/vosu).
+- [Source on GitHub](https://github.com/18-lab-dev/vosu).

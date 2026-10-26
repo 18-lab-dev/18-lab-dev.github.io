@@ -63,8 +63,8 @@ Do not use tosu's deprecated `/api/ingame` or `__ingame__` settings; use vosulay
 in-game placement and ordinary counter settings for customization.
 :::
 
-Sources: [vosu settings](https://github.com/shiruviaa/vosu/blob/main/src/counters/settings.rs),
-[vosu commands](https://github.com/shiruviaa/vosu/blob/main/src/server/commands.rs),
+Sources: [vosu settings](https://github.com/18-lab-dev/vosu/blob/main/src/counters/settings.rs),
+[vosu commands](https://github.com/18-lab-dev/vosu/blob/main/src/server/commands.rs),
 [tosu settings parser](https://github.com/tosuapp/tosu/blob/master/packages/server/utils/parseSettings.ts),
 [tosu commands](https://github.com/tosuapp/tosu/blob/master/packages/server/utils/commands.ts).
 

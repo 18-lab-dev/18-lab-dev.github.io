@@ -46,7 +46,7 @@ Both `GET /api/keys` and `POST /api/keys` live on the dashboard origin and requi
 
 Names are 1–64 printable characters excluding Unicode bidirectional controls. `scopes` contains one or both scope values above. To change permissions, revoke and recreate the key.
 
-Sources: [API key README and examples](https://github.com/shiruviaa/vosu/blob/d0851c8/README.md#api-keys), [ADR 0015](https://github.com/shiruviaa/vosu/blob/d0851c8/docs/decisions/0015-user-managed-api-keys.md).
+Sources: [API key README and examples](https://github.com/18-lab-dev/vosu/blob/d0851c8/README.md#api-keys), [ADR 0015](https://github.com/18-lab-dev/vosu/blob/d0851c8/docs/decisions/0015-user-managed-api-keys.md).
 
 ## State and calculation
 
@@ -101,7 +101,7 @@ File serving accepts a validated **single** `Range: bytes=...` request: 206 with
 
 ## Pages and static content
 
-`/`, `/settings`, `/available`, and embedded `/assets/{path}` belong to the **dashboard origin**. Counter-static fallback belongs only to the **overlay origin**. Dashboard read APIs serve its pages, while read-only state, calculation, game files, settings/profiles/catalog APIs remain on the overlay origin as documented by [ADR 0016](https://github.com/shiruviaa/vosu/blob/d0851c8/docs/decisions/0016-separate-dashboard-origin.md).
+`/`, `/settings`, `/available`, and embedded `/assets/{path}` belong to the **dashboard origin**. Counter-static fallback belongs only to the **overlay origin**. Dashboard read APIs serve its pages, while read-only state, calculation, game files, settings/profiles/catalog APIs remain on the overlay origin as documented by [ADR 0016](https://github.com/18-lab-dev/vosu/blob/d0851c8/docs/decisions/0016-separate-dashboard-origin.md).
 
 | Method + path                      | Parameters / response                                                                       |
 | ---------------------------------- | ------------------------------------------------------------------------------------------- |
@@ -116,7 +116,7 @@ Dynamic page rendering can return 500 JSON errors. Counter fallback uses 200 byt
 
 ### Removed in-game page <Badge type="danger" text="deprecated" />
 
-`GET /api/ingame` is **not served**: the router returns 404. Dedicated `__ingame__` storage and catalog commands were removed in [ADR 0008](https://github.com/shiruviaa/vosu/blob/main/docs/decisions/0008-external-in-game-overlays.md). Do not depend on this tosu endpoint, including for your own settings/configuration. In-game rendering belongs to [vosulay](/vosulay/); use per-counter settings instead.
+`GET /api/ingame` is **not served**: the router returns 404. Dedicated `__ingame__` storage and catalog commands were removed in [ADR 0008](https://github.com/18-lab-dev/vosu/blob/main/docs/decisions/0008-external-in-game-overlays.md). Do not depend on this tosu endpoint, including for your own settings/configuration. In-game rendering belongs to [vosulay](/vosulay/); use per-counter settings instead.
 
 ## Counters and settings
 
@@ -183,7 +183,7 @@ Externally managed installs return a 200 JSON `error` instead of replacing the b
 
 ## Implementation sources
 
-- [Exact route classifier](https://github.com/shiruviaa/vosu/blob/main/src/server/routes.rs)
-- [Production handlers](https://github.com/shiruviaa/vosu/blob/main/src/server/service/routing.rs), [responses](https://github.com/shiruviaa/vosu/blob/main/src/server/service/responses.rs)
-- [Files and ranges](https://github.com/shiruviaa/vosu/blob/main/src/server/files.rs), [pages](https://github.com/shiruviaa/vosu/blob/main/src/server/pages.rs)
-- [Legacy calculator DTO](https://github.com/shiruviaa/vosu/blob/main/src/calculation/engine.rs)
+- [Exact route classifier](https://github.com/18-lab-dev/vosu/blob/main/src/server/routes.rs)
+- [Production handlers](https://github.com/18-lab-dev/vosu/blob/main/src/server/service/routing.rs), [responses](https://github.com/18-lab-dev/vosu/blob/main/src/server/service/responses.rs)
+- [Files and ranges](https://github.com/18-lab-dev/vosu/blob/main/src/server/files.rs), [pages](https://github.com/18-lab-dev/vosu/blob/main/src/server/pages.rs)
+- [Legacy calculator DTO](https://github.com/18-lab-dev/vosu/blob/main/src/calculation/engine.rs)

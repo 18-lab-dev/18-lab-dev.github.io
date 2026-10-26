@@ -1,5 +1,5 @@
 Name: Starter Play HUD
-Author: shiruviaa
+Author: 18-lab-dev
 Version: 1.0.0
 Usecase: ingame,obs-overlay
 Resolution: 640x220

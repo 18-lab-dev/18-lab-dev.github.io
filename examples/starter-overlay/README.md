@@ -1,6 +1,6 @@
 # Starter Play HUD
 
-The finished [shiruviaa overlay tutorial](https://shiruviaa.github.io/vosu/dev/tutorial).
+The finished [18-lab-dev overlay tutorial](https://18-lab-dev.github.io/vosu/dev/tutorial).
 A transparent 640 × 220 web overlay with pp, accuracy, combo, all six judgement counts,
 latest press/release timing, the great timing window when available, and up to 18 inputs.
 

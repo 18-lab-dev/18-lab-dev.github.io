@@ -1,0 +1,24 @@
+.docs-side .side-search { display: grid; height: auto; padding: .65rem; font: .75rem var(--font-mono); }
+.docs-side .side-search input { width: 100%; padding: .5rem 0; }
+.prose pre { max-width: 100%; overflow-x: auto; padding: 1rem; background: var(--code-bg); border: 1px solid var(--rule); }
+.prose pre code { border: 0; padding: 0; white-space: pre; }
+.prose :not(pre) > code { overflow-wrap: anywhere; }
+.table-scroll { max-width: 100%; overflow-x: auto; margin: 1.5rem 0; }
+.prose table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+.prose th, .prose td { padding: .6rem .8rem; border: 1px solid var(--rule-strong); text-align: left; min-width: 120px; }
+.prose th { color: var(--fg); background: var(--bg-raised); }
+.prose img { max-width: 100%; }
+.prose h1 { line-height: 1.05; }
+.prose h2, .prose h3, .prose h4 { scroll-margin-top: 80px; }
+.prose .badge { display: inline-block; font: .625rem var(--font-mono); color: var(--accent); border: 1px solid var(--rule-strong); padding: .15rem .3rem; vertical-align: middle; }
+.prose .callout, .prose details { padding: .75rem 1rem; margin: 1rem 0; border-left: 2px solid var(--accent); background: var(--bg-raised); }
+.prose summary { cursor: pointer; color: var(--fg); }
+.docs-outline { position: sticky; top: 90px; align-self: start; max-height: 75vh; overflow-y: auto; font-size: .8rem; }
+.docs-outline ul { list-style: none; padding: 0; }
+.docs-outline a { display: block; padding: .25rem 0; color: var(--fg-dim); text-decoration: none; }
+.bench-table { margin: 1.5rem 0; min-width: 0; max-width: 100%; }
+.bench-table figcaption { overflow-wrap: anywhere; }
+.bench-table figcaption { color: var(--fg); font: 500 1rem var(--font-mono); }
+.doc-source { margin-top: 3rem !important; font-size: .8rem; }
+@media (max-width: 1100px) { .docs { grid-template-columns: 220px minmax(0, 1fr); } .docs-outline { display: none; } }
+@media (max-width: 700px) { .docs { display: flex; flex-direction: column; padding-top: 1rem; gap: 2rem; } .docs-side { display: block; position: static; max-height: 240px; width: 100%; border-bottom: 1px solid var(--rule-strong); } .docs-side nav { columns: 2; } .side-group { break-inside: avoid; } .docs-main { width: 100%; } .prose { font-size: 1rem; } }

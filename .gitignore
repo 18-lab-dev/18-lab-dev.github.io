@@ -1,3 +1,7 @@
 node_modules/
-docs/.vitepress/cache/
-docs/.vitepress/dist/
+dist/
+.generated/
+/vosu/
+/vosulay/
+/public/docs.html
+/public/third-party-licenses.txt

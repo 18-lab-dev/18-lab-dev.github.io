@@ -25,7 +25,7 @@ tosu-compatible full streams. It does not require a framework.
 | [5. Settings](/vosu/dev/tutorial/05-settings)               | One schema per server and a read-only settings channel |
 | [6. Package and test](/vosu/dev/tutorial/06-package)        | A deployable folder for OBS and vosulay                |
 
-The finished project is [`examples/starter-overlay`](https://github.com/shiruviaa/shiruviaa.github.io/tree/main/examples/starter-overlay).
+The finished project is [`examples/starter-overlay`](https://github.com/18-lab-dev/18-lab-dev.github.io/tree/main/examples/starter-overlay).
 Code includes in these pages come directly from that project, not a second implementation.
 
 ## Real-world reference

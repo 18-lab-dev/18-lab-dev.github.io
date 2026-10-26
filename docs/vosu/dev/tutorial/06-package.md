@@ -77,8 +77,8 @@ static mount and checking the target and copied files.
 vosu permits a **top-level directory symlink** as an explicit mount, even outside its
 static root. It rejects symlinked **settings files**, not regular settings files
 inside that mounted directory. Vite's copies are regular files, so this layout is valid.
-See [ADR 0005](https://github.com/shiruviaa/vosu/blob/main/docs/decisions/0005-root-confined-file-serving.md),
-[settings file checks](https://github.com/shiruviaa/vosu/blob/main/src/counters/settings.rs),
+See [ADR 0005](https://github.com/18-lab-dev/vosu/blob/main/docs/decisions/0005-root-confined-file-serving.md),
+[settings file checks](https://github.com/18-lab-dev/vosu/blob/main/src/counters/settings.rs),
 and the [counter package reference](/vosu/dev/counter-packages).
 
 Use `pnpm dev` with HMR for UI work. Use this symlinked build when testing inside vosu,

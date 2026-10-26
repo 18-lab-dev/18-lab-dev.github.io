@@ -37,7 +37,7 @@ The default backend is `http://127.0.0.1:24050/`. Change it in **Settings → Ad
 Release downloads target x86_64. Linux binaries require glibc 2.35 or newer. See the [Linux](/vosulay/linux) and [Windows](/vosulay/windows) guides before configuring game capture or attachment.
 
 ::: warning Know what is running
-vosulay loads overlay code into the game and executes the web content you choose. Use trusted counters. Hiding vosulay does not stop attachment or network listeners; **tray → Exit vosulay** quits the host. Read the upstream [security disclosure](https://github.com/shiruviaa/vosulay/blob/main/docs/security.md).
+vosulay loads overlay code into the game and executes the web content you choose. Use trusted counters. Hiding vosulay does not stop attachment or network listeners; **tray → Exit vosulay** quits the host. Read the upstream [security disclosure](https://github.com/18-lab-dev/vosulay/blob/main/docs/security.md).
 :::
 
 ## Next steps
@@ -51,4 +51,4 @@ vosulay loads overlay code into the game and executes the web content you choose
 | Change defaults             | [Settings](/vosulay/settings)               |
 | Fix missing overlays        | [Troubleshooting](/vosulay/troubleshooting) |
 
-Source: [vosulay 1.4.0 README](https://github.com/shiruviaa/vosulay/blob/d2e472a/README.md).
+Source: [vosulay 1.4.0 README](https://github.com/18-lab-dev/vosulay/blob/d2e472a/README.md).

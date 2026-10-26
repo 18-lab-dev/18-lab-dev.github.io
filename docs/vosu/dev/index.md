@@ -40,4 +40,27 @@ Installed counter JavaScript runs on the overlay origin, separate from the dashb
 - [HTTP reference](/vosu/dev/http-api), [WebSocket reference](/vosu/dev/websocket-api), and [field schema](/vosu/dev/schema).
 - [Counter packages](/vosu/dev/counter-packages): metadata, schemas, and settings migration.
 
-Source: [published README](https://github.com/shiruviaa/vosu/blob/main/README.md#http-api).
+Source: [published README](https://github.com/18-lab-dev/vosu/blob/main/README.md#http-api).
+
+## Minimal selected-field example
+
+Ask for three fields. Get three fields. vosu speaks tosu's APIs, so overlays you
+write today run on both. When vosu is the backend, the selected-field stream sends
+only the JSON Pointers you subscribe to, and only when they change. The tutorial
+starts there and falls back to tosu cleanly. In this excerpt, `render` is your
+overlay's rendering function:
+
+```js
+// vosu: stream only the fields this overlay draws
+const fields = ["/play/pp/current", "/play/accuracy", "/play/combo/current"];
+const url = "ws://127.0.0.1:24050/websocket/v2/subscribe";
+const ws = new WebSocket(url);
+
+ws.onopen = () => ws.send(JSON.stringify(fields));
+ws.onmessage = ({ data }) => {
+  // [0, rev, pairs] once, then [1, rev, pairs, removed]
+  const [kind, , pairs] = JSON.parse(data);
+  if (kind > 1) return; // [2, code, message] is an error
+  for (const [i, value] of pairs) render(fields[i], value);
+};
+```

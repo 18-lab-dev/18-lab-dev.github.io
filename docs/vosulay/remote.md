@@ -80,4 +80,4 @@ This serves the remote pages, the backend broker and the editor at `manage.local
 
 If the remote port is occupied, a bind failure is logged but local counters can still use the broker. **Hide vosulay** does not stop any of them. **Exit vosulay** (or `vosulay --quit`) stops the host and its listeners.
 
-Sources: [remote usage](https://github.com/shiruviaa/vosulay/blob/main/README.md#remote-profile-pages), [network disclosure](https://github.com/shiruviaa/vosulay/blob/main/docs/security.md#network-exposure-and-web-content).
+Sources: [remote usage](https://github.com/18-lab-dev/vosulay/blob/main/README.md#remote-profile-pages), [network disclosure](https://github.com/18-lab-dev/vosulay/blob/main/docs/security.md#network-exposure-and-web-content).

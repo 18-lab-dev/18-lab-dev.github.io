@@ -81,4 +81,4 @@ Input-capture or browser-heartbeat failures have a five-second safety bound: inp
 
 Placement changes save automatically; wait for **Saved** rather than leaving a persistent error unnoticed. **Done** finishes editing. Settings changes require **Save** in the Settings dialog. See [Troubleshooting](/vosulay/troubleshooting) for unsaved edits.
 
-Sources: [editing guide](https://github.com/shiruviaa/vosulay/blob/main/README.md#editing-shortcuts-and-tray), [inspector and labels](https://github.com/shiruviaa/vosulay/blob/main/assets/manager.html), [editor actions](https://github.com/shiruviaa/vosulay/blob/main/assets/manager.js).
+Sources: [editing guide](https://github.com/18-lab-dev/vosulay/blob/main/README.md#editing-shortcuts-and-tray), [inspector and labels](https://github.com/18-lab-dev/vosulay/blob/main/assets/manager.html), [editor actions](https://github.com/18-lab-dev/vosulay/blob/main/assets/manager.js).

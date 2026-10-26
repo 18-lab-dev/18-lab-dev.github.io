@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>18-LAB · performance-engineered osu! tooling</title>
+    <meta
+      name="description"
+      content="18-LAB builds osu! tooling engineered for performance and power users: vosu, the native telemetry daemon, and vosulay, the in-game overlay manager."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script>
+      document.documentElement.dataset.theme = localStorage.getItem("18lab-theme") ?? "dark";
+    </script>
+    <script type="module" src="/src/landing.ts"></script>
+  </head>
+  <body>
+    <div data-shell="header"></div>
+
+    <main>
+      <!-- SHEET 00 · INDEX -->
+      <section class="hero" data-draw aria-labelledby="hero-title">
+        <div class="hero-crosshair" aria-hidden="true">
+          <span class="ch-x"></span><span class="ch-y"></span><span class="ch-label mono"></span>
+        </div>
+
+        <div class="wrap hero-grid">
+          <div class="hero-copy">
+            <p class="hero-kicker mono">
+              <span class="accent">18 / Laboratory</span><span class="muted">Sheet 00 · Index · Rev A</span>
+            </p>
+
+            <h1 id="hero-title" class="wordmark">
+              <span class="visually-hidden">18-LAB</span>
+              <span class="wm-guide wm-guide--cap mono" aria-hidden="true">Cap</span>
+              <span class="wm-guide wm-guide--base mono" aria-hidden="true">Base</span>
+              <span class="wm-text" data-wordmark aria-hidden="true"></span>
+            </h1>
+
+            <p class="statement">osu! tooling, engineered and measured.</p>
+            <p class="lede">
+              We build the daemon that reads the game and the overlay manager that draws inside it. Native Rust,
+              Linux first-class, and every performance claim published with its method.
+            </p>
+
+            <div class="hero-actions">
+              <a class="btn btn--primary mono" href="/vosu/guide/install.html"><span class="idx">01</span>Get vosu<span class="arrow">→</span></a>
+              <a class="btn mono" href="/vosulay/install.html"><span class="idx">02</span>Get vosulay<span class="arrow">→</span></a>
+              <a class="btn mono" href="#interface"><span class="idx">03</span>Build an overlay<span class="arrow">→</span></a>
+              <a class="btn mono" href="https://github.com/18-lab-dev/vosu-tools#readme"><span class="idx">04</span>vosu-tools catalog<span class="arrow">→</span></a>
+            </div>
+          </div>
+
+          <figure class="hero-fig">
+            <div class="fig-frame reg" data-fig></div>
+            <figcaption class="fig-caption mono">
+              <span><span class="accent">FIG.01</span> Mark · construction</span>
+              <span class="muted">Ø 464 ref · 3° graduations</span>
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="wrap">
+          <dl class="readout mono">
+            <div><dt>Cursor</dt><dd data-cursor>X 0000 · Y 0000</dd></div>
+            <div><dt>Local</dt><dd data-clock>--:--:--</dd></div>
+            <div><dt>Builds</dt><dd>vosu 1.2.0 · vosulay 1.4.0</dd></div>
+            <div><dt>Targets</dt><dd>osu!stable · osu!lazer</dd></div>
+            <div><dt>Status</dt><dd><span class="status-dot" aria-hidden="true"></span>Nominal</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- SHEET 01 · ROUTE -->
+      <section id="route" class="sheet" data-draw aria-labelledby="route-title">
+        <div class="wrap">
+          <header class="sheet-head mono">
+            <span class="sheet-no">Sheet 01</span><span class="sheet-rule"></span><span class="sheet-title">Route</span
+            ><span>18-LAB / IDX / 001</span>
+          </header>
+          <div class="section-intro">
+            <h2 id="route-title">One route,<br />five instruments.</h2>
+            <p>
+              Data leaves the game through vosu, comes back in through vosulay, and the measurements keep both honest.
+              Select a stage to open its dossier.
+            </p>
+          </div>
+
+          <div class="route">
+            <div class="route-map reg" data-route-map></div>
+            <aside class="dossier" data-dossier aria-live="polite"></aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- SHEET 02 · MEASURE -->
+      <section id="measure" class="sheet" data-draw aria-labelledby="measure-title">
+        <div class="wrap">
+          <header class="sheet-head mono">
+            <span class="sheet-no">Sheet 02</span><span class="sheet-rule"></span><span class="sheet-title">Measure</span
+            ><span>vosu 1.1.0 / tosu 4.26.2</span>
+          </header>
+          <div class="section-intro">
+            <h2 id="measure-title">Measured,<br />not claimed.</h2>
+            <p>
+              Live osu!stable and osu!lazer clients on Windows and Linux, alternating builds, medians of five. The ratio
+              is tosu’s value over vosu’s. The narrowest margin is listed alongside the widest.
+            </p>
+          </div>
+
+          <div class="readouts" data-readouts></div>
+
+          <figure class="chart reg" data-chart>
+            <figcaption class="chart-head">
+              <span class="mono"><span class="accent">FIG.02</span> Regular read cycle · <span class="unit">µs</span> · lower is better</span>
+              <span class="chart-legend mono">
+                <span><i class="sw sw--tosu"></i>tosu 4.26.2</span><span><i class="sw sw--vosu"></i>vosu 1.1.0</span>
+              </span>
+            </figcaption>
+            <div class="chart-body" data-chart-body></div>
+          </figure>
+          <p class="footnote mono">
+            Source: vosu benchmark guide, released tosu comparison, rerun 2026-10-17. Hot paths, CPU, and latency tables
+            with ranges on the <a href="/vosu/benchmarks.html">benchmarks page</a>.
+          </p>
+        </div>
+      </section>
+
+      <!-- SHEET 03 · INTERFACE -->
+      <section id="interface" class="sheet" data-draw aria-labelledby="interface-title">
+        <div class="wrap">
+          <header class="sheet-head mono">
+            <span class="sheet-no">Sheet 03</span><span class="sheet-rule"></span><span class="sheet-title">Interface</span
+            ><span>ws://127.0.0.1:24050</span>
+          </header>
+          <div class="section-intro">
+            <h2 id="interface-title">Stream only<br />what you draw.</h2>
+            <p>
+              Existing tosu overlays run unchanged. New ones can subscribe to exactly the fields they render and receive
+              revisioned diffs instead of the whole state.
+            </p>
+          </div>
+
+          <div class="annotated" data-annotated></div>
+
+          <div class="interface-actions">
+            <a class="btn btn--primary mono" href="/vosu/dev/tutorial/">Build an overlay · 6 steps<span class="arrow">→</span></a>
+            <a class="btn mono" href="/vosu/dev/websocket-api.html">WebSocket reference<span class="arrow">→</span></a>
+          </div>
+        </div>
+      </section>
+
+      <!-- SHEET 04 · SPEC -->
+      <section id="spec" class="sheet" data-draw aria-labelledby="spec-title">
+        <div class="wrap">
+          <header class="sheet-head mono">
+            <span class="sheet-no">Sheet 04</span><span class="sheet-rule"></span><span class="sheet-title">Specification</span
+            ><span>How we build</span>
+          </header>
+          <h2 id="spec-title" class="visually-hidden">How we build</h2>
+          <ol class="spec">
+            <li>
+              <span class="spec-no mono">P-01</span>
+              <h3>Native &amp; measured</h3>
+              <p>
+                Native Rust with no Node.js or Electron underneath. Hot paths carry Criterion benchmarks, and
+                head-to-head results against tosu are published with their limits stated.
+              </p>
+            </li>
+            <li>
+              <span class="spec-no mono">P-02</span>
+              <h3>Linux first-class</h3>
+              <p>
+                Native osu!lazer telemetry on Linux, process events over eBPF or CN_PROC, and in-game overlays for
+                Vulkan, OpenGL, Wayland, X11, and Wine. Windows is supported too.
+              </p>
+            </li>
+            <li>
+              <span class="spec-no mono">P-03</span>
+              <h3>Built for power users</h3>
+              <p>
+                tosu-compatible APIs so existing overlays keep working, plus extensions for people who want more:
+                selected-field streams, per-key timing, and release hit errors.
+              </p>
+            </li>
+          </ol>
+        </div>
+      </section>
+    </main>
+
+    <div data-shell="footer"></div>
+  </body>
+</html>

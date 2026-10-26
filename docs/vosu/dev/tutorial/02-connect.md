@@ -85,7 +85,7 @@ With default allowlists, both servers accept reads with Origin
 `http://localhost:5173`: they compare the hostname, not the port, and allow
 `localhost`. vosu also requires an allowed network peer; a local loopback connection
 satisfies that requirement. This does not grant vosu's same-origin management access.
-See [vosu authorization](https://github.com/shiruviaa/vosu/blob/main/src/server/auth.rs)
+See [vosu authorization](https://github.com/18-lab-dev/vosu/blob/main/src/server/auth.rs)
 and [tosu authorization](https://github.com/tosuapp/tosu/blob/master/packages/server/utils/index.ts).
 
 ## Complete module
@@ -94,8 +94,8 @@ and [tosu authorization](https://github.com/tosuapp/tosu/blob/master/packages/se
 <<< ../../../../examples/starter-overlay/src/connection.ts
 :::
 
-Sources: [vosu subscription implementation](https://github.com/shiruviaa/vosu/blob/main/src/server/v2_subscription.rs),
-[vosu transport](https://github.com/shiruviaa/vosu/blob/main/src/server/service/websocket_transport.rs),
+Sources: [vosu subscription implementation](https://github.com/18-lab-dev/vosu/blob/main/src/server/v2_subscription.rs),
+[vosu transport](https://github.com/18-lab-dev/vosu/blob/main/src/server/service/websocket_transport.rs),
 [tosu v2 types](https://github.com/tosuapp/tosu/blob/master/packages/tosu/src/api/types/v2.ts).
 See the [WebSocket reference](/vosu/dev/websocket-api) for the complete contract.
 

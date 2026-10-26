@@ -31,7 +31,7 @@ Start with the listener, then authorization, then game access. Run vosu as the s
 
 For each discovered osu!lazer version, resolution tries a valid `<version>.json` cache entry, matching embedded offsets, then the embedded local generator for that exact PID and version. It never downloads offsets or scans another process. A failed generation does not replace an existing cache entry.
 
-Release executables include the self-contained helper; end users do **not** install .NET, an SDK, or a source checkout. A debug binary without a prepared payload reports a missing-bundle error: use the appropriate [release](https://github.com/shiruviaa/vosu/releases) for normal use.
+Release executables include the self-contained helper; end users do **not** install .NET, an SDK, or a source checkout. A debug binary without a prepared payload reports a missing-bundle error: use the appropriate [release](https://github.com/18-lab-dev/vosu/releases) for normal use.
 
 Offsets live in:
 
@@ -46,8 +46,8 @@ Check `logs/` under the platform data root and the effective `vosu.toml`. Use **
 
 **Diagnostics report** downloads through an authenticated dashboard fetch and generates a local report with machine information, configuration, installed counters, and recent logs. vosu does not upload it. Review it before sharing: it can contain paths and other personal details. Reports mark truncated log content explicitly.
 
-For ordinary bugs, use [vosu issues](https://github.com/shiruviaa/vosu/issues) with the platform, game client/version, vosu version, and relevant reviewed diagnostics. For vulnerabilities, use the repository's **Security → Report a vulnerability**, not a public issue.
+For ordinary bugs, use [vosu issues](https://github.com/18-lab-dev/vosu/issues) with the platform, game client/version, vosu version, and relevant reviewed diagnostics. For vulnerabilities, use the repository's **Security → Report a vulnerability**, not a public issue.
 
 See also [configuration](/vosu/guide/configuration), [privacy and security](/vosu/guide/privacy-security), and [updates](/vosu/guide/updates).
 
-Sources: [README](https://github.com/shiruviaa/vosu/blob/main/README.md), [operations runbook](https://github.com/shiruviaa/vosu/blob/main/docs/operations/runbook.md), and [security policy](https://github.com/shiruviaa/vosu/blob/main/SECURITY.md).
+Sources: [README](https://github.com/18-lab-dev/vosu/blob/main/README.md), [operations runbook](https://github.com/18-lab-dev/vosu/blob/main/docs/operations/runbook.md), and [security policy](https://github.com/18-lab-dev/vosu/blob/main/SECURITY.md).

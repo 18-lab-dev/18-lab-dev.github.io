@@ -9,7 +9,7 @@ description: Understand the separate dashboard origin, management authority, and
 
 Installed counters stay at `http://127.0.0.1:24050` (`SERVER_IP:SERVER_PORT`), preserving URLs, localStorage, and IndexedDB. Trusted dashboard pages and management APIs move to `http://127.0.0.1:24051` (`DASHBOARD_IP:DASHBOARD_PORT`). The dashboard never serves overlay scripts or static files; previews use the overlay origin.
 
-[ADR 0016](https://github.com/shiruviaa/vosu/blob/d0851c8/docs/decisions/0016-separate-dashboard-origin.md) supersedes ADR 0013's shared-origin decision. Installed overlays no longer have dashboard management authority. This is browser-origin separation, not a general-purpose sandbox: overlays retain game-data reads and their settings command protocol, and third-party code can make external requests.
+[ADR 0016](https://github.com/18-lab-dev/vosu/blob/d0851c8/docs/decisions/0016-separate-dashboard-origin.md) supersedes ADR 0013's shared-origin decision. Installed overlays no longer have dashboard management authority. This is browser-origin separation, not a general-purpose sandbox: overlays retain game-data reads and their settings command protocol, and third-party code can make external requests.
 
 Old overlay-origin dashboard page links redirect with HTTP 302, preserving path and query. `GET /api/dashboard` on the overlay origin publishes the effective dashboard origin. Redirect authorities use the effective listener rather than arbitrary Host headers; wildcard binds map to loopback for local discovery.
 
@@ -71,7 +71,7 @@ Keys persist across restarts. Config-root `api-keys.toml` stores SHA-256 hashes 
 
 The per-start loopback `broker.json` token below keeps zero-config native broker integration on the overlay origin. It authorizes command-socket writes and HTTP value saves/profile actions, not schema saves or general management. Scoped API-key settings/profile writes also remain on that origin.
 
-Sources: [ADR 0016](https://github.com/shiruviaa/vosu/blob/d0851c8/docs/decisions/0016-separate-dashboard-origin.md), [API key contract](https://github.com/shiruviaa/vosu/blob/d0851c8/README.md#api-keys), [network exposure](https://github.com/shiruviaa/vosu/blob/d0851c8/docs/security.md#network-exposure), and [operations runbook](https://github.com/shiruviaa/vosu/blob/d0851c8/docs/operations/runbook.md).
+Sources: [ADR 0016](https://github.com/18-lab-dev/vosu/blob/d0851c8/docs/decisions/0016-separate-dashboard-origin.md), [API key contract](https://github.com/18-lab-dev/vosu/blob/d0851c8/README.md#api-keys), [network exposure](https://github.com/18-lab-dev/vosu/blob/d0851c8/docs/security.md#network-exposure), and [operations runbook](https://github.com/18-lab-dev/vosu/blob/d0851c8/docs/operations/runbook.md).
 
 ## Local broker trust boundary
 
@@ -85,12 +85,12 @@ Any same-account process that can read this file can write counter settings and 
 
 **Windows residual risk:** the file inherits its directory's ACL. A pre-existing `%LOCALAPPDATA%\vosu` directory or its parents with broad inheritable permissions can expose the token to other accounts. vosu does not reset those ACLs; protect the directory and its parents. LocalAppData placement alone is not a security guarantee, and administrators or other principals already entitled to read remain trusted.
 
-Sources: [broker integration contract](https://github.com/shiruviaa/vosu/blob/main/README.md#native-overlay-brokers), [network exposure and ACL limits](https://github.com/shiruviaa/vosu/blob/main/docs/security.md#network-exposure), [ADR 0013 amendment](https://github.com/shiruviaa/vosu/blob/main/docs/decisions/0013-counters-share-dashboard-origin.md#native-broker-authentication-2026-10-16-amendment).
+Sources: [broker integration contract](https://github.com/18-lab-dev/vosu/blob/main/README.md#native-overlay-brokers), [network exposure and ACL limits](https://github.com/18-lab-dev/vosu/blob/main/docs/security.md#network-exposure), [ADR 0013 amendment](https://github.com/18-lab-dev/vosu/blob/main/docs/decisions/0013-counters-share-dashboard-origin.md#native-broker-authentication-2026-10-16-amendment).
 
 ## Removed in-game endpoint <Badge type="danger" text="deprecated" />
 
-Upstream tosu has `/api/ingame`, its embedded in-game overlay page, and dedicated `__ingame__` settings. vosu removed that surface in [ADR 0008](https://github.com/shiruviaa/vosu/blob/main/docs/decisions/0008-external-in-game-overlays.md). Its [router](https://github.com/shiruviaa/vosu/blob/main/src/server/routes.rs) reserves unknown `/api/` paths and returns **404** for `/api/ingame`; it cannot fall through to counter HTML.
+Upstream tosu has `/api/ingame`, its embedded in-game overlay page, and dedicated `__ingame__` settings. vosu removed that surface in [ADR 0008](https://github.com/18-lab-dev/vosu/blob/main/docs/decisions/0008-external-in-game-overlays.md). Its [router](https://github.com/18-lab-dev/vosu/blob/main/src/server/routes.rs) reserves unknown `/api/` paths and returns **404** for `/api/ingame`; it cannot fall through to counter HTML.
 
 Overlays must not depend on `/api/ingame` or `__ingame__`, and should never have used that in-game product surface to manage even their own settings or configuration. In-game rendering is [vosulay's](/vosulay/) job. Store each counter's settings using the counter settings mechanism; external renderers own their UI and persistence.
 
-Sources: [management authorization README](https://github.com/shiruviaa/vosu/blob/main/README.md#pages-counters-reports-and-updates), [runbook security](https://github.com/shiruviaa/vosu/blob/main/docs/operations/runbook.md#security-hardening-and-remaining-trust), [privacy policy](https://github.com/shiruviaa/vosu/blob/main/PRIVACY.md), [security policy](https://github.com/shiruviaa/vosu/blob/main/SECURITY.md).
+Sources: [management authorization README](https://github.com/18-lab-dev/vosu/blob/main/README.md#pages-counters-reports-and-updates), [runbook security](https://github.com/18-lab-dev/vosu/blob/main/docs/operations/runbook.md#security-hardening-and-remaining-trust), [privacy policy](https://github.com/18-lab-dev/vosu/blob/main/PRIVACY.md), [security policy](https://github.com/18-lab-dev/vosu/blob/main/SECURITY.md).

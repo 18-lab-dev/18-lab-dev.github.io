@@ -36,4 +36,4 @@ Automatic tosu import occurs only with an untouched/default configuration and ex
 The [local editor](/vosulay/remote#edit-from-obs-or-a-local-browser) provides full profile
 management, app settings and local HTML file picking on this computer, not just placement edits.
 
-Sources: [profile controls](https://github.com/shiruviaa/vosulay/blob/main/assets/manager.html), [profile shortcuts and rename](https://github.com/shiruviaa/vosulay/blob/main/assets/manager.js), [tosu import](https://github.com/shiruviaa/vosulay/blob/main/README.md#importing-tosu-layouts).
+Sources: [profile controls](https://github.com/18-lab-dev/vosulay/blob/main/assets/manager.html), [profile shortcuts and rename](https://github.com/18-lab-dev/vosulay/blob/main/assets/manager.js), [tosu import](https://github.com/18-lab-dev/vosulay/blob/main/README.md#importing-tosu-layouts).

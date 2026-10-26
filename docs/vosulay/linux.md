@@ -56,4 +56,4 @@ Refreshed shortcuts use **lookup helper → foreign preloads → compositor** or
 
 To include an independently rendered profile in a stream, use a [remote profile page](/vosulay/remote) as a browser source.
 
-Sources: [Linux integration and capture](https://github.com/shiruviaa/vosulay/blob/main/README.md#linux-1), [launcher/security disclosure](https://github.com/shiruviaa/vosulay/blob/main/docs/security.md).
+Sources: [Linux integration and capture](https://github.com/18-lab-dev/vosulay/blob/main/README.md#linux-1), [launcher/security disclosure](https://github.com/18-lab-dev/vosulay/blob/main/docs/security.md).

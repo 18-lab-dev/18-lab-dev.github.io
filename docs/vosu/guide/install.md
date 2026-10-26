@@ -5,7 +5,7 @@ description: Portable archives, Linux packages, per-user installation, and relea
 
 # Install vosu
 
-The current release is **1.1.0**. Download from the [v1.1.0 release](https://github.com/shiruviaa/vosu/releases/tag/v1.1.0).
+The current release is **1.1.0**. Download from the [v1.1.0 release](https://github.com/18-lab-dev/vosu/releases/tag/v1.1.0).
 
 ## Portable archive
 
@@ -52,7 +52,7 @@ No apt, dnf, or pacman repository or system service is installed. [Update packag
 
 ### AUR source package
 
-The source recipe is `vosu-git`, targeting the current `main` branch. The published README says it can be installed from the AUR **once published**, so this guide does not assume an AUR listing is live. The canonical [PKGBUILD](https://github.com/shiruviaa/vosu/blob/main/packaging/aur/PKGBUILD) can be built from a local checkout:
+The source recipe is `vosu-git`, targeting the current `main` branch. The published README says it can be installed from the AUR **once published**, so this guide does not assume an AUR listing is live. The canonical [PKGBUILD](https://github.com/18-lab-dev/vosu/blob/main/packaging/aur/PKGBUILD) can be built from a local checkout:
 
 ```sh
 cd packaging/aur
@@ -84,7 +84,7 @@ Add `$HOME/.local/bin` to `PATH` if needed. On Linux, run setup against the **in
 
 ## Verify release signatures
 
-From v1.0.1, every release file has a detached `<file>.sig` signature. Download both the asset and its signature. Obtain [the release public key](https://github.com/shiruviaa/vosu/blob/main/packaging/release-signing-key.asc) and check its fingerprint:
+From v1.0.1, every release file has a detached `<file>.sig` signature. Download both the asset and its signature. Obtain [the release public key](https://github.com/18-lab-dev/vosu/blob/main/packaging/release-signing-key.asc) and check its fingerprint:
 
 ```text
 6F0F 0D30 C09D 3A03 6246  A810 2CB6 524B B54B 2CDA
@@ -102,4 +102,4 @@ Use the Windows ZIP or Linux package filename when verifying those assets. Requi
 
 Next: [dashboard](/vosu/guide/dashboard), [overlays](/vosu/guide/overlays), or [troubleshooting](/vosu/guide/troubleshooting).
 
-Source: [installation and verification README](https://github.com/shiruviaa/vosu/blob/main/README.md#install).
+Source: [installation and verification README](https://github.com/18-lab-dev/vosu/blob/main/README.md#install).

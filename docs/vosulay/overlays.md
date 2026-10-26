@@ -68,4 +68,4 @@ Counters and custom pages execute JavaScript inside CEF's sandboxed renderer. Th
 Counters cannot make edits: [local editing](/vosulay/remote#edit-from-obs-or-a-local-browser) lives on a separate `manage.localhost` address whose routes counters cannot reach, and a page can only add local HTML files you chose in a file dialog.
 :::
 
-Sources: [vosulay 1.4.0 editing and settings](https://github.com/shiruviaa/vosulay/blob/d2e472a/README.md#editing-shortcuts-and-tray), [integrations](https://github.com/shiruviaa/vosulay/blob/main/docs/integrations.md), [security disclosure](https://github.com/shiruviaa/vosulay/blob/main/docs/security.md).
+Sources: [vosulay 1.4.0 editing and settings](https://github.com/18-lab-dev/vosulay/blob/d2e472a/README.md#editing-shortcuts-and-tray), [integrations](https://github.com/18-lab-dev/vosulay/blob/main/docs/integrations.md), [security disclosure](https://github.com/18-lab-dev/vosulay/blob/main/docs/security.md).

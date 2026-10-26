@@ -22,7 +22,7 @@ Use the [dashboard's Settings page](/vosu/guide/dashboard#settings) or edit `vos
 
 ## Complete binding reference
 
-These are all 19 bindings in the [configuration schema](https://github.com/shiruviaa/vosu/blob/main/src/config/schema.rs). Numeric intervals are milliseconds; fractional intervals are supported.
+These are all 19 bindings in the [configuration schema](https://github.com/18-lab-dev/vosu/blob/main/src/config/schema.rs). Numeric intervals are milliseconds; fractional intervals are supported.
 
 | Key                           | Default                          | Valid range / type                                                      | Meaning                                                                                                                                                                                                                                 |
 | ----------------------------- | -------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -46,7 +46,7 @@ These are all 19 bindings in the [configuration schema](https://github.com/shiru
 | `STATIC_FOLDER_PATH`          | `"./static"`                     | String: directory path                                                  | Root scanned and served for counters.                                                                                                                                                                                                   |
 | `ALLOWED_IPS`                 | `"127.0.0.1,localhost,absolute"` | String: comma-separated policy tokens                                   | Peer IPs/IPv4 or IPv6 CIDRs, legacy IPv4 wildcard octets, and Origin/Referer hostname tokens. Loopback peers are always allowed. `absolute` is a literal legacy hostname, never a universal peer grant.                                 |
 
-Listener port validation differs from the dashboard: [the listener](https://github.com/shiruviaa/vosu/blob/main/src/runtime/lifecycle.rs) accepts the full integral `u16` range, while [Settings](https://github.com/shiruviaa/vosu/blob/main/src/runtime/render.rs) requires 1–65535. Do not run the daemon as root to bind a privileged port.
+Listener port validation differs from the dashboard: [the listener](https://github.com/18-lab-dev/vosu/blob/main/src/runtime/lifecycle.rs) accepts the full integral `u16` range, while [Settings](https://github.com/18-lab-dev/vosu/blob/main/src/runtime/render.rs) requires 1–65535. Do not run the daemon as root to bind a privileged port.
 
 ### Example
 
@@ -109,4 +109,4 @@ Management mutations live on the dashboard origin (default `http://127.0.0.1:240
 
 See [privacy and security](/vosu/guide/privacy-security), [developer security](/vosu/dev/security), and [troubleshooting](/vosu/guide/troubleshooting). Release installation and update choices are covered in [install](/vosu/guide/install) and [updates](/vosu/guide/updates).
 
-Sources: [schema](https://github.com/shiruviaa/vosu/blob/main/src/config/schema.rs), [parsing and validation](https://github.com/shiruviaa/vosu/blob/main/src/config/document.rs), [migration](https://github.com/shiruviaa/vosu/blob/main/src/config/migration.rs), and [configuration README](https://github.com/shiruviaa/vosu/blob/main/README.md#configuration).
+Sources: [schema](https://github.com/18-lab-dev/vosu/blob/main/src/config/schema.rs), [parsing and validation](https://github.com/18-lab-dev/vosu/blob/main/src/config/document.rs), [migration](https://github.com/18-lab-dev/vosu/blob/main/src/config/migration.rs), and [configuration README](https://github.com/18-lab-dev/vosu/blob/main/README.md#configuration).

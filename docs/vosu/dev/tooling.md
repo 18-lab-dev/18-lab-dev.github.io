@@ -5,7 +5,7 @@ description: "Use Vite, oxlint, and oxfmt for a small, reproducible overlay tool
 
 # Overlay developer tooling
 
-The [starter overlay](https://github.com/shiruviaa/shiruviaa.github.io/tree/main/examples/starter-overlay)
+The [starter overlay](https://github.com/18-lab-dev/18-lab-dev.github.io/tree/main/examples/starter-overlay)
 uses Vite for development/builds, TypeScript for checking, oxlint for linting, and oxfmt
 for formatting. These are separate jobs; a successful Vite build is not a type check.
 

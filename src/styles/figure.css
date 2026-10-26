@@ -1,0 +1,84 @@
+/* FIG drawings: construction figures shared by the landing hero and the brand sheet. */
+
+.fig-frame {
+  aspect-ratio: 1;
+  border: var(--hair) solid var(--rule);
+  background: color-mix(in srgb, var(--bg-raised) 55%, transparent);
+  padding: 4%;
+}
+
+.fig {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  color: var(--accent);
+}
+
+.fig .hair {
+  fill: none;
+  stroke: var(--rule-strong);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.fig .faint {
+  stroke: var(--rule);
+}
+
+.fig .strong {
+  stroke: var(--fg-dim);
+}
+
+.fig .signal {
+  stroke: var(--signal);
+}
+
+.fig .accent {
+  stroke: var(--accent);
+}
+
+.fig .dashed {
+  stroke-dasharray: 3 5;
+}
+
+.fig .tick {
+  stroke: var(--rule-strong);
+  vector-effect: non-scaling-stroke;
+}
+
+.fig .tick-major {
+  stroke: var(--fg-dim);
+  vector-effect: non-scaling-stroke;
+}
+
+.fig-label {
+  font: 500 9px var(--font-mono);
+  letter-spacing: 0.08em;
+  fill: var(--muted);
+}
+
+.fig-label--accent {
+  fill: var(--accent);
+}
+
+.fig-ring {
+  transform-origin: 0 0;
+  animation: spin 240s linear infinite;
+}
+
+.fig-mark {
+  fill: currentColor;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.fig-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}

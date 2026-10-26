@@ -84,4 +84,4 @@ Do not delete overlay source directories or vosu/tosu backend data merely becaus
 These instructions describe the upstream implementation and package-manager paths, not a claim of native uninstall testing. Quitting stops the host and listeners; it does not reverse Linux launcher edits or remove code already loaded in an open game.
 :::
 
-Source: [complete upstream removal disclosure](https://github.com/shiruviaa/vosulay/blob/main/docs/security.md#how-to-remove-vosulay-completely).
+Source: [complete upstream removal disclosure](https://github.com/18-lab-dev/vosulay/blob/main/docs/security.md#how-to-remove-vosulay-completely).

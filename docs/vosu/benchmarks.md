@@ -16,7 +16,7 @@ osu!stable and osu!lazer clients on Windows and Linux. **Lower is better** on ev
 below 1× means tosu did.
 
 These numbers come from the "Released tosu comparison" section of vosu's maintained
-[benchmark guide](https://github.com/shiruviaa/vosu/blob/a2e3358/docs/testing/benchmarks.md#released-tosu-comparison)
+[benchmark guide](https://github.com/18-lab-dev/vosu/blob/a2e3358/docs/testing/benchmarks.md#released-tosu-comparison)
 (guide commit `a2e3358`). Live readers and daemon measurements were rerun on **2026-10-17**
 with the 1.1.0 release commit; the separately labeled hot paths retain their latest 2026-10-11
 vosu `v1.0.0` measurements. A rerun replaces its rows; earlier results remain in Git history.
@@ -32,7 +32,7 @@ of fifteen invocations. The chip is the speedup since 1.0.2.
 Criterion used 2 s warm-up, 20 s measurement and 60 samples. The 1.0.2 filtered harness overrides
 these with 1 s warm-up, 2 s measurement and 10 samples; 1.1.0 uses the requested options.
 Linux used default release features; Windows used MSVC and `--no-default-features`.
-See the [paired method](https://github.com/shiruviaa/vosu/blob/a2e3358/docs/testing/benchmarks.md#performance-changes-for-110-paired).
+See the [paired method](https://github.com/18-lab-dev/vosu/blob/a2e3358/docs/testing/benchmarks.md#performance-changes-for-110-paired).
 
 <BenchChart v-for="chart in paired.charts" :key="chart.id" :chart="chart" />
 
@@ -167,7 +167,7 @@ The rows exercise the closest tosu production path, not identical work:
 ## Reproduce
 
 Commands, fixtures, and the live-reader example are in the
-[benchmark guide](https://github.com/shiruviaa/vosu/blob/a2e3358/docs/testing/benchmarks.md#reproduce).
+[benchmark guide](https://github.com/18-lab-dev/vosu/blob/a2e3358/docs/testing/benchmarks.md#reproduce).
 The tosu-side harness lives outside the vosu repository; it bundles tosu commit `b21b452` with
 benchmark entry points that call the unchanged production functions. Launch identities, collector
 configurations, per-window samples, and reader logs are kept with the measurement evidence.

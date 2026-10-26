@@ -655,6 +655,6 @@ vosu retains v1 `hitErrorArray` and streamCompanion `hitErrors` and adds sibling
 
 ## Sources
 
-- [Regular/precise DTOs](https://github.com/shiruviaa/vosu/blob/main/src/model/api/v2.rs) and [settings DTOs](https://github.com/shiruviaa/vosu/blob/main/src/model/api/v2/settings.rs)
-- [Mods](https://github.com/shiruviaa/vosu/blob/main/src/model/states.rs), [ranked-play types](https://github.com/shiruviaa/vosu/blob/main/src/model/memory.rs)
+- [Regular/precise DTOs](https://github.com/18-lab-dev/vosu/blob/main/src/model/api/v2.rs) and [settings DTOs](https://github.com/18-lab-dev/vosu/blob/main/src/model/api/v2/settings.rs)
+- [Mods](https://github.com/18-lab-dev/vosu/blob/main/src/model/states.rs), [ranked-play types](https://github.com/18-lab-dev/vosu/blob/main/src/model/memory.rs)
 - [Upstream tosu types](https://github.com/tosuapp/tosu/blob/HEAD/packages/tosu/src/api/types/v2.ts) and [builder](https://github.com/tosuapp/tosu/blob/HEAD/packages/tosu/src/api/utils/buildResultV2.ts)

@@ -48,4 +48,4 @@ An untouched/default vosulay configuration can automatically import a tosu layou
 
 Missing or blank counters? Follow [Troubleshooting](/vosulay/troubleshooting).
 
-Sources: [README](https://github.com/shiruviaa/vosulay/blob/main/README.md), [editor controls](https://github.com/shiruviaa/vosulay/blob/main/assets/manager.html), [saving behavior](https://github.com/shiruviaa/vosulay/blob/main/assets/manager.js).
+Sources: [README](https://github.com/18-lab-dev/vosulay/blob/main/README.md), [editor controls](https://github.com/18-lab-dev/vosulay/blob/main/assets/manager.html), [saving behavior](https://github.com/18-lab-dev/vosulay/blob/main/assets/manager.js).

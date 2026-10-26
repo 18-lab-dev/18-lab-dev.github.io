@@ -1,41 +1,48 @@
-# shiruviaa.github.io
+# 18-LAB site and documentation
 
-Source for <https://shiruviaa.github.io/>: the shiruviaa organization site and the documentation for
-[vosu](https://github.com/shiruviaa/vosu) and [vosulay](https://github.com/shiruviaa/vosulay).
+Production site: <https://18-lab-dev.github.io/>. The approved 18-LAB design uses
+Workstation (graphite/amber) and Drafting (paper/blueprint) modes, with locally
+bundled Barlow Condensed, Barlow and IBM Plex Mono fonts.
 
-Built with [VitePress](https://vitepress.dev/), linted with [oxlint](https://oxc.rs/docs/guide/usage/linter),
-and formatted with [oxfmt](https://oxc.rs/docs/guide/usage/formatter).
+## Develop and publish
 
-## Develop
+Use Bun 1.4.4:
 
 ```sh
-pnpm install
-pnpm dev          # http://localhost:5173/
-pnpm check        # oxlint, oxfmt --check, production build (fails on dead links)
-pnpm fmt          # format in place
+bun install --frozen-lockfile
+bun run dev
+bun run lint
+bun run build
+node scripts/check-links.mjs
+bun run preview
 ```
 
-## Layout
+`build` generates static HTML from every Markdown page in `docs/`, checks
+TypeScript and builds all pages with Vite 8. The generated root `vosu/` and
+`vosulay/` directories are ignored: edit `docs/`, not generated HTML. Restart the
+development command after editing Markdown. The header/footer and theme controls
+are shared with the landing and brand pages. Page filtering in the docs navigation
+is local and needs no service. Benchmark data remains in `data/`; the complete
+series and ranges render as accessible tables. The runnable overlay tutorial is
+in `examples/starter-overlay/` and keeps its own pnpm-based toolchain.
 
-| Path                        | Content                                                                                       |
-| --------------------------- | --------------------------------------------------------------------------------------------- |
-| `docs/index.md`             | Organization home page                                                                        |
-| `docs/vosu/guide/`          | vosu user guide                                                                               |
-| `docs/vosu/dev/`            | vosu developer docs: API reference, security boundary, overlay tutorial, performance, tooling |
-| `docs/vosulay/`             | vosulay user docs                                                                             |
-| `docs/.vitepress/`          | Site config, sidebars, and the brand theme                                                    |
-| `examples/starter-overlay/` | The finished project from the overlay tutorial                                                |
+`.github/workflows/deploy.yml` runs on pushes to `main`, pull requests and manual
+workflow dispatch. It installs the frozen Bun lockfile, lints, generates docs,
+typechecks, builds and checks internal output links/anchors. Non-PR runs upload
+`dist/` with `actions/upload-pages-artifact` and deploy it with
+`actions/deploy-pages` to the `github-pages` environment using Pages/OIDC write
+permissions. PRs build/check without publishing. Pages must use **GitHub Actions**
+as its build source; no branch build or `/docs` folder setting is used.
 
-Documentation describes the published `main` branches of vosu and vosulay. When an API or setting
-changes there, update the matching page here.
+At release the coordinator renames the existing Pages repository to
+`18-lab-dev.github.io`, then merges/pushes the approved `rebrand/18-lab` branch to
+`main`. Keep Pages set to GitHub Actions and its default domain; the site builds
+for `/`, not a repository subpath. No custom domain is configured. All original
+product documentation paths are retained (GitHub Pages resolves clean URLs to
+`.html`); `/docs.html` redirects to the install guide, preserving query/hash.
 
-## Deploy
+## Licenses
 
-`.github/workflows/deploy.yml` lints, format-checks, and builds every push and pull request, then
-publishes `main` to GitHub Pages. In the repository settings, set **Pages → Source** to
-**GitHub Actions**.
-
-## License
-
-[MIT](LICENSE), covering the site code, documentation, and `examples/starter-overlay/`. The vosu
-and vosulay icons in `docs/public/` remain under their own projects' terms.
+Code and documentation: MIT, © 2026 18-LAB (see `LICENSE`). Artwork and branding:
+© 2026 sxlvia; not included in the code license. Font software remains under SIL
+OFL 1.1. Complete font and dependency notices are in `THIRD-PARTY-LICENSES.txt`.

@@ -85,4 +85,4 @@ vosu can also read `${XDG_DATA_HOME:-$HOME/.local/share}/osuconfig/osupath`. Off
 
 Continue with [dashboard](/vosu/guide/dashboard), [configuration](/vosu/guide/configuration), or [troubleshooting](/vosu/guide/troubleshooting).
 
-Sources: [Linux platform README](https://github.com/shiruviaa/vosu/blob/main/README.md#platform-support) and [security disclosure](https://github.com/shiruviaa/vosu/blob/main/docs/security.md#linux).
+Sources: [Linux platform README](https://github.com/18-lab-dev/vosu/blob/main/README.md#platform-support) and [security disclosure](https://github.com/18-lab-dev/vosu/blob/main/docs/security.md#linux).

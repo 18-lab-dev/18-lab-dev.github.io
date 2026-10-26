@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Brand sheet · 18-LAB</title>
+    <meta name="description" content="18-LAB identity: mark, lockups, colour, type, and GitHub applications." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script>
+      document.documentElement.dataset.theme = localStorage.getItem("18lab-theme") ?? "dark";
+    </script>
+    <script type="module" src="/src/brand.ts"></script>
+  </head>
+  <body>
+    <div data-shell="header"></div>
+
+    <main>
+      <section class="sheet brand-intro" data-draw>
+        <div class="wrap">
+          <header class="sheet-head mono">
+            <span class="sheet-no">Sheet B-00</span><span class="sheet-rule"></span><span class="sheet-title">Identity</span
+            ><span>Rev A · proposal</span>
+          </header>
+          <div class="section-intro">
+            <h2>Workstation<br />and drafting.</h2>
+            <p>
+              One system in two modes: dark industrial instrumentation and light architectural drafting. Each mode borrows
+              the other’s accent as its quiet signal colour, so they read as one brand. The mark is monochrome first.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- B-01 MARK -->
+      <section class="sheet" data-draw aria-labelledby="b01">
+        <div class="wrap">
+          <header class="sheet-head mono">
+            <span class="sheet-no">Sheet B-01</span><span class="sheet-rule"></span><span class="sheet-title" id="b01">Mark</span
+            ><span>Grid 120 · stroke 12</span>
+          </header>
+          <div class="mark-sheet">
+            <div class="fig-frame reg" data-brand-fig></div>
+            <div class="mark-notes">
+              <h3>Numeral as construction.</h3>
+              <p>
+                The 1 is a stem with a 45° flag. The 8 is two tangent loops, R14 over R20, so the waist sits exactly on
+                their shared tangent. Every part lands on a 120-unit grid, which lets the mark be redrawn from its
+                dimensions alone.
+              </p>
+              <dl class="spec-table mono">
+                <div><dt>Grid</dt><dd>120 × 120 units</dd></div>
+                <div><dt>Stroke</dt><dd>12 units</dd></div>
+                <div><dt>Loops</dt><dd>A · R14 · B · R20, tangent</dd></div>
+                <div><dt>Flag</dt><dd>45°, 12-unit run</dd></div>
+                <div><dt>Clear space</dt><dd>14 units (loop A radius)</dd></div>
+                <div><dt>Minimum</dt><dd>16 px · 4 mm</dd></div>
+              </dl>
+              <div class="clearspace" data-clearspace></div>
+            </div>
+          </div>
+
+          <div class="variants" data-variants></div>
+          <div class="sizes" data-sizes></div>
+        </div>
+      </section>
+
+      <!-- B-02 LOCKUPS -->
+      <section class="sheet" data-draw aria-labelledby="b02">
+        <div class="wrap">
+          <header class="sheet-head mono">
+            <span class="sheet-no">Sheet B-02</span><span class="sheet-rule"></span><span class="sheet-title" id="b02">Lockups</span
+            ><span>Mark + wordmark</span>
+          </header>
+          <div class="lockups" data-lockups></div>
+        </div>
+      </section>
+
+      <!-- B-03 COLOUR -->
+      <section class="sheet" data-draw aria-labelledby="b03">
+        <div class="wrap">
+          <header class="sheet-head mono">
+            <span class="sheet-no">Sheet B-03</span><span class="sheet-rule"></span><span class="sheet-title" id="b03">Colour</span
+            ><span>Two modes · one signal</span>
+          </header>
+          <div class="palettes" data-palettes></div>
+        </div>
+      </section>
+
+      <!-- B-04 TYPE -->
+      <section class="sheet" data-draw aria-labelledby="b04">
+        <div class="wrap">
+          <header class="sheet-head mono">
+            <span class="sheet-no">Sheet B-04</span><span class="sheet-rule"></span><span class="sheet-title" id="b04">Type</span
+            ><span>Three families · open licences</span>
+          </header>
+          <div class="type-specimens">
+            <article class="specimen">
+              <header class="mono"><span class="accent">T-01</span><span>Display · Barlow Condensed 600–700</span></header>
+              <p class="spec-display">Engineered<br />and measured.</p>
+              <p class="spec-note">
+                Stand-in for DIN / Bahnschrift. Condensed industrial grotesque for headings, codes, and numerals. Always
+                uppercase, tight leading.
+              </p>
+            </article>
+            <article class="specimen">
+              <header class="mono"><span class="accent">T-02</span><span>Text · Barlow 400–600</span></header>
+              <p class="spec-text">
+                vosu reads live state from osu!stable and osu!lazer, then serves the dashboard, counters, diagnostic
+                reports, and tosu-compatible HTTP and WebSocket APIs on 127.0.0.1:24050.
+              </p>
+              <p class="spec-note">Same skeleton as the display face, so headings and body share proportions.</p>
+            </article>
+            <article class="specimen">
+              <header class="mono"><span class="accent">T-03</span><span>Labels · IBM Plex Mono 400–500</span></header>
+              <p class="spec-mono">SHEET 01 · 18-01 · GRID D3<br />X 0412 · Y 0233 · REV A<br />6F0F 0D30 C09D 3A03</p>
+              <p class="spec-note">Coordinates, versions, codes, and annotations. 11 px, +8% tracking, uppercase.</p>
+            </article>
+          </div>
+          <ol class="type-scale" data-type-scale></ol>
+        </div>
+      </section>
+
+      <!-- B-05 APPLICATIONS -->
+      <section class="sheet" data-draw aria-labelledby="b05">
+        <div class="wrap">
+          <header class="sheet-head mono">
+            <span class="sheet-no">Sheet B-05</span><span class="sheet-rule"></span><span class="sheet-title" id="b05">GitHub</span
+            ><span>github.com/18-lab-dev</span>
+          </header>
+          <div class="section-intro">
+            <h2>Applications.</h2>
+            <p>
+              The organisation avatar, the profile README banner in both colour schemes (GitHub serves the matching one
+              through <code>&lt;picture&gt;</code> and <code>prefers-color-scheme</code>), and a repository social preview.
+            </p>
+          </div>
+          <div class="gh-profile" data-gh-profile></div>
+          <div class="apps" data-apps></div>
+        </div>
+      </section>
+    </main>
+
+    <div data-shell="footer"></div>
+  </body>
+</html>

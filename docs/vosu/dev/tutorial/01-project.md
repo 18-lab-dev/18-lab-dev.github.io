@@ -15,7 +15,7 @@ pnpm add -D vite@8.3.4 typescript@7.0.2 oxlint@1.87.0 oxfmt@0.72.0 @types/node@2
 ```
 
 Remove the scaffold's demo module, images, and sample CSS when replacing its entry
-point. You can instead download the [finished example](https://github.com/shiruviaa/shiruviaa.github.io/tree/main/examples/starter-overlay)
+point. You can instead download the [finished example](https://github.com/18-lab-dev/18-lab-dev.github.io/tree/main/examples/starter-overlay)
 and run `pnpm install` in its folder.
 
 ## Scripts and configuration
@@ -90,7 +90,7 @@ starter-overlay/                 # development project
 
 vosu discovers counters recursively and honors top-level symlink mounts. Its settings
 schema belongs to the package, while mutable user values are stored centrally.
-See [vosu's counter documentation](https://github.com/shiruviaa/vosu/blob/main/README.md#dashboard-and-counters)
+See [vosu's counter documentation](https://github.com/18-lab-dev/vosu/blob/main/README.md#dashboard-and-counters)
 and [tosu's settings parser](https://github.com/tosuapp/tosu/blob/master/packages/server/utils/parseSettings.ts).
 
 Next: [connect to live state](/vosu/dev/tutorial/02-connect).

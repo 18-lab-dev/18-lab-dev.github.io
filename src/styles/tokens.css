@@ -1,0 +1,90 @@
+/*
+ * 18-LAB design tokens.
+ * Two modes, one system: WORKSTATION (graphite + amber) and DRAFTING (paper + blueprint).
+ * Each mode borrows the other's accent as its quiet secondary "signal" colour, which is what
+ * keeps them reading as one brand rather than two unrelated palettes.
+ */
+
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #111214;
+  --bg-raised: #17191c;
+  --bg-sunken: #0b0c0d;
+  --rule: #25282c;
+  --rule-strong: #3b3f45;
+  --fg: #ebe8e1;
+  --fg-dim: #b8b5ad;
+  --muted: #7e8288;
+  --note: #7fa6cf;
+  --caution: #e8b04a;
+  --accent: #ff963f;
+  --on-accent: #1a1007;
+  --signal: #7fa6cf;
+  --danger: #ef5b4f;
+
+  --grid-minor: rgb(235 232 225 / 0.028);
+  --grid-major: rgb(235 232 225 / 0.06);
+  --hatch: rgb(235 232 225 / 0.07);
+  --mode-label: "WORKSTATION";
+
+  --code-bg: #0d0e10;
+  --code-comment: #6b7078;
+  --code-string: #e9c08f;
+  --code-keyword: #ff963f;
+  --code-number: #9fc3e6;
+  --code-fn: #ebe8e1;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #f2f1ec;
+  --bg-raised: #f8f7f3;
+  --bg-sunken: #e7e6df;
+  --rule: #d6dadd;
+  --rule-strong: #a7b2bd;
+  --fg: #132030;
+  --fg-dim: #3b4858;
+  --muted: #677483;
+  --accent: #175fad;
+  --on-accent: #f4f6f9;
+  --note: #175fad;
+  --caution: #a15c07;
+  --signal: #b8621b;
+  --danger: #b42318;
+
+  --grid-minor: rgb(23 95 173 / 0.05);
+  --grid-major: rgb(23 95 173 / 0.1);
+  --hatch: rgb(19 32 48 / 0.08);
+  --mode-label: "DRAFTING";
+
+  --code-bg: #e9e8e1;
+  --code-comment: #7a8591;
+  --code-string: #8a4a12;
+  --code-keyword: #175fad;
+  --code-number: #6b3fa0;
+  --code-fn: #132030;
+}
+
+:root {
+  --font-display: "Barlow Condensed", "Bahnschrift", "DIN Condensed", sans-serif;
+  --font-body: "Barlow", "Bahnschrift", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --step--1: 0.8125rem;
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-2: 1.75rem;
+  --step-3: clamp(2.25rem, 1.6rem + 2.6vw, 3.75rem);
+  --step-4: clamp(3rem, 2rem + 4vw, 5.5rem);
+  --step-hero: clamp(6.5rem, 2rem + 17vw, 17rem);
+
+  --gutter: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+  --max: 1440px;
+  --header-h: 56px;
+  --hair: 1px;
+
+  --ease-draft: cubic-bezier(0.65, 0, 0.2, 1);
+}

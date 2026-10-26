@@ -20,7 +20,7 @@ Run vosu as the same desktop user as osu!, never as root or Administrator. Linux
 
 ## First steps
 
-1. [Install vosu](/vosu/guide/install) from [GitHub releases](https://github.com/shiruviaa/vosu/releases).
+1. [Install vosu](/vosu/guide/install) from [GitHub releases](https://github.com/18-lab-dev/vosu/releases).
 2. On Linux, follow [process-access setup](/vosu/guide/linux).
 3. Start osu! and vosu, then open <http://127.0.0.1:24051/>.
 4. Explore the [dashboard](/vosu/guide/dashboard) and [install an overlay](/vosu/guide/overlays).
@@ -32,4 +32,4 @@ Both default listeners are loopback-only. In vosu 1.1.0, the dashboard and manag
 
 See [configuration](/vosu/guide/configuration), [updates](/vosu/guide/updates), [troubleshooting](/vosu/guide/troubleshooting), and [uninstall](/vosu/guide/uninstall) for ongoing use.
 
-Source: [vosu README](https://github.com/shiruviaa/vosu/blob/main/README.md) and [security disclosure](https://github.com/shiruviaa/vosu/blob/main/docs/security.md).
+Source: [vosu README](https://github.com/18-lab-dev/vosu/blob/main/README.md) and [security disclosure](https://github.com/18-lab-dev/vosu/blob/main/docs/security.md).

@@ -43,4 +43,4 @@ Choose **tray → Exit vosulay** before upgrading or uninstalling; hiding leaves
 
 Windows uninstall retains user settings and profiles. See [Uninstall](/vosulay/uninstall) for full removal.
 
-Sources: [Windows README](https://github.com/shiruviaa/vosulay/blob/main/README.md#windows-1), [installation disclosure](https://github.com/shiruviaa/vosulay/blob/main/docs/security.md).
+Sources: [Windows README](https://github.com/18-lab-dev/vosulay/blob/main/README.md#windows-1), [installation disclosure](https://github.com/18-lab-dev/vosulay/blob/main/docs/security.md).

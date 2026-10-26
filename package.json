@@ -1,27 +1,28 @@
 {
-  "name": "shiruviaa-site",
+  "name": "18-lab-site",
   "private": true,
-  "description": "shiruviaa.github.io: the shiruviaa organization site and documentation for vosu and vosulay.",
-  "license": "MIT",
+  "description": "18-LAB organization site and complete vosu / vosulay documentation.",
   "type": "module",
   "scripts": {
-    "dev": "vitepress dev docs",
-    "build": "vitepress build docs",
-    "preview": "vitepress preview docs",
-    "lint": "oxlint",
-    "fmt": "oxfmt",
-    "fmt:check": "oxfmt --check",
-    "check": "oxlint && oxfmt --check && vitepress build docs && node scripts/check-fragments.mjs"
+    "dev": "bun run generate && vite --host 127.0.0.1",
+    "generate": "node scripts/generate-docs.mjs",
+    "lint": "oxlint src scripts vite.config.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "bun run generate && bun run typecheck && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "check:links": "node scripts/check-links.mjs"
   },
   "devDependencies": {
-    "@fontsource-variable/jetbrains-mono": "^5.3.0",
-    "oxfmt": "^0.72.0",
+    "@fontsource/barlow": "^5.3.0",
+    "@fontsource/barlow-condensed": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "markdown-it": "^14.1.0",
+    "markdown-it-anchor": "^9.2.0",
+    "markdown-it-container": "^4.0.0",
     "oxlint": "^1.87.0",
-    "vitepress": "^1.6.4",
-    "vue": "^3.5.0"
+    "linkedom": "^0.18.12"
   },
-  "engines": {
-    "node": ">=22"
-  },
-  "packageManager": "pnpm@11.28.5"
+  "license": "MIT"
 }

@@ -20,7 +20,7 @@ message intake / JSON parse → state update → DOM / style writes
 
 An inexpensive message handler can still trigger expensive rendering. Layout calculates geometry, paint produces pixels, and compositing combines layers. Changing geometry can require layout and paint; changing a composited transform or opacity can avoid those stages. See [MDN's rendering waterfall](https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/Animation_performance_and_frame_rate).
 
-The frame budget belongs to the **whole page**, not each widget. OBS browser sources use [CEF](https://obsproject.com/kb/browser-source); [vosulay renders the complete profile in one transparent CEF browser](https://github.com/shiruviaa/vosulay/blob/main/README.md#linux). In vosulay, your work shares that page's budget with the other overlays. Separate OBS sources still compete for the machine's resources; they do not become free because they are separate pages.
+The frame budget belongs to the **whole page**, not each widget. OBS browser sources use [CEF](https://obsproject.com/kb/browser-source); [vosulay renders the complete profile in one transparent CEF browser](https://github.com/18-lab-dev/vosulay/blob/main/README.md#linux). In vosulay, your work shares that page's budget with the other overlays. Separate OBS sources still compete for the machine's resources; they do not become free because they are separate pages.
 
 Optimize the stage a trace shows is expensive. Usually the first wins are less incoming data, fewer writes, bounded history, and no work while idle—not switching every counter to a GPU renderer.
 
@@ -43,7 +43,7 @@ Use `/websocket/v2/subscribe` to request only the fields your overlay needs. Sma
 | Missing value   | Omitted initially or reported as removed; not the same as JSON `null`                             |
 | New field set   | Open a new connection; the established selection is not editable                                  |
 
-After subscribing, **send nothing**. Browsers handle WebSocket control ping/pong; do not implement a text-message ping on this stream. Sources: [change suppression and delivery](https://github.com/shiruviaa/vosu/blob/main/src/server/v2_subscription.rs), [transport](https://github.com/shiruviaa/vosu/blob/main/src/server/service/websocket_transport.rs), and [WebSocket standard](https://websockets.spec.whatwg.org/#ping-and-pong-frames).
+After subscribing, **send nothing**. Browsers handle WebSocket control ping/pong; do not implement a text-message ping on this stream. Sources: [change suppression and delivery](https://github.com/18-lab-dev/vosu/blob/main/src/server/v2_subscription.rs), [transport](https://github.com/18-lab-dev/vosu/blob/main/src/server/service/websocket_transport.rs), and [WebSocket standard](https://websockets.spec.whatwg.org/#ping-and-pong-frames).
 
 For example, the [EZ2ON `Subscription` helper](https://github.com/qt715/EZ2ON-REBOOT-R-vosu-overlays-recreation/blob/main/ez2on-timing-bar/js/vosu.js) reconstructs values and exposes a `changed` set, including removals and initial missing fields:
 
@@ -62,7 +62,7 @@ For frequently changing fields, put these writes behind the batching pattern in 
 
 ### Cadence and compatibility
 
-`V2_SUBSCRIPTION_DEBOUNCE` controls selected-field sampling and the minimum interval between state frames per client. Its default is **1 ms**, its range is **1–60000 ms**, and fractional milliseconds are supported. It is **not** a wait-until-input-goes-quiet debounce: continuous changes can produce frames at that interval. Selected-field sampling runs while a selection exists and is never slower than regular/precise sampling; faster sampling reruns memory reads and live pp calculation. Do not increase backend work just to refresh a mostly static label. [vosu documents the settings and cadence](https://github.com/shiruviaa/vosu/blob/main/README.md#websocket-api).
+`V2_SUBSCRIPTION_DEBOUNCE` controls selected-field sampling and the minimum interval between state frames per client. Its default is **1 ms**, its range is **1–60000 ms**, and fractional milliseconds are supported. It is **not** a wait-until-input-goes-quiet debounce: continuous changes can produce frames at that interval. Selected-field sampling runs while a selection exists and is never slower than regular/precise sampling; faster sampling reruns memory reads and live pp calculation. Do not increase backend work just to refresh a mostly static label. [vosu documents the settings and cadence](https://github.com/18-lab-dev/vosu/blob/main/README.md#websocket-api).
 
 For **tosu**, fall back to `/websocket/v2` full documents at its regular poll cadence. Extract your needed values and compare them before writing; a received document does not mean every displayed value changed. The selected-field endpoint is vosu-only. See [tosu's socket routes](https://github.com/tosuapp/tosu/blob/master/packages/server/router/socket.ts) and [WebSocket implementation](https://github.com/tosuapp/tosu/blob/master/packages/server/utils/socket.ts).
 
@@ -251,7 +251,7 @@ OBS can also [unload a browser source when it is not visible](https://obsproject
 1. Record a representative update burst in [Chrome DevTools Performance](https://developer.chrome.com/docs/devtools/performance). Look for JSON parsing, script time, garbage collection, style recalculation, layout, paint, and slow frames—not just your own function's duration.
 2. Compare idle behavior, dense activity, long sessions, resets, asset changes, and reconnects. Check that DOM size and retained history stop growing when intended. Test the complete OBS scene/vosulay profile: a standalone browser helps diagnosis but does not establish in-game performance.
 3. For a Chromium-wide trace, use `chrome://tracing` where available; see [Chromium tracing](https://www.chromium.org/developers/how-tos/trace-event-profiling-tool/). Do not assume an embedded CEF renderer exposes that page or DevTools by default.
-4. Measure at the intended output rate. In OBS, check **Use custom frame rate** and **FPS** in [browser-source properties](https://obsproject.com/kb/browser-source). vosulay has its own [frame-rate scheduling limit](https://github.com/shiruviaa/vosulay/blob/main/README.md#frame-rate). A requested limit is not guaranteed rendered FPS, and increasing it does not fix slow JavaScript.
+4. Measure at the intended output rate. In OBS, check **Use custom frame rate** and **FPS** in [browser-source properties](https://obsproject.com/kb/browser-source). vosulay has its own [frame-rate scheduling limit](https://github.com/18-lab-dev/vosulay/blob/main/README.md#frame-rate). A requested limit is not guaranteed rendered FPS, and increasing it does not fix slow JavaScript.
 
 Use a monotonic timer for local synchronous work:
 

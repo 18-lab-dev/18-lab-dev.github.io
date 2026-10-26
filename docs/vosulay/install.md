@@ -5,7 +5,7 @@ description: Install verified Linux or Windows releases and keep the complete ru
 
 # Install vosulay
 
-Download the x86_64 package for your platform from [GitHub Releases](https://github.com/shiruviaa/vosulay/releases). In filenames below, replace `<v>` with the release version. vosulay needs a [running backend](/vosulay/getting-started); installing it does not install vosu.
+Download the x86_64 package for your platform from [GitHub Releases](https://github.com/18-lab-dev/vosulay/releases). In filenames below, replace `<v>` with the release version. vosulay needs a [running backend](/vosulay/getting-started); installing it does not install vosu.
 
 ## Verify the download
 
@@ -21,7 +21,7 @@ Get-FileHash .\vosulay-<v>-windows-x86_64-setup.exe -Algorithm SHA256
 ```
 :::
 
-Releases **after v1.2.0** also include a detached `<file>.sig` for every asset. Download the [public release key](https://github.com/shiruviaa/vosulay/blob/main/packaging/release-signing-key.asc) as `release-signing-key.asc`. Its fingerprint is:
+Releases **after v1.2.0** also include a detached `<file>.sig` for every asset. Download the [public release key](https://github.com/18-lab-dev/vosulay/blob/main/packaging/release-signing-key.asc) as `release-signing-key.asc`. Its fingerprint is:
 
 ```text
 6F0F 0D30 C09D 3A03 6246  A810 2CB6 524B B54B 2CDA
@@ -49,7 +49,7 @@ Launch **Vosulay** from the applications menu or run `vosulay`. Packages include
 
 ### Tarball
 
-For another compatible distribution, extract `vosulay-<v>-linux-x86_64.tar.gz` and run `./vosulay` inside it. Install the CEF runtime dependencies listed in [package metadata](https://github.com/shiruviaa/vosulay/blob/main/packaging/linux/nfpm.yaml).
+For another compatible distribution, extract `vosulay-<v>-linux-x86_64.tar.gz` and run `./vosulay` inside it. Install the CEF runtime dependencies listed in [package metadata](https://github.com/18-lab-dev/vosulay/blob/main/packaging/linux/nfpm.yaml).
 
 Keep the executable, CEF resources/locales, sandbox helper, compositor/lookup libraries and Vulkan manifest together. Startup registers a user launcher pointing to this location. If you move it, launch again to update registration. Startup downloads nothing.
 
@@ -84,6 +84,6 @@ Keep a backup of your [configuration](/vosulay/settings#configuration-files). Se
 
 ## Build from source
 
-Follow the repository's [native prerequisites and contribution guide](https://github.com/shiruviaa/vosulay/blob/main/CONTRIBUTING.md), then its [source installation instructions](https://github.com/shiruviaa/vosulay/blob/main/README.md#build-from-source). Cargo acquires the pinned precompiled CEF distribution when needed; this is not a Chromium source build. Linux source installs rely on retained runtime/overlay caches, so copying only the executable is insufficient.
+Follow the repository's [native prerequisites and contribution guide](https://github.com/18-lab-dev/vosulay/blob/main/CONTRIBUTING.md), then its [source installation instructions](https://github.com/18-lab-dev/vosulay/blob/main/README.md#build-from-source). Cargo acquires the pinned precompiled CEF distribution when needed; this is not a Chromium source build. Linux source installs rely on retained runtime/overlay caches, so copying only the executable is insufficient.
 
-Source: [installation instructions](https://github.com/shiruviaa/vosulay/blob/main/README.md#install).
+Source: [installation instructions](https://github.com/18-lab-dev/vosulay/blob/main/README.md#install).

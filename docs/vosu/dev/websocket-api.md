@@ -145,7 +145,7 @@ The `l` query parameter still identifies the counter; **no query parameter authe
 
 Remote peers must still pass `ALLOWED_IPS`; keys never bypass that policy. Plain HTTP/WS on a LAN exposes secrets to network observers: keep loopback by default and use a trusted TLS reverse proxy (`wss://` for WebSockets) for remote access. Cross-origin browser HTTP Authorization is not supported by CORS.
 
-Persistent API keys are separate from the per-start, loopback-only `broker.json` token below, which keeps zero-config native broker integration and also authorizes HTTP value saves/profile actions, never schemas or management. See the [API key trust boundary](/vosu/dev/security#api-key-trust-boundary) and [README example](https://github.com/shiruviaa/vosu/blob/d0851c8/README.md#api-keys).
+Persistent API keys are separate from the per-start, loopback-only `broker.json` token below, which keeps zero-config native broker integration and also authorizes HTTP value saves/profile actions, never schemas or management. See the [API key trust boundary](/vosu/dev/security#api-key-trust-boundary) and [README example](https://github.com/18-lab-dev/vosu/blob/d0851c8/README.md#api-keys).
 
 ### Native broker credential <Badge type="tip" text="vosu only" />
 
@@ -164,7 +164,7 @@ A valid file token grants **exactly the same command-socket write permission as 
 
 On 401, reread the file and retry once; if that fails, connect without the token for the existing read-only behavior. vosu never deletes the file: once the daemon stops, its token is stale and authenticates nothing, and the next start atomically replaces it. Publication failures warn and disable broker writes without stopping vosu. Keep the token out of page JavaScript and logs, and authorize the broker's inbound counter-frame Origin/Host and session secret before forwarding: it must not become an open local proxy.
 
-See the [native broker integration contract](https://github.com/shiruviaa/vosu/blob/main/README.md#native-overlay-brokers) for the full lifecycle and trust boundary.
+See the [native broker integration contract](https://github.com/18-lab-dev/vosu/blob/main/README.md#native-overlay-brokers) for the full lifecycle and trust boundary.
 
 ### Profile-aware commands
 
@@ -182,4 +182,4 @@ Filters are an array of field strings or nested `{ "field": "fieldName", "keys":
 
 Filters apply to the socket receiving the command; sending them to `/websocket/commands` does not alter another state socket. Send them to your state connection instead. Control queues and the shared relay mailbox each hold at most **16** frames/events. Saturation drops new relay refreshes; a recipient with a full control queue disconnects without stalling other clients.
 
-Sources: [subscription implementation](https://github.com/shiruviaa/vosu/blob/main/src/server/v2_subscription.rs), [transport](https://github.com/shiruviaa/vosu/blob/main/src/server/service/websocket_transport.rs), [commands](https://github.com/shiruviaa/vosu/blob/main/src/server/commands.rs), [filter parser](https://github.com/shiruviaa/vosu/blob/main/src/server/commands/framing.rs), [WebSocket hub](https://github.com/shiruviaa/vosu/blob/main/src/server/websocket.rs).
+Sources: [subscription implementation](https://github.com/18-lab-dev/vosu/blob/main/src/server/v2_subscription.rs), [transport](https://github.com/18-lab-dev/vosu/blob/main/src/server/service/websocket_transport.rs), [commands](https://github.com/18-lab-dev/vosu/blob/main/src/server/commands.rs), [filter parser](https://github.com/18-lab-dev/vosu/blob/main/src/server/commands/framing.rs), [WebSocket hub](https://github.com/18-lab-dev/vosu/blob/main/src/server/websocket.rs).

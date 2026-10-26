@@ -5,7 +5,7 @@ description: Every vosulay setting, its real default, shortcuts and configuratio
 
 # Settings and configuration
 
-Enter edit mode, open **Settings**, change the controls, then click **Save**. **Cancel** discards the dialog's draft. Defaults below come from the published [configuration model](https://github.com/shiruviaa/vosulay/blob/main/src/config.rs); labels come from the [editor UI](https://github.com/shiruviaa/vosulay/blob/main/assets/manager.html).
+Enter edit mode, open **Settings**, change the controls, then click **Save**. **Cancel** discards the dialog's draft. Defaults below come from the published [configuration model](https://github.com/18-lab-dev/vosulay/blob/main/src/config.rs); labels come from the [editor UI](https://github.com/18-lab-dev/vosulay/blob/main/assets/manager.html).
 
 ## General
 
@@ -19,7 +19,7 @@ Automatic gives 360 Hz → 120 fps, 240 → 120, 165 → 82.5 (CEF rounds to 83)
 and leaves 120 Hz or slower displays unchanged. It updates when the game moves between displays
 or display refresh changes. CEF's damage-driven off-screen clock is not display-locked, so
 spacing is only approximate. Fixed stays fixed. This limits overlay scheduling, not the game's
-FPS; complex overlays can render more slowly. See the [1.4.0 frame-rate guide](https://github.com/shiruviaa/vosulay/blob/d2e472a/README.md#frame-rate).
+FPS; complex overlays can render more slowly. See the [1.4.0 frame-rate guide](https://github.com/18-lab-dev/vosulay/blob/d2e472a/README.md#frame-rate).
 
 `--fps-limit auto`, `--fps-limit 0` or `--fps-limit 120` (`-f`) overrides the saved choice for one run. An explicit automatic value overrides a saved fixed cap.
 
@@ -133,4 +133,4 @@ These are saved layout data, not additional Settings-dialog switches:
 
 Width/height normalize to at least 10; scale to at least 0.1; opacity to 0–1; rotation to −180–180; layer to 0–999. Duplicate placements and their ordering are preserved. Missing/duplicate profile IDs and invalid active-profile selection are repaired during loading.
 
-Sources: [configuration reference](https://github.com/shiruviaa/vosulay/blob/main/docs/configuration.md), [defaults](https://github.com/shiruviaa/vosulay/blob/main/src/config.rs), [settings controls](https://github.com/shiruviaa/vosulay/blob/main/assets/manager.html).
+Sources: [configuration reference](https://github.com/18-lab-dev/vosulay/blob/main/docs/configuration.md), [defaults](https://github.com/18-lab-dev/vosulay/blob/main/src/config.rs), [settings controls](https://github.com/18-lab-dev/vosulay/blob/main/assets/manager.html).

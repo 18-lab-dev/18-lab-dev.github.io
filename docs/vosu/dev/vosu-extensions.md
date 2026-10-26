@@ -142,7 +142,7 @@ Descriptors, setting types, `?update=yes`, `?update=true`, and `window.COUNTER_P
 | Built-in `/local-overlays` instruction page                                                            | No dedicated page in vosu; it reaches ordinary counter-static fallback and is normally missing unless a matching static resource is supplied |
 | Special counter-open names `tosu.exe`, `static.exe`                                                    | No magic aliases; use the normal name or dedicated `/api/counters/open-root`                                                                 |
 
-Overlays must not depend on `/api/ingame` or `__ingame__`, and should never have used that in-game endpoint even to manage their own settings/configuration. In-game rendering is [vosulay's](/vosulay/) job. [ADR 0008](https://github.com/shiruviaa/vosu/blob/main/docs/decisions/0008-external-in-game-overlays.md) is the clean-cutover rationale; [the router](https://github.com/shiruviaa/vosu/blob/main/src/server/routes.rs) confirms `/api/ingame` cannot fall through to counter serving.
+Overlays must not depend on `/api/ingame` or `__ingame__`, and should never have used that in-game endpoint even to manage their own settings/configuration. In-game rendering is [vosulay's](/vosulay/) job. [ADR 0008](https://github.com/18-lab-dev/vosu/blob/main/docs/decisions/0008-external-in-game-overlays.md) is the clean-cutover rationale; [the router](https://github.com/18-lab-dev/vosu/blob/main/src/server/routes.rs) confirms `/api/ingame` cannot fall through to counter serving.
 
 ## Feature detection
 
@@ -168,5 +168,5 @@ function inputCapabilities(regular, precise) {
 
 ## Comparison sources
 
-- vosu: [routes](https://github.com/shiruviaa/vosu/blob/main/src/server/routes.rs), [handlers](https://github.com/shiruviaa/vosu/blob/main/src/server/service/routing.rs), [v2 DTO](https://github.com/shiruviaa/vosu/blob/main/src/model/api/v2.rs), [README input extensions](https://github.com/shiruviaa/vosu/blob/main/README.md#state-and-calculation).
+- vosu: [routes](https://github.com/18-lab-dev/vosu/blob/main/src/server/routes.rs), [handlers](https://github.com/18-lab-dev/vosu/blob/main/src/server/service/routing.rs), [v2 DTO](https://github.com/18-lab-dev/vosu/blob/main/src/model/api/v2.rs), [README input extensions](https://github.com/18-lab-dev/vosu/blob/main/README.md#state-and-calculation).
 - tosu: [HTTP router](https://github.com/tosuapp/tosu/blob/HEAD/packages/server/router/index.ts), [upgrade router](https://github.com/tosuapp/tosu/blob/HEAD/packages/server/router/socket.ts), [v1 types](https://github.com/tosuapp/tosu/blob/HEAD/packages/tosu/src/api/types/v1.ts), [streamCompanion types](https://github.com/tosuapp/tosu/blob/HEAD/packages/tosu/src/api/types/sc.ts), [v2 types](https://github.com/tosuapp/tosu/blob/HEAD/packages/tosu/src/api/types/v2.ts), [settings parser](https://github.com/tosuapp/tosu/blob/HEAD/packages/server/utils/parseSettings.ts), [directory serving](https://github.com/tosuapp/tosu/blob/HEAD/packages/server/utils/directories.ts).

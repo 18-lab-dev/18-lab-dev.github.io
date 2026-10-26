@@ -41,7 +41,7 @@ selection described in [performance: bound growing histories](/vosu/dev/performa
 :::
 
 See [vosu extensions](/vosu/dev/vosu-extensions) and [schema](/vosu/dev/schema).
-The source contracts are [vosu v2](https://github.com/shiruviaa/vosu/blob/main/src/model/api/v2.rs)
+The source contracts are [vosu v2](https://github.com/18-lab-dev/vosu/blob/main/src/model/api/v2.rs)
 and [tosu v2](https://github.com/tosuapp/tosu/blob/master/packages/tosu/src/api/types/v2.ts).
 
 Next: [declare settings](/vosu/dev/tutorial/05-settings).

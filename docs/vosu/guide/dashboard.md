@@ -75,7 +75,7 @@ Neither permission grants daemon settings, updates, counter installation/deletio
 
 Treat keys as passwords: never put them in URLs, logs, public pages, or untrusted overlay code. Remote peers still need `ALLOWED_IPS` permission. Plain HTTP/WS on a LAN exposes keys to network observers; keep loopback by default or use a trusted TLS reverse proxy for remote access. See [native HTTP usage](/vosu/dev/http-api#api-keys), [browser WebSocket usage](/vosu/dev/websocket-api#api-key-authentication), and the [security boundary](/vosu/dev/security#api-key-trust-boundary).
 
-Source: [API key contract](https://github.com/shiruviaa/vosu/blob/d0851c8/README.md#api-keys).
+Source: [API key contract](https://github.com/18-lab-dev/vosu/blob/d0851c8/README.md#api-keys).
 
 ### Overlay settings
 
@@ -89,4 +89,4 @@ On Linux, **Settings → General → Start at login** records the current execut
 
 This setting is off by default and hidden on Windows. Packages do not enable it automatically. Disable it before [uninstalling](/vosu/guide/uninstall).
 
-Sources: [vosu 1.1.0 origin decision](https://github.com/shiruviaa/vosu/blob/d0851c8/docs/decisions/0016-separate-dashboard-origin.md), [1.1.0 release changes](https://github.com/shiruviaa/vosu/blob/d0851c8/CHANGELOG.md#110--2026-10-17), and [operations runbook](https://github.com/shiruviaa/vosu/blob/d0851c8/docs/operations/runbook.md).
+Sources: [vosu 1.1.0 origin decision](https://github.com/18-lab-dev/vosu/blob/d0851c8/docs/decisions/0016-separate-dashboard-origin.md), [1.1.0 release changes](https://github.com/18-lab-dev/vosu/blob/d0851c8/CHANGELOG.md#110--2026-10-17), and [operations runbook](https://github.com/18-lab-dev/vosu/blob/d0851c8/docs/operations/runbook.md).
