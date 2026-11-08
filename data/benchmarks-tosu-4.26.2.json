@@ -1,7 +1,7 @@
 {
   "source": {
     "repo": "18-lab-dev/vosu",
-    "commit": "a2e3358",
+    "commit": "fe080ce",
     "path": "docs/testing/benchmarks.md",
     "section": "Released tosu comparison"
   },
@@ -464,32 +464,17 @@
       "series": ["tosu", "vosu"],
       "rows": [
         {
-          "label": "Windows lazer",
+          "label": "Windows stable · vosu 1.2.0",
           "values": {
             "vosu": {
-              "v": 148.0,
-              "s": "148.0 µs",
-              "range": "145.1–149.8"
+              "v": 157.412,
+              "s": "157.412 µs",
+              "range": "155.088–164.594"
             },
             "tosu": {
-              "v": 737.0,
-              "s": "737.0 µs",
-              "range": "729.2–741.5"
-            }
-          }
-        },
-        {
-          "label": "Windows stable",
-          "values": {
-            "vosu": {
-              "v": 132.7,
-              "s": "132.7 µs",
-              "range": "131.7–135.3"
-            },
-            "tosu": {
-              "v": 456.2,
-              "s": "456.2 µs",
-              "range": "448.6–472.9"
+              "v": 566.976,
+              "s": "566.976 µs",
+              "range": "517.107–589.800"
             }
           }
         },
@@ -531,32 +516,17 @@
       "series": ["tosu", "vosu"],
       "rows": [
         {
-          "label": "Windows lazer",
+          "label": "Windows stable · vosu 1.2.0",
           "values": {
             "vosu": {
-              "v": 30.0,
-              "s": "30.0 µs",
-              "range": "29.8–31.0"
+              "v": 27.729,
+              "s": "27.729 µs",
+              "range": "27.553–28.283"
             },
             "tosu": {
-              "v": 151.2,
-              "s": "151.2 µs",
-              "range": "150.2–152.5"
-            }
-          }
-        },
-        {
-          "label": "Windows stable",
-          "values": {
-            "vosu": {
-              "v": 23.9,
-              "s": "23.9 µs",
-              "range": "23.8–24.3"
-            },
-            "tosu": {
-              "v": 40.7,
-              "s": "40.7 µs",
-              "range": "40.6–42.0"
+              "v": 46.774,
+              "s": "46.774 µs",
+              "range": "42.512–49.436"
             }
           }
         },
@@ -598,32 +568,6 @@
       "series": ["tosu", "vosu"],
       "rows": [
         {
-          "label": "Windows lazer",
-          "values": {
-            "vosu": {
-              "v": 71000.0,
-              "s": "71 ms"
-            },
-            "tosu": {
-              "v": 1521000.0,
-              "s": "1521 ms"
-            }
-          }
-        },
-        {
-          "label": "Windows stable",
-          "values": {
-            "vosu": {
-              "v": 85000.0,
-              "s": "85 ms"
-            },
-            "tosu": {
-              "v": 589000.0,
-              "s": "589 ms"
-            }
-          }
-        },
-        {
           "label": "Linux lazer",
           "values": {
             "vosu": {
@@ -659,70 +603,32 @@
       "series": ["tosu", "vosu", "vosuAlone"],
       "rows": [
         {
-          "label": "Windows lazer · background",
+          "label": "Windows stable · 1.2.0 background",
           "values": {
-            "vosuAlone": {
-              "v": 1.67,
-              "s": "1.67%"
-            },
             "vosu": {
-              "v": 1.67,
-              "s": "1.67%"
+              "v": 1.46,
+              "s": "1.46%",
+              "range": "1.35–1.94"
             },
             "tosu": {
-              "v": 2.78,
-              "s": "2.78%"
+              "v": 1.84,
+              "s": "1.84%",
+              "range": "1.39–2.33"
+            },
+            "vosuAlone": {
+              "v": 1.56,
+              "s": "1.56%",
+              "range": "1.32–1.63"
             }
           }
         },
         {
-          "label": "Windows lazer · consumer",
+          "label": "Windows stable · 1.2.0 alone consumer",
           "values": {
             "vosuAlone": {
-              "v": 1.49,
-              "s": "1.49%"
-            },
-            "vosu": {
-              "v": 1.7,
-              "s": "1.70%"
-            },
-            "tosu": {
-              "v": 2.64,
-              "s": "2.64%"
-            }
-          }
-        },
-        {
-          "label": "Windows stable · background",
-          "values": {
-            "vosuAlone": {
-              "v": 1.49,
-              "s": "1.49%"
-            },
-            "vosu": {
-              "v": 1.53,
-              "s": "1.53%"
-            },
-            "tosu": {
-              "v": 1.63,
-              "s": "1.63%"
-            }
-          }
-        },
-        {
-          "label": "Windows stable · consumer",
-          "values": {
-            "vosuAlone": {
-              "v": 1.7,
-              "s": "1.70%"
-            },
-            "vosu": {
-              "v": 1.81,
-              "s": "1.81%"
-            },
-            "tosu": {
-              "v": 3.19,
-              "s": "3.19%"
+              "v": 2.15,
+              "s": "2.15%",
+              "range": "2.01–2.29"
             }
           }
         },
@@ -802,54 +708,27 @@
       "series": ["tosu", "vosu"],
       "rows": [
         {
-          "label": "Windows lazer · background",
+          "label": "Windows stable · 1.2.0 background",
           "values": {
             "vosu": {
-              "v": 41.7,
-              "s": "41.7 MB"
+              "v": 48.03,
+              "s": "48.03 MiB",
+              "range": "48.00–48.11"
             },
             "tosu": {
-              "v": 88.8,
-              "s": "88.8 MB"
+              "v": 143.16,
+              "s": "143.16 MiB",
+              "range": "142.77–143.62"
             }
           }
         },
         {
-          "label": "Windows lazer · consumer",
+          "label": "Windows stable · 1.2.0 alone consumer",
           "values": {
             "vosu": {
-              "v": 42.2,
-              "s": "42.2 MB"
-            },
-            "tosu": {
-              "v": 91.2,
-              "s": "91.2 MB"
-            }
-          }
-        },
-        {
-          "label": "Windows stable · background",
-          "values": {
-            "vosu": {
-              "v": 49.7,
-              "s": "49.7 MB"
-            },
-            "tosu": {
-              "v": 148.9,
-              "s": "148.9 MB"
-            }
-          }
-        },
-        {
-          "label": "Windows stable · consumer",
-          "values": {
-            "vosu": {
-              "v": 50.9,
-              "s": "50.9 MB"
-            },
-            "tosu": {
-              "v": 152.7,
-              "s": "152.7 MB"
+              "v": 49.16,
+              "s": "49.16 MiB",
+              "range": "48.96–49.76"
             }
           }
         },
@@ -913,54 +792,27 @@
       "series": ["tosu", "vosu"],
       "rows": [
         {
-          "label": "Windows lazer · background",
+          "label": "Windows stable · 1.2.0 background",
           "values": {
             "vosu": {
-              "v": 7.1,
-              "s": "7.1 MB"
+              "v": 13.24,
+              "s": "13.24 MiB",
+              "range": "13.18–13.31"
             },
             "tosu": {
-              "v": 78.6,
-              "s": "78.6 MB"
+              "v": 126.01,
+              "s": "126.01 MiB",
+              "range": "124.98–126.60"
             }
           }
         },
         {
-          "label": "Windows lazer · consumer",
+          "label": "Windows stable · 1.2.0 alone consumer",
           "values": {
             "vosu": {
-              "v": 7.9,
-              "s": "7.9 MB"
-            },
-            "tosu": {
-              "v": 82.7,
-              "s": "82.7 MB"
-            }
-          }
-        },
-        {
-          "label": "Windows stable · background",
-          "values": {
-            "vosu": {
-              "v": 14.7,
-              "s": "14.7 MB"
-            },
-            "tosu": {
-              "v": 131.5,
-              "s": "131.5 MB"
-            }
-          }
-        },
-        {
-          "label": "Windows stable · consumer",
-          "values": {
-            "vosu": {
-              "v": 16.0,
-              "s": "16.0 MB"
-            },
-            "tosu": {
-              "v": 135.7,
-              "s": "135.7 MB"
+              "v": 14.59,
+              "s": "14.59 MiB",
+              "range": "14.49–15.29"
             }
           }
         },
@@ -1024,54 +876,27 @@
       "series": ["tosu", "vosu"],
       "rows": [
         {
-          "label": "Windows lazer · background",
+          "label": "Windows stable · 1.2.0 background",
           "values": {
             "vosu": {
-              "v": 9.9,
-              "s": "9.90 ms"
+              "v": 7.994,
+              "s": "7.994 ms",
+              "range": "7.458–8.574"
             },
             "tosu": {
-              "v": 10.45,
-              "s": "10.45 ms"
+              "v": 5.465,
+              "s": "5.465 ms",
+              "range": "5.385–16.826"
             }
           }
         },
         {
-          "label": "Windows lazer · consumer",
+          "label": "Windows stable · 1.2.0 alone consumer",
           "values": {
             "vosu": {
-              "v": 0.3,
-              "s": "0.30 ms"
-            },
-            "tosu": {
-              "v": 0.68,
-              "s": "0.68 ms"
-            }
-          }
-        },
-        {
-          "label": "Windows stable · background",
-          "values": {
-            "vosu": {
-              "v": 4.83,
-              "s": "4.83 ms"
-            },
-            "tosu": {
-              "v": 8.0,
-              "s": "8.00 ms"
-            }
-          }
-        },
-        {
-          "label": "Windows stable · consumer",
-          "values": {
-            "vosu": {
-              "v": 0.36,
-              "s": "0.36 ms"
-            },
-            "tosu": {
-              "v": 3.43,
-              "s": "3.43 ms"
+              "v": 0.451,
+              "s": "0.451 ms",
+              "range": "0.438–0.462"
             }
           }
         },
