@@ -73,6 +73,8 @@ Network fields (`SERVER_IP`, `SERVER_PORT`, `DASHBOARD_IP`, `DASHBOARD_PORT`, `A
 
 vosu watches the configuration's parent directory and applies supported changes without restarting. Writes use atomic same-directory replacement. Malformed TOML during reload leaves the last-good configuration and dependent resources active; malformed canonical TOML at startup leaves all source files untouched.
 
+Since vosu 1.2.2, on Windows filesystems with hard links (including NTFS), programs reading `vosu.toml` or settings files see the old or the new file throughout a save, never a missing file; the file's ACLs, creation time and alternate streams are kept. A reader that blocks deletion can delay a save by at most two seconds of retries. FAT/exFAT and network drives without hard links keep the older replacement, which can briefly hide the file from concurrent readers. At startup vosu removes leftover `.vosu-atomic-*` staging directories from its program directory.
+
 Startup migration precedence is `vosu.toml > vosu.env > tosu.env > defaults`. The `.env` files are **legacy migration inputs**, not the current configuration format. vosu writes canonical TOML before removing readable legacy files. On Linux, legacy `tosu` XDG data moves to `vosu` roots without overwriting existing files.
 
 ## Environment controls

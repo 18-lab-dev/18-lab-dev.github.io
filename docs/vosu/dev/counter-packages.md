@@ -152,4 +152,6 @@ Installation uses `POST /api/counters/download/<encoded-url>?name=<name>` <Badge
 
 Downloads require HTTPS; downgrade redirects and loopback/private/reserved destinations are rejected. Shutdown cancels and joins admitted jobs even if the initiating HTTP client disconnects. These checks do not make downloaded JavaScript trusted.
 
+Since vosu 1.2.1 the entry count comes from the archive's own end-of-central-directory record, the one ending exactly at the end of the file, so end-record bytes that happen to occur inside compressed data no longer reject a valid archive. Data after the archive, a second end record inside the archive comment, and a central directory that disagrees with its end record are refused; ZIP64 records must sit immediately before that end record. Tool packages, overlay downloads and update archives share these rules.
+
 Sources: [counter service/discovery](https://github.com/18-lab-dev/vosu/blob/main/src/counters/service.rs), [settings/migration](https://github.com/18-lab-dev/vosu/blob/main/src/counters/settings.rs), [descriptor model](https://github.com/18-lab-dev/vosu/blob/main/src/counters/model.rs), [static response injection](https://github.com/18-lab-dev/vosu/blob/main/src/server/service/responses.rs), [download and ZIP policy](https://github.com/18-lab-dev/vosu/blob/main/src/net/streaming.rs).

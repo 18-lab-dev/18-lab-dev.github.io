@@ -5,11 +5,11 @@ description: Portable archives, Linux packages, per-user installation, and relea
 
 # Install vosu
 
-The current release is **1.2.0**. Download from the [v1.2.0 release](https://github.com/18-lab-dev/vosu/releases/tag/v1.2.0).
+The current release is **1.2.2**. Download from the [v1.2.2 release](https://github.com/18-lab-dev/vosu/releases/tag/v1.2.2).
 
 ## Portable archive
 
-Download `vosu-linux-v1.2.0.zip` or `vosu-windows-v1.2.0.zip` and extract the **whole archive** into a writable directory. The release archive contains the executable and `LICENSE`.
+Download `vosu-linux-v1.2.2.zip` or `vosu-windows-v1.2.2.zip` and extract the **whole archive** into a writable directory. The release archive contains the executable and `LICENSE`.
 
 ::: code-group
 ```sh [Linux]
@@ -34,15 +34,15 @@ Requirements: glibc **2.35 or newer** (Debian 12+, Ubuntu 22.04+, current Fedora
 
 ::: code-group
 ```sh [Debian / Ubuntu]
-sudo apt install ./vosu_1.2.0_amd64.deb
+sudo apt install ./vosu_1.2.2_amd64.deb
 ```
 
 ```sh [Fedora]
-sudo dnf install ./vosu-1.2.0-1.x86_64.rpm
+sudo dnf install ./vosu-1.2.2-1.x86_64.rpm
 ```
 
 ```sh [Arch Linux]
-sudo pacman -U vosu-1.2.0-1-x86_64.pkg.tar.zst
+sudo pacman -U vosu-1.2.2-1-x86_64.pkg.tar.zst
 ```
 :::
 
@@ -95,7 +95,7 @@ With GnuPG installed, and the key saved as `release-signing-key.asc`:
 ```sh
 gpg --show-keys --fingerprint release-signing-key.asc
 gpg --import release-signing-key.asc
-gpg --verify vosu-linux-v1.2.0.zip.sig vosu-linux-v1.2.0.zip
+gpg --verify vosu-linux-v1.2.2.zip.sig vosu-linux-v1.2.2.zip
 ```
 
 Use the Windows ZIP or Linux package filename when verifying those assets. Require a good signature from the fingerprint above, not just a matching display name.
