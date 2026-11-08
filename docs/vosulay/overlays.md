@@ -13,6 +13,8 @@ Use **Search counters** to match a counter's name, author or folder. Click a cat
 
 A counter can depend on backend-specific endpoints. For example, vosu's selected-field `/websocket/v2/subscribe` is unavailable in tosu; a counter relying on it may remain empty and reconnect there. Changing renderer settings does not provide a missing backend API.
 
+Since vosulay 1.5.2, in game each installed counter loads from its own loopback address (`127.0.0.N` on the broker's port), so animated counters no longer multiply each other's animation callbacks and canvas work. Placements of the same counter still share one address, its `localStorage` and IndexedDB, and can still multiply each other's work; different counters are isolated from each other. Beyond 64 addresses, or if one cannot be bound, the rest share the original broker address. The broker port changes every run, as before, so this storage is not carried across restarts. Browser and OBS [profile pages](/vosulay/remote) keep their previous routing and storage.
+
 ## Counter settings
 
 Select an installed counter and use the compact inspector's **Settings** button. With vosu's
@@ -68,4 +70,4 @@ Counters and custom pages execute JavaScript inside CEF's sandboxed renderer. Th
 Counters cannot make edits: [local editing](/vosulay/remote#edit-from-obs-or-a-local-browser) lives on a separate `manage.localhost` address whose routes counters cannot reach, and a page can only add local HTML files you chose in a file dialog.
 :::
 
-Sources: [vosulay 1.5.0 editing and settings](https://github.com/18-lab-dev/vosulay/blob/v1.5.0/README.md#editing-shortcuts-and-tray), [integrations](https://github.com/18-lab-dev/vosulay/blob/main/docs/integrations.md), [security disclosure](https://github.com/18-lab-dev/vosulay/blob/main/docs/security.md).
+Sources: [vosulay 1.5.3 editing and settings](https://github.com/18-lab-dev/vosulay/blob/v1.5.3/README.md#editing-shortcuts-and-tray), [integrations](https://github.com/18-lab-dev/vosulay/blob/v1.5.3/docs/integrations.md), [security disclosure](https://github.com/18-lab-dev/vosulay/blob/v1.5.3/docs/security.md).

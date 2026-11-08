@@ -31,6 +31,7 @@ description: Source-grounded fixes for missing counters, input, saving, attachme
 | Input capture fails or vosulay exits                | Capture/heartbeat failures release input or terminate the host within the five-second safety bound. Restart vosulay if needed.           |
 | No Linux tray icon                                  | Your desktop needs StatusNotifierItem tray support.                                                                                      |
 | Starting the app again exits immediately            | Single-instance behavior: a host is already running. Hiding is not quitting; use **Exit vosulay**.                                       |
+| DevTools debugging was enabled but nothing listens  | Restart vosulay after saving, and attach to a game: the debugger starts with the in-game browser, never with `--server-only`. A port already in use is reported in **Settings → Advanced**; choose another [DevTools port](/vosulay/settings#devtools-debugging). |
 
 ## Startup and saving
 

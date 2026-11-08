@@ -19,7 +19,7 @@ Automatic gives 360 Hz → 120 fps, 240 → 120, 165 → 82.5 (CEF rounds to 83)
 and leaves 120 Hz or slower displays unchanged. It updates when the game moves between displays
 or display refresh changes. CEF's damage-driven off-screen clock is not display-locked, so
 spacing is only approximate. Fixed stays fixed. This limits overlay scheduling, not the game's
-FPS; complex overlays can render more slowly. See the [1.5.0 frame-rate guide](https://github.com/18-lab-dev/vosulay/blob/v1.5.0/README.md#frame-rate).
+FPS; complex overlays can render more slowly. See the [frame-rate guide](https://github.com/18-lab-dev/vosulay/blob/v1.5.3/README.md#frame-rate).
 
 The in-game editor has its own 30 fps maximum while visible (a lower configured limit still wins). Closing the editor restores the overlay's normal limit immediately without changing your setting.
 
@@ -41,6 +41,8 @@ Read [Remote profiles](/vosulay/remote) before opening access. There is no remot
 
 | UI setting                           | JSON key under `settings`                | Default                     | Effect                                                                                                     |
 | ------------------------------------ | ---------------------------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Enable DevTools debugging (CDP)      | `devtools_enabled`                       | `false` (off)               | Open Chromium's DevTools debugger for the overlay browser on `127.0.0.1` only. Restart required.           |
+| DevTools port                        | `devtools_port`                          | `39229`                     | Loopback debugger port, 1–65535. Restart required.                                                         |
 | vosu URL                             | `vosu_url`                               | `"http://127.0.0.1:24050/"` | vosu or tosu-compatible backend origin. Restart required; `--vosu-url` (`-t`) overrides it for one run.    |
 | Allow editing on this computer       | `allow_local_profile_editing`            | `false` (off)               | Serve the full editor at `manage.localhost:<port>/overlay` to this computer only. Applies without restart. |
 | Allow unrestricted SharedArrayBuffer | `allow_unrestricted_shared_array_buffer` | `false` (off)               | Compatibility opt-in for all overlays. Restart required.                                                   |
@@ -48,8 +50,16 @@ Read [Remote profiles](/vosulay/remote) before opening access. There is no remot
 Backend URLs accept HTTP(S) without embedded credentials, query or fragment. Use scheme, host and port, not a path prefix: API paths are absolute. Invalid stored URLs fall back to the default.
 
 ::: danger Security-sensitive switches
-Local editing serves vosulay's full editor, including settings and file dialogs, to any program on this computer that can open `manage.localhost`; counters and other websites cannot use it (see [Remote profiles](/vosulay/remote#edit-from-obs-or-a-local-browser)). Unrestricted SharedArrayBuffer disables a Chromium Spectre mitigation and exposes shared memory to all local/remote overlays. Enable either only when you need it; neither is needed for an ordinary first setup.
+Local editing serves vosulay's full editor, including settings and file dialogs, to any program on this computer that can open `manage.localhost`; counters and other websites cannot use it (see [Remote profiles](/vosulay/remote#edit-from-obs-or-a-local-browser)). Unrestricted SharedArrayBuffer disables a Chromium Spectre mitigation and exposes shared memory to all local/remote overlays. DevTools debugging has no authentication: any program on this computer can then read and change overlay pages, run JavaScript in them and drive the editor, which amounts to controlling vosulay. Enable these only when you need them; none is needed for an ordinary first setup.
 :::
+
+### DevTools debugging
+
+Added in vosulay 1.5.1 for diagnosing overlays in game. Enable **Enable DevTools debugging (CDP)**, Save, and restart vosulay; closing only the editor does not restart the browser. While it is active, the editor toolbar shows **DevTools on: 127.0.0.1:&lt;port&gt;**. If the port is already in use, Advanced settings shows the error and debugging stays off for that run; vosulay does not pick another port.
+
+In Chrome, open `chrome://inspect`, choose **Configure**, add `127.0.0.1:39229` (or your port) and inspect the vosulay target. A CDP client can instead list targets with `curl http://127.0.0.1:39229/json/list` and attach to a target's `webSocketDebuggerUrl`. Chromium's Origin and Host checks stay on, so do not add an Origin override or forward the port.
+
+The debugger starts with the in-game browser, so it is not available with `--server-only` or before vosulay attaches to a game. Standalone and vosu-tool mode use the same settings; as a tool they are kept in the tool's data directory. Turn it off again for normal play. See the upstream [DevTools security notes](https://github.com/18-lab-dev/vosulay/blob/v1.5.3/docs/operations.md#devtools-security).
 
 ## Shortcuts
 

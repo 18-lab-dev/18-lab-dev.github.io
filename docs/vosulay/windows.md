@@ -5,7 +5,7 @@ description: Windows installation, osu! attachment, hotkeys and capture caveats.
 
 # vosulay on Windows
 
-vosulay renders inside **osu!stable** (`osu!.exe`) and **osu!lazer** (`osulazer.exe`) through native **asdf-overlay 2.1.0** injection. Run it alongside a separately running vosu or tosu-compatible backend.
+vosulay renders inside **osu!stable** (`osu!.exe`) and **osu!lazer** (`osulazer.exe`) through native **asdf-overlay 2.1.1** injection, built from source by vosulay's release workflow. Since 1.5.3 the overlay takes mouse capture only while it is blocking game input, as in asdf-overlay 2.1.1. Run it alongside a separately running vosu or tosu-compatible backend.
 
 ## Install and launch
 
@@ -39,8 +39,8 @@ For a separate stream overlay, use [profile pages](/vosulay/remote) as OBS brows
 
 ## Upgrade or remove
 
-Choose **tray → Exit vosulay** before upgrading or uninstalling; hiding leaves the host running. Close games that loaded the overlay before replacing its DLLs. Run the newer installer over the existing install, or replace a ZIP's complete runtime directory.
+Before upgrading or uninstalling, stop a vosu-managed host from vosu's dashboard, or choose **tray → Exit vosulay** for standalone use; hiding leaves the host running. Close games that loaded the overlay before replacing its DLLs. Run the newer installer over the existing install, or replace a ZIP's complete runtime directory.
 
 Windows uninstall retains user settings and profiles. See [Uninstall](/vosulay/uninstall) for full removal.
 
-Sources: [Windows README](https://github.com/18-lab-dev/vosulay/blob/main/README.md#windows-1), [installation disclosure](https://github.com/18-lab-dev/vosulay/blob/main/docs/security.md).
+Sources: [Windows README](https://github.com/18-lab-dev/vosulay/blob/v1.5.3/README.md#windows-1), [installation disclosure](https://github.com/18-lab-dev/vosulay/blob/v1.5.3/docs/security.md), [1.5.3 changelog](https://github.com/18-lab-dev/vosulay/blob/v1.5.3/CHANGELOG.md).

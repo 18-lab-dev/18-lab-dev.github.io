@@ -5,7 +5,7 @@ description: Install verified Linux or Windows releases and keep the complete ru
 
 # Install vosulay
 
-The current release is **1.5.0**. vosulay needs a [running backend](/vosulay/getting-started); installing it does not install vosu.
+The current release is **1.5.3**. vosulay needs a [running backend](/vosulay/getting-started); installing it does not install vosu.
 
 ## Install from the vosu dashboard
 
@@ -19,7 +19,7 @@ The tool uses vosu's backend and separate tool data/cache directories. On its fi
 
 ## Standalone installation
 
-Standalone packages remain available for vosu or tosu, with their existing configuration, launcher registration and lifecycle. Download the x86_64 package for your platform from the [v1.5.0 release](https://github.com/18-lab-dev/vosulay/releases/tag/v1.5.0).
+Standalone packages remain available for vosu or tosu, with their existing configuration, launcher registration and lifecycle. Download the x86_64 package for your platform from the [v1.5.3 release](https://github.com/18-lab-dev/vosulay/releases/tag/v1.5.3).
 
 ## Verify the download
 
@@ -27,11 +27,11 @@ Published releases include `SHA256SUMS`. Compare your file's SHA-256 with its en
 
 ::: code-group
 ```sh [Linux]
-sha256sum vosulay-1.5.0-linux-x86_64.tar.gz
+sha256sum vosulay-1.5.3-linux-x86_64.tar.gz
 ```
 
 ```powershell [Windows]
-Get-FileHash .\vosulay-1.5.0-windows-x86_64-setup.exe -Algorithm SHA256
+Get-FileHash .\vosulay-1.5.3-windows-x86_64-setup.exe -Algorithm SHA256
 ```
 :::
 
@@ -55,15 +55,15 @@ v1.2.0 predates detached release signatures. OpenPGP asset signatures are not Wi
 
 | Distribution               | Command                                             |
 | -------------------------- | --------------------------------------------------- |
-| Ubuntu 22.04+ / Debian 12+ | `sudo apt install ./vosulay_1.5.0-1_amd64.deb`      |
-| Fedora                     | `sudo dnf install ./vosulay-1.5.0-1.x86_64.rpm`     |
-| Arch Linux                 | `sudo pacman -U vosulay-1.5.0-1-x86_64.pkg.tar.zst` |
+| Ubuntu 22.04+ / Debian 12+ | `sudo apt install ./vosulay_1.5.3-1_amd64.deb`      |
+| Fedora                     | `sudo dnf install ./vosulay-1.5.3-1.x86_64.rpm`     |
+| Arch Linux                 | `sudo pacman -U vosulay-1.5.3-1-x86_64.pkg.tar.zst` |
 
 Launch **Vosulay** from the applications menu or run `vosulay`. Packages include the runtime and system launcher; startup does not create a duplicate user launcher. Linux releases require glibc 2.35 or newer.
 
 ### Tarball
 
-For another compatible distribution, extract `vosulay-1.5.0-linux-x86_64.tar.gz` and run `./vosulay` inside it. Install the CEF runtime dependencies listed in [package metadata](https://github.com/18-lab-dev/vosulay/blob/main/packaging/linux/nfpm.yaml).
+For another compatible distribution, extract `vosulay-1.5.3-linux-x86_64.tar.gz` and run `./vosulay` inside it. Install the CEF runtime dependencies listed in [package metadata](https://github.com/18-lab-dev/vosulay/blob/main/packaging/linux/nfpm.yaml).
 
 Keep the executable, CEF resources/locales, sandbox helper, compositor/lookup libraries and Vulkan manifest together. Startup registers a user launcher pointing to this location. If you move it, launch again to update registration. Startup downloads nothing.
 
@@ -79,11 +79,11 @@ Distribution packages already install this helper setuid root. This is Chromium'
 
 ## Windows
 
-Run `vosulay-1.5.0-windows-x86_64-setup.exe`. The per-user Inno Setup installer needs no administrator privileges and defaults to `%LOCALAPPDATA%\Programs\Vosulay`.
+Run `vosulay-1.5.3-windows-x86_64-setup.exe`. The per-user Inno Setup installer needs no administrator privileges and defaults to `%LOCALAPPDATA%\Programs\Vosulay`.
 
 It creates a Start Menu shortcut. Desktop and start-with-Windows shortcuts are optional and unchecked by default; the final page offers to launch vosulay. See [Windows](/vosulay/windows) for SmartScreen and game integration.
 
-Alternatively extract `vosulay-1.5.0-windows-x86_64.zip` and run `vosulay.exe`. Keep `vosulay.dll`, CEF runtime files/locales and both injection DLLs beside it. **The ZIP uses the same user configuration as the installer; it is not portable config by default.**
+Alternatively extract `vosulay-1.5.3-windows-x86_64.zip` and run `vosulay.exe`. Keep `vosulay.dll`, CEF runtime files/locales and both injection DLLs beside it. **The ZIP uses the same user configuration as the installer; it is not portable config by default.** Since 1.5.3 the runtime no longer includes `dxil.dll`, which CEF 156 dropped.
 
 ## Upgrade
 

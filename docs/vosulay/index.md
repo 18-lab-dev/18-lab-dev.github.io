@@ -5,11 +5,12 @@ description: Render and arrange tosu-compatible counters inside osu! on Linux an
 
 # vosulay
 
-vosulay renders tosu-compatible counters inside osu! using a native Rust host and one Chromium Embedded Framework (CEF) browser runtime. It manages the layout; a **separately running vosu or tosu-compatible backend** supplies installed counters and game data.
+vosulay renders tosu-compatible counters inside osu! using a native Rust host and one Chromium Embedded Framework (CEF) browser runtime (CEF 156 with Chromium 156.0.8078.80 since 1.5.3). It manages the layout; a **separately running vosu or tosu-compatible backend** supplies installed counters and game data.
 
-These docs cover **vosulay 1.5.0**, including the compact inspector, full placement editor,
-native vosu settings editor, per-placement settings-profile pins, ruleset-bound profiles and
-installation as an official [vosu tool](/vosu/guide/tools).
+These docs cover **vosulay 1.5.3**, including the compact inspector, full placement editor,
+native vosu settings editor, per-placement settings-profile pins, ruleset-bound profiles,
+installation as an official [vosu tool](/vosu/guide/tools) and opt-in
+[DevTools debugging](/vosulay/settings#devtools-debugging).
 
 The default backend is `http://127.0.0.1:24050/`. Change it in **Settings → Advanced → vosu URL**, then restart vosulay. Compatibility comes from the public counter API, not the backend's product name. vosu remains independent of vosulay.
 
@@ -33,7 +34,7 @@ The default backend is `http://127.0.0.1:24050/`. Change it in **Settings → Ad
 | Platform | Supported game/rendering routes                                                                                                                                                                  |
 | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Linux    | Vulkan, EGL/OpenGL and GLX/OpenGL; native Wayland and X11/XWayland games; osu!stable through Wine's X11 driver, including osu-winello. Live attachment or launch-time preload/layer integration. |
-| Windows  | osu!stable (`osu!.exe`) and osu!lazer (`osulazer.exe`) through native asdf-overlay 2.1.0 injection.                                                                                              |
+| Windows  | osu!stable (`osu!.exe`) and osu!lazer (`osulazer.exe`) through native asdf-overlay 2.1.1 injection.                                                                                              |
 
 Release downloads target x86_64. Linux binaries require glibc 2.35 or newer. See the [Linux](/vosulay/linux) and [Windows](/vosulay/windows) guides before configuring game capture or attachment.
 
@@ -52,4 +53,4 @@ vosulay loads overlay code into the game and executes the web content you choose
 | Change defaults             | [Settings](/vosulay/settings)               |
 | Fix missing overlays        | [Troubleshooting](/vosulay/troubleshooting) |
 
-Source: [vosulay 1.5.0 README](https://github.com/18-lab-dev/vosulay/blob/v1.5.0/README.md).
+Source: [vosulay 1.5.3 README](https://github.com/18-lab-dev/vosulay/blob/v1.5.3/README.md) and [changelog](https://github.com/18-lab-dev/vosulay/blob/v1.5.3/CHANGELOG.md).
